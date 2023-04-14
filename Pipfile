@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 django = "*"
+finnhub-python = "*"
+requests = "*"
 
 [dev-packages]
 flake8 = "*"
