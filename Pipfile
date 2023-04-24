@@ -5,11 +5,14 @@ name = "pypi"
 
 [packages]
 django = "*"
-finnhub-python = "*"
 requests = "*"
+yfinance = "*"
+pytest = "*"
 
 [dev-packages]
 flake8 = "*"
+pytest = "*"
+pytest-django = "*"
 
 [requires]
 python_version = "3.9"

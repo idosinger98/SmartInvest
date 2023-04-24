@@ -14,7 +14,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Remote Python 3.9.2 (sftp://vagrant@127.0.0.1:2222/home/vagrant/.local/share/virtualenvs/vagrant-gKDsaKU3/bin/python3.9)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.9.2 (sftp://vagrant@127.0.0.1:2222/home/vagrant/.local/share/virtualenvs/vagrant-gKDsaKU3/bin/python) (3)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
