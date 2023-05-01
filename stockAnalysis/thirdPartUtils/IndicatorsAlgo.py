@@ -60,3 +60,11 @@ def linear_reg_algo(stock_df):
     future_prices = model.predict(future_dates)
 
     return future_prices
+
+
+def force_index(df):
+    df = df.copy()
+    df['force_index'] = df['Volume'] * (df['Close'] - df['Close'].shift(1))
+    df['force_index_ema'] = df['force_index'].ewm(span=14, min_periods=14).mean()
+
+    return df
