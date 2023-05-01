@@ -8,6 +8,7 @@ django = "*"
 requests = "*"
 yfinance = "*"
 pytest = "*"
+sklearn = "*"
 
 [dev-packages]
 flake8 = "*"
