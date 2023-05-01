@@ -6,7 +6,7 @@ import datetime
 
 AVAILABLE_INTERVAL = {'1m', '2m', '5m', '15m', '30m', '60m', '90m', '1h', '1d', '5d', '1wk', '1mo', '3mo'}
 AVAILABLE_PERIOD = {'1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max'}
-DATE_PATTERN = re.compile("^(\d{4})-(\d{2})-(\d{2})$")
+DATE_PATTERN = re.compile("^(\\d{4})-(\\d{2})-(\\d{2})$")
 CLOSE_PRICE = 'Close'
 HIGH_PRICE = 'High'
 LOW_PRICE = 'Low'
@@ -20,7 +20,7 @@ def get_stock_by_date(stock_name, start_date, end_date, interval):
 
     __check_date_in_correct_format(start_date)
     __check_date_in_correct_format(end_date)
-    __check_start_date_before_end(start_date,end_date)
+    __check_start_date_before_end(start_date, end_date)
     try:
         response = yf.Ticker(stock_name).history(interval=interval, start=start_date, end=end_date)
         return handle_response(response)

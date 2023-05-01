@@ -5,6 +5,7 @@ import Yfinance as Yf
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
+
 class Indicators(enum.Enum):
     RSI = 'rsi_algo'
     MACD = 'macd_algo'
