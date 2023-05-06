@@ -1,6 +1,7 @@
 import re
 import yfinance as yf
-from stockAnalysis.exceptions.StockDataException import StockDataException
+from stockAnalysis.exceptions.BadStockRequestException import BadStockRequestException
+from stockAnalysis.exceptions.StockNotFoundException import StockNotFoundException
 import datetime
 
 
@@ -25,23 +26,21 @@ def get_stock_by_date(stock_name, start_date, end_date, interval):
         response = yf.Ticker(stock_name).history(interval=interval, start=start_date, end=end_date)
         return handle_response(response)
     except ValueError:
-        raise StockDataException('symbol not found')
-    except Exception as e:
-        raise StockDataException(e.args[0])
+        raise StockNotFoundException()
 
 
 def handle_response(response):
     if len(response) == 0:
-        raise StockDataException('can not find symbol / there was no trading in this date range')
+        raise StockNotFoundException()
 
     return response
 
 
 def __check_date_in_correct_format(date):
     if not DATE_PATTERN.match(date):
-        raise StockDataException('date is not match, please make sure the date is in this format: "YYYY-MM-DD"')
+        raise BadStockRequestException('date is not match, please make sure the date is in this format: "YYYY-MM-DD"')
 
 
 def __check_start_date_before_end(start, end):
     if datetime.datetime.strptime(start, '%Y-%m-%d') >= datetime.datetime.strptime(end, '%Y-%m-%d'):
-        raise StockDataException('Invalid input - start date cannot be after end date.')
+        raise BadStockRequestException('Invalid input - start date cannot be after end date.')
