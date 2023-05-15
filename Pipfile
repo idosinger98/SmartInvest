@@ -5,9 +5,17 @@ name = "pypi"
 
 [packages]
 django = "*"
+requests = "*"
+yfinance = "*"
+pytest = "*"
+packaging = "*"
+scikit-learn = "*"
+pillow = "*"
 
 [dev-packages]
 flake8 = "*"
+pytest = "*"
+pytest-django = "*"
 
 [requires]
 python_version = "3.9"
