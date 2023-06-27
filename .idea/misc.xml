@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.9.2 (sftp://vagrant@127.0.0.1:2222/home/vagrant/.local/share/virtualenvs/vagrant-gKDsaKU3/bin/python) (3)" project-jdk-type="Python SDK" />
+  <component name="PyCharmProfessionalAdvertiser">
+    <option name="shown" value="true" />
+  </component>
 </project>
