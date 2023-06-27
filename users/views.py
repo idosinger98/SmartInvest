@@ -1,7 +1,28 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
-from users.forms import LoginForm
+from users.forms import LoginForm, RegisterForm, ProfileForm, PasswordChangingForm
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+
+
+def sign_up_view(request):
+    if request.method == 'GET':
+        user_form = RegisterForm()
+        profile_form = ProfileForm()
+        return render(request, 'users/register.html', {'user_form': user_form, 'profile_form': profile_form})
+
+    if request.method == 'POST':
+        user_form = RegisterForm(request.POST)
+        profile_form = ProfileForm(request.POST, request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user_id = user
+            profile.save()
+            return redirect('login')
+        else:
+            return render(request, 'users/register.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
 def sign_in_view(request):
@@ -19,7 +40,7 @@ def sign_in_view(request):
             if user:
                 login(request, user)
                 messages.success(request, f'Hi {username.title()}, welcome back!')
-                return redirect('login')
+                return redirect('change_password')
 
         messages.error(request, 'Invalid username or password')
         return render(request, 'users/login.html', {'form': form})
@@ -29,3 +50,8 @@ def sign_out(request):
     logout(request)
     messages.success(request, 'You have been logged out.')
     return redirect('login')
+
+
+class PasswordsChangeView(PasswordChangeView):
+    form_class = PasswordChangingForm
+    success_url = reverse_lazy('login')
