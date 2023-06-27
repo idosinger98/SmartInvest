@@ -108,3 +108,8 @@ def test_calculate_algos(sample_df):
     assert 'RSI' in result
     assert 'MACD' in result
     assert len(result.keys()) == 2
+
+def test_mad_algo(sample_df):
+    result = algos.mad_algo(sample_df)
+    expected_result = 3.2102874755859375  # Expected result based on the sample_df
+    assert result == expected_result
