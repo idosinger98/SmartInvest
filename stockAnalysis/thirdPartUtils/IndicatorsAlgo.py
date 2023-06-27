@@ -115,3 +115,4 @@ def ma_golden_death_cross(stock_df):
     result_df = pd.concat([ma_21, ma_200], axis=1, keys=['moving average-21', 'moving average-200'])
 
     return result_df
+    
