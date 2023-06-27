@@ -5,6 +5,7 @@ from users.forms import LoginForm, RegisterForm, ProfileForm, PasswordChangingFo
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 
+
 def sign_up_view(request):
     if request.method == 'GET':
         user_form = RegisterForm()
