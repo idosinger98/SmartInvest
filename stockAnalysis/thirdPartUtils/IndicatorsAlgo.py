@@ -1,5 +1,6 @@
 import enum
 import sys
+
 import pandas as pd
 from . import Yfinance as Yf
 import numpy as np
@@ -17,6 +18,8 @@ class Indicators(enum.Enum):
     LINEAR_REGRESSION = 'linear_reg_algo'
     STOCHASTIC_OSCILLATOR = 'stochastic_algo'
     FORCE = 'force_algo'
+    MAD = 'mad_algo'                    # Mean Absolute Deviation
+    MA21 = 'ma_golden_death_cross'
 
 
 def calculate_algorithms(chosen_algos_list, stock_df):
@@ -91,5 +94,24 @@ def stochastic_algo(stock_df):
     k_percent_smooth = k_percent.rolling(window=3).mean()
     d_percent = k_percent_smooth.rolling(window=3).mean()
     result_df = pd.concat([k_percent_smooth, d_percent], axis=1, keys=['k percent smooth', 'd percent'])
+
+    return result_df
+
+
+def mad_algo(stock_df):
+    mean_price = np.mean(stock_df[Yf.CLOSE_PRICE])
+    abs_diff_from_mean = np.abs(mean_price - stock_df[Yf.CLOSE_PRICE])
+
+    return np.mean(abs_diff_from_mean)
+
+
+def ma_golden_death_cross(stock_df):
+    prices = stock_df[Yf.CLOSE_PRICE].values
+    if len(prices) < 200:
+        return None
+
+    ma_21 = prices.rolling(window=21).mean()
+    ma_200 = prices.rolling(window=200).mean()
+    result_df = pd.concat([ma_21, ma_200], axis=1, keys=['moving average-21', 'moving average-200'])
 
     return result_df
