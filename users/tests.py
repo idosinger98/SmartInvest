@@ -1,11 +1,19 @@
 import pytest
-from users.forms import LoginForm, RegisterForm, ProfileForm
-from django.urls import reverse
 from django.contrib.auth.models import User
+from django.urls import reverse
+from users.forms import LoginForm, RegisterForm, ProfileForm
 from users.models import Profile
 
 USERNAME = "testusername3"
 PASSWORD = 'testpassword3'
+
+
+@pytest.fixture
+def authenticated_user(client):
+    user = User.objects.create_user(username='testuser', password='testpassword')
+    client.force_login(user)
+    profile = Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
+    return client
 
 
 @pytest.mark.django_db
@@ -54,6 +62,7 @@ class TestSignUpView:
         # Create a test profile data
         profile_data = {
             'phone_number': '1234567890',
+            'country': 'US',  # Add the country field with a valid value
         }
 
         user_form = RegisterForm(user_data)
@@ -86,3 +95,73 @@ class TestSignUpView:
         user_form = RegisterForm(user_data)
         assert not user_form.is_valid()
         assert not User.objects.filter(username='testuser').exists()
+
+
+@pytest.mark.django_db
+class TestChangePasswordView:
+    def test_password_change_view(self, authenticated_user):
+        url = reverse('change_password')
+        response = authenticated_user.get(url)
+        assert response.status_code == 200
+
+    def test_password_change_POST(self, client):
+        user = User.objects.create_user(username='testuser', password='testpassword')
+        client.force_login(user)
+        url = reverse('change_password')
+        data = {
+            'old_password': 'testpassword',
+            'new_password1': 'newtestpassword',
+            'new_password2': 'newtestpassword',
+        }
+        response = client.post(url, data)
+        assert response.status_code == 302  # Check for a redirect
+        assert response.url == reverse('login')  # Check the redirect URL
+        user.refresh_from_db()
+        assert user.check_password('newtestpassword')  # Verify the password change
+
+
+@pytest.mark.django_db
+class TestEditProfileView:
+    def test_get_edit_profile_view(self, authenticated_user):
+        response = authenticated_user.get(reverse('edit_profile'))
+        assert response.status_code == 200
+        assert 'users/edit_profile.html' in response.templates[0].name
+        assert 'user_form' in response.context
+        assert 'profile_form' in response.context
+
+    def test_post_valid_form(self, authenticated_user):
+        data = {
+            'username': 'newusername',
+            'email': 'newemail@example.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'phone_number': '1234567890',
+            'country': 'US',
+        }
+        response = authenticated_user.post(reverse('edit_profile'), data=data)
+        assert response.status_code == 302
+        assert response.url == reverse('show_details')
+
+        # Perform additional assertions to check the updated user and profile data
+        user = User.objects.get(username='newusername')
+        assert user.email == 'newemail@example.com'
+        assert user.first_name == 'John'
+        assert user.last_name == 'Doe'
+        profile = user.profile
+        assert profile.phone_number == '1234567890'
+        assert profile.country == 'US'
+
+    def test_post_invalid_form(self, authenticated_user):
+        # Simulate an invalid form submission
+        data = {
+            'username': '',  # Invalid, username is required
+            'email': '',  # Invalid, email is required
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'phone_number': '1234567890',
+            'country': 'US',
+            # Include any other required form fields
+        }
+        response = authenticated_user.post(reverse('edit_profile'), data=data)
+        assert response.status_code == 200
+        assert 'users/edit_profile.html' in response.templates[0].name
