@@ -11,6 +11,7 @@ pytest = "*"
 packaging = "20.9"
 scikit-learn = "*"
 pillow = "*"
+django-countries = "*"
 
 [dev-packages]
 flake8 = "*"
