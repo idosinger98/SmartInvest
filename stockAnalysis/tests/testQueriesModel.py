@@ -4,6 +4,7 @@ from django.db.models import QuerySet
 from users.models import Profile
 from stockAnalysis.models import AnalyzedStocks
 
+
 @pytest.fixture
 @pytest.mark.django_db
 def test_user(db):
@@ -11,6 +12,7 @@ def test_user(db):
     user = User.objects.create_user(username='test_user', password='test_password')
     profile = Profile.objects.create(user_id=user, phone_number='1234567890')
     return profile
+
 
 @pytest.fixture
 @pytest.mark.django_db
@@ -24,12 +26,14 @@ def test_analyzed_stock(db, test_user):
     )
     return analyzed_stock
 
+
 @pytest.mark.django_db
 def test_get_user_stocks(test_user, test_analyzed_stock):
     # Test the get_user_stocks() method
     user_stocks = AnalyzedStocks.objects.get_user_stocks(test_user.id)
     assert isinstance(user_stocks, QuerySet)
     assert test_analyzed_stock in user_stocks
+
 
 @pytest.mark.django_db
 def test_get_community_stocks(test_analyzed_stock):
