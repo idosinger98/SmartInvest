@@ -28,18 +28,17 @@ class Post(models.Model):
     objects = PostManager()
 
 
-class ReviewManager(models.Manager):
+class CommentManager(models.Manager):
 
     def get_all_reviews_on_post(self, post_id: int):
         return self.filter(post_id__id=post_id)
 
 
-class Review(models.Model):
+class Comment(models.Model):
     id = models.BigAutoField(primary_key=True)
     publisher_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
     content = models.TextField()
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)
     date = models.DateTimeField(default=timezone.now)
-    objects = ReviewManager()
-
+    objects = CommentManager()
