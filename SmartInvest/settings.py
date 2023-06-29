@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'community.apps.CommunityConfig',
+    'stockAnalysis.apps.StockanalysisConfig',
 ]
 
 MIDDLEWARE = [
