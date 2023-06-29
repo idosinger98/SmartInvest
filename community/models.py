@@ -21,7 +21,8 @@ class PostManager(models.Manager):
 
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)
-    analysis_id = models.OneToOneField(AnalyzedStocks, on_delete=models.CASCADE)
+    # analysis_id = models.OneToOneField(AnalyzedStocks, on_delete=models.CASCADE)
+    analysis_id = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     date = models.DateTimeField(default=timezone.now)
     objects = PostManager()
