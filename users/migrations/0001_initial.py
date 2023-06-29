@@ -20,10 +20,15 @@ class Migration(migrations.Migration):
             name='Profile',
             fields=[
                 ('profile_id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('phone_number', models.CharField(max_length=10, validators=[django.core.validators.RegexValidator(message='Phone number must be numeric.', regex='^[0-9]*$'), django.core.validators.MinLengthValidator(10)])),
+                ('phone_number', models.CharField(max_length=10,
+                                                  validators=[django.core.validators.RegexValidator
+                                                              (message='Phone number must be numeric.',
+                                                               regex='^[0-9]*$'),
+                                                              django.core.validators.MinLengthValidator(10)])),
                 ('image', models.ImageField(blank=True, null=True, upload_to='images/')),
                 ('country', django_countries.fields.CountryField(max_length=2)),
-                ('user_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('user_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE,
+                                                 to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

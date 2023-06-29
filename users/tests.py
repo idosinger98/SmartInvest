@@ -12,7 +12,7 @@ PASSWORD = 'testpassword3'
 def authenticated_user(client):
     user = User.objects.create_user(username='testuser', password='testpassword')
     client.force_login(user)
-    profile = Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
+    Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
     return client
 
 
