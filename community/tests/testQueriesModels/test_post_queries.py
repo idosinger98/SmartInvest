@@ -42,3 +42,17 @@ class TestPostManager:
         assert Post.objects.sort_posts_by_popularity()[0] == post_2  # popularity = 14
         assert Post.objects.sort_posts_by_popularity()[1] == post_3  # popularity = 13
         assert Post.objects.sort_posts_by_popularity()[2] == post_1  # popularity = 11
+
+    def test_get_posts_by_publisher_id(self, make_post, test_user, test_user2, test_user3,
+                                       test_analyzed_stock, test_analyzed_stock2, test_analyzed_stock3):
+        analyzed_stock_1 = test_analyzed_stock
+        analyzed_stock_2 = test_analyzed_stock2
+        analyzed_stock_3 = test_analyzed_stock3
+
+        post_1 = make_post(analysis_id=analyzed_stock_1)
+        post_2 = make_post(analysis_id=analyzed_stock_2)
+        post_3 = make_post(analysis_id=analyzed_stock_3)
+
+        assert Post.objects.get_posts_by_publisher_id(post_1.analysis_id.analyst_id.profile_id)[0] == post_1
+        assert Post.objects.get_posts_by_publisher_id(post_2.analysis_id.analyst_id.profile_id)[1] == post_2
+        assert Post.objects.get_posts_by_publisher_id(post_3.analysis_id.analyst_id.profile_id)[2] == post_3

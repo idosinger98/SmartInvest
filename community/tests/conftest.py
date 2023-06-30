@@ -2,7 +2,7 @@ import pytest
 from django.utils import timezone
 from community.models import Post
 from community.models import Comment
-from users.models import Profile
+from users.models import Profile, User
 from stockAnalysis.models import AnalyzedStocks
 from stockAnalysis.tests.testQueriesModel import test_user, test_analyzed_stock
 
@@ -23,7 +23,7 @@ def make_post(db, test_analyzed_stock):
 
 @pytest.fixture
 @pytest.mark.django_db
-def make_comment(db, make_post):
+def make_comment(db, make_post, test_user):
     def make(
         publisher_id: Profile = test_user,
         content: str = 'test comment',
@@ -31,11 +31,14 @@ def make_comment(db, make_post):
         likes: int = 0,
         time: timezone = timezone.now(),
     ):
-        comment = Comment.objects.create(publisher_id=publisher_id,
-                                         content=content,
-                                         post_id=post_id,
-                                         likes=likes,
-                                         time=time)
+
+        comment = Comment.objects.create(
+            publisher_id=publisher_id,
+            content=content,
+            post_id=post_id,
+            likes=likes,
+            time=time
+        )
         return comment
 
     return make
@@ -65,3 +68,21 @@ def test_analyzed_stock3(db, test_user):
         is_public=True
     )
     return analyzed_stock
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def test_user2(db):
+    # Create a test user object for the analyst_id field
+    user = User.objects.create_user(username='test_user2', password='test_password2')
+    profile = Profile.objects.create(user_id=user, phone_number='1234567890')
+    return profile
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def test_user3(db):
+    # Create a test user object for the analyst_id field
+    user = User.objects.create_user(username='test_user3', password='test_password3')
+    profile = Profile.objects.create(user_id=user, phone_number='1234567890')
+    return profile

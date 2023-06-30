@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.db.models import F, Count
 from users.models import Profile
 from stockAnalysis.models import AnalyzedStocks
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 # popularity = likes + 5 * Count(comments)
@@ -20,9 +22,9 @@ class PostManager(models.Manager):
     def sort_posts_by_popularity(self):
         return self.annotate(popularity=F('likes') + 5 * Count('comment')).order_by('-popularity')
 
-    # def get_posts_by_publisher_id(self, publisher_id: int):
-    #     analyzed_stocks_list = list(AnalyzedStocks.get_all_user_analyzes(id=publisher_id))
-    #     return self.filter(analysis_id__in=analyzed_stocks_list)
+    def get_posts_by_publisher_id(self, publisher_id: int):
+        analyzed_stocks_list = AnalyzedStocks.objects.get_user_stocks(analyst_id=publisher_id)
+        return self.filter(analysis_id__in=analyzed_stocks_list)
 
 
 class Post(models.Model):
