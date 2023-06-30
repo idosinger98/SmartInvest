@@ -16,9 +16,6 @@ class PostManager(models.Manager):
     def sort_posts_by_time(self):
         return self.get_queryset().order_by('-time')
 
-    def sort_posts_by_likes(self):
-        return self.get_queryset().order_by('-likes')
-
     def sort_posts_by_popularity(self):
         return self.annotate(popularity=F('likes') + 5 * Count('comment')).order_by('-popularity')
 
