@@ -2,6 +2,7 @@ from django.db import migrations, transaction
 from users.models import Profile
 from stockAnalysis.models import AnalyzedStocks
 
+
 class Migration(migrations.Migration):
 
     initial = True

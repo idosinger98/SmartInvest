@@ -10,7 +10,7 @@ from stockAnalysis.models import AnalyzedStocks
 def test_user(db):
     # Create a test user object for the analyst_id field
     user = User.objects.create_user(username='test_user', password='test_password')
-    profile = Profile.objects.create(user_id=user, phone_number='1234567890')
+    profile = Profile.objects.create(profile_id=user, phone_number='1234567890',country='US')
     return profile
 
 
