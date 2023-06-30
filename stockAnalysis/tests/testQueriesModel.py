@@ -10,7 +10,7 @@ from stockAnalysis.models import AnalyzedStocks
 def test_user(db):
     # Create a test user object for the analyst_id field
     user = User.objects.create_user(username='test_user', password='test_password')
-    profile = Profile.objects.create(profile_id=user, phone_number='1234567890',country='US')
+    profile = Profile.objects.create(user_id=user, phone_number='1234567890',country='US')
     return profile
 
 
@@ -30,7 +30,7 @@ def test_analyzed_stock(db, test_user):
 @pytest.mark.django_db
 def test_get_user_stocks(test_user, test_analyzed_stock):
     # Test the get_user_stocks() method
-    user_stocks = AnalyzedStocks.objects.get_user_stocks(test_user.id)
+    user_stocks = AnalyzedStocks.objects.get_user_stocks(test_user.profile_id)
     assert isinstance(user_stocks, QuerySet)
     assert test_analyzed_stock in user_stocks
 
