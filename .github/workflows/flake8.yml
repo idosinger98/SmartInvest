@@ -18,13 +18,13 @@ jobs:
         run: pipenv run flake8 --exclude=testIndicatorsAlgo.py --max-line-length 120
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: fedora:34
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Install Pipenv and Git
         run: dnf install -y pipenv git
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Setup environment
         run: pipenv sync --dev
       - name: Upload server
