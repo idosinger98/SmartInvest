@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'stockAnalysis.apps.StockanalysisConfig',
+    'review.apps.ReviewConfig',
 ]
 
 MIDDLEWARE = [
