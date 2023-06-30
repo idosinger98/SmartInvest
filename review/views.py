@@ -24,4 +24,5 @@ def createReviewView(request):
             return redirect('change_password')
         else:
             messages.error(request, "You must enter rating")
+
     return render(request, 'review/create_review.html', {'form': form})
