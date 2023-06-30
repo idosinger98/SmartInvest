@@ -1,7 +1,12 @@
 from django.db import models
 from django.utils import timezone
+from django.db.models import F, Count
 from users.models import Profile
 from stockAnalysis.models import AnalyzedStocks
+
+
+# popularity = likes + 5 * Count(comments)
+# TODO create a factory for the users, profiles, analized_stocks
 
 
 class PostManager(models.Manager):
@@ -12,9 +17,9 @@ class PostManager(models.Manager):
     def sort_posts_by_likes(self):
         return self.get_queryset().order_by('-likes')
 
-    # def sort_posts_by_comment_count(self):
-    #     return self.get_queryset().annotate(comment_count=models.Count('comment')).order_by('-comment_count')
-    #
+    def sort_posts_by_popularity(self):
+        return self.annotate(popularity=F('likes') + 5 * Count('comment')).order_by('-popularity')
+
     # def get_posts_by_publisher_id(self, publisher_id: int):
     #     analyzed_stocks_list = list(AnalyzedStocks.get_all_user_analyzes(id=publisher_id))
     #     return self.filter(analysis_id__in=analyzed_stocks_list)
