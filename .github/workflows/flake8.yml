@@ -1,5 +1,7 @@
-name: Flake8
+name: check code and tests
+
 on: pull_request
+
 jobs:
   flake8:
     name: Check code with Flake8
@@ -14,3 +16,17 @@ jobs:
         run: pipenv sync --dev
       - name: Run Flake8
         run: pipenv run flake8 --exclude=testIndicatorsAlgo.py --max-line-length 120
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Pipenv and Git
+        run: dnf install -y pipenv git
+      - name: Setup environment
+        run: pipenv sync --dev
+      - name: Upload server
+        run: pipenv run python manage.py runserver 0.0.0.0:8000
+      - name: Run PyTest
+        run: pipenv run pytest -v
