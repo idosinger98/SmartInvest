@@ -99,6 +99,7 @@
                                 <small class="error text-danger">{{ profile_form.image.errors|striptags }}</small>
                             {% endif %}
                         </div>
+                  <p class="text-center" style="color: black;">Already have an account? <a href="{% url 'login' %}">Login Here</a></p>
                         <button type="submit" class="btn btn-block btn-primary">Register</button>
                     </form>
                 </div>
