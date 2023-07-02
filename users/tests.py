@@ -11,8 +11,8 @@ PASSWORD = 'testpassword3'
 @pytest.fixture
 def authenticated_user(client):
     user = User.objects.create_user(username='testuser', password='testpassword')
-    client.force_login(user)
     Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
+    client.force_login(user)
     return client
 
 
@@ -22,6 +22,16 @@ class TestLoginView:
         response = client.get('/login/')
         assert response.status_code == 200
         assert 'users/login.html' in response.templates[0].name
+
+    def test_sign_in_POST_valid(self, client):
+        user = User.objects.create_user(username='testuser', password='testpassword')
+        Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
+        response = client.post('/login/', {
+            'username': "testuser",
+            'password': "testpassword",
+        })
+        assert response.status_code == 302
+        assert response.url == reverse('show_details')
 
     def test_sign_in_POST_invalid(self, client):
         response = client.post('/login/', {
@@ -82,7 +92,7 @@ class TestSignUpView:
         assert User.objects.filter(username='testuser').exists()
         assert Profile.objects.filter(user_id__username='testuser').exists()
 
-    def test_sign_up_POST_invalid(self, client):
+    def test_sign_up_POST_invalid(self):
         user_data = {
             'username': 'testuser',
             'first_name': 'Test',
@@ -160,8 +170,29 @@ class TestEditProfileView:
             'last_name': 'Doe',
             'phone_number': '1234567890',
             'country': 'US',
-            # Include any other required form fields
         }
         response = authenticated_user.post(reverse('edit_profile'), data=data)
         assert response.status_code == 200
         assert 'users/edit_profile.html' in response.templates[0].name
+
+
+@pytest.mark.django_db
+class TestResetPasswordView:
+    def test_get_reset_password_page(self, client):
+        response = client.get('/password-reset/')
+        assert response.status_code == 200
+        assert 'users/password_reset.html' in [t.name for t in response.templates]
+
+    def test_post_reset_password_valid(self, client):
+        user = User.objects.create_user(username='testuser', password='testpassword', email='test@example.com')
+        Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
+        response = client.post('/password-reset/', {'email': 'test@example.com'})
+        assert response.status_code == 200
+        assert 'users/reset_password_done.html' in [t.name for t in response.templates]
+
+    def test_post_reset_password_invalid(self, client):
+        user = User.objects.create_user(username='testuser', password='testpassword', email='test@example.com')
+        Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
+        response = client.post('/password-reset/', {'email': 'invalid_email'})
+        assert response.status_code == 200
+        assert 'users/password_reset.html' in [t.name for t in response.templates]

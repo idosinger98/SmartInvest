@@ -12,6 +12,8 @@ packaging = "*"
 scikit-learn = "*"
 pillow = "*"
 django-countries = "*"
+sib-api-v3-sdk = "*"
+python-dotenv = "*"
 
 [dev-packages]
 flake8 = "*"
