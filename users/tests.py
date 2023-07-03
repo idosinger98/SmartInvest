@@ -16,6 +16,12 @@ def authenticated_user(client):
     return client
 
 
+@pytest.fixture
+def unauthenticated_user():
+    user = User.objects.create_user(username='testuser', password='testpassword', email='test@example.com')
+    return Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
+
+
 @pytest.mark.django_db
 class TestLoginView:
     def test_enter_login_page(self, client):
@@ -183,16 +189,12 @@ class TestResetPasswordView:
         assert response.status_code == 200
         assert 'users/password_reset.html' in [t.name for t in response.templates]
 
-    def test_post_reset_password_valid(self, client):
-        user = User.objects.create_user(username='testuser', password='testpassword', email='test@example.com')
-        Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
+    def test_post_reset_password_valid(self, client, unauthenticated_user):
         response = client.post('/password-reset/', {'email': 'test@example.com'})
         assert response.status_code == 200
         assert 'users/reset_password_done.html' in [t.name for t in response.templates]
 
-    def test_post_reset_password_invalid(self, client):
-        user = User.objects.create_user(username='testuser', password='testpassword', email='test@example.com')
-        Profile.objects.create(user_id=user, phone_number='1234567890', country='US')
+    def test_post_reset_password_invalid(self, client, unauthenticated_user):
         response = client.post('/password-reset/', {'email': 'invalid_email'})
         assert response.status_code == 200
         assert 'users/password_reset.html' in [t.name for t in response.templates]
