@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'stockAnalysis.apps.StockanalysisConfig',
     'review.apps.ReviewConfig',
+    'community.apps.CommunityConfig',
 ]
 
 MIDDLEWARE = [
