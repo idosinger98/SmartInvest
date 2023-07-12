@@ -1,6 +1,5 @@
 import pytest
 from community.models import Comment
-from stockAnalysis.tests.testQueriesModel import test_user
 from django.utils import timezone
 from datetime import timedelta
 
