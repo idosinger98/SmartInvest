@@ -1,3 +1,5 @@
-# from django.contrib import admin
+from django.contrib import admin
+from stockAnalysis.models import AnalyzedStocks
 
-# Register your models here.
+
+admin.site.register(AnalyzedStocks)
