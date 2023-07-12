@@ -1,23 +1,86 @@
-{%extends 'base.html'%}
+{% load static %}
 
-{%block content%}
-  <div class="center">
-	  <form method="post" class="card" novalidate>
-	  	{% csrf_token %}
-	    <h2 class="text-center">Log in to your account</h2>
-		{% for field in form %}
-	    		{{ field.label_tag }}
-	        	{{ field }}
-	        	{% if field.errors %}
-	        		<small>{{ field.errors|striptags  }}</small>
-	        	{% endif %}
-		{% endfor %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href=https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap rel="stylesheet">
 
-		<input type="submit" value="Login" class="btn btn-primary full-width">
-		<hr>
-		<p class="text-center">Forgot your password <a href="">Reset Password</a></p>
-		<p class="text-center">Don't have a account? <a href="">Join Now</a></p>
-	</form>
-</div>
+    <link rel="stylesheet" href="{% static 'login/fonts/icomoon/style.css' %}">
+    <link rel="stylesheet" href="{% static 'login/css/owl.carousel.min.css%' %}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'login/css/bootstrap.min.css' %}">
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
 
-{%endblock content%}
+    <title>Login</title>
+  </head>
+  <body>
+
+  <div class="d-lg-flex half">
+    <div class="bg order-2 order-md-1" style="background-image: url({% static 'login/images/stock.jpg' %});"></div>
+    <div class="contents order-2 order-md-1">
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-7">
+            <div class="mb-4">
+              <h3>Sign In</h3>
+            </div>
+            {% if messages %}
+            <div class="alert alert-danger">
+              {% for message in messages %}
+                {{ message }}
+              {% endfor %}
+            </div>
+            {% endif %}
+            <form method="post" action="{% url 'login' %}">
+              {% csrf_token %}
+              <div class="form-group">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username">
+                {% if form.username.errors %}
+                <small class="text-danger">{{ form.username.errors|striptags }}</small>
+                {% endif %}
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
+                {% if form.password.errors %}
+                <small class="text-danger">{{ form.password.errors|striptags }}</small>
+                {% endif %}
+              </div>
+
+              <div class="d-flex mb-5 align-items-center">
+                <label class="control control--checkbox mb-0">
+                  <span class="caption">Remember me</span>
+                  <input type="checkbox" checked="checked" name="remember_me">
+                  <div class="control__indicator"></div>
+                </label>
+                <span class="ml-auto"><a href="{% url 'password-reset' %}" class="forgot-pass">Forgot Password</a></span>
+              </div>
+          <p class="text-center" style="color: black;">Don't have an account? <a href="{% url 'register' %}">Join Now</a></p>
+
+              <button type="submit" class="btn btn-block btn-primary">Log In</button>
+
+              <span class="d-block text-center my-4 text-muted">&mdash; or &mdash;</span>
+
+              <div class="social-login">
+                <a href="#" class="facebook btn d-flex justify-content-center align-items-center">
+                  <span class="icon-facebook mr-3"></span> Login with Facebook
+                </a>
+                <a href="#" class="twitter btn d-flex justify-content-center align-items-center">
+                  <span class="icon-twitter mr-3"></span> Login with  Twitter
+               </a>
+                <a href="#" class="google btn d-flex justify-content-center align-items-center">
+                  <span class="icon-google mr-3"></span> Login with  Google
+                </a>
+              </div>
+            </form>
+         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </body>
+</html>

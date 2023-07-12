@@ -5,6 +5,7 @@ from users.models import Profile
 from django.core.exceptions import ValidationError
 from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
+from django.contrib.auth.forms import PasswordResetForm
 
 
 class LoginForm(forms.Form):
@@ -74,3 +75,18 @@ class UpdateProfileForm(forms.ModelForm):
         if Profile.objects.exclude(user_id=self.instance.user_id).filter(phone_number=phone_number).exists():
             raise forms.ValidationError('Phone number already exists.')
         return phone_number
+
+
+class ResetPasswordForm(PasswordResetForm):
+    email = forms.EmailField(
+        max_length=254,
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+        label='',
+        help_text='Enter the email address associated with your account.'
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError('There is no account associated with this email')
+        return email
