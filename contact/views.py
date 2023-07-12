@@ -1,4 +1,3 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from contact.forms import ContactForm
 import sib_api_v3_sdk

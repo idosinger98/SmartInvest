@@ -1,7 +1,6 @@
 import pytest
 from django.contrib.messages import get_messages
 from django.urls import reverse
-from contact.forms import ContactForm
 
 
 @pytest.mark.django_db
