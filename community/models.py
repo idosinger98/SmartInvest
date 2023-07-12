@@ -5,10 +5,6 @@ from users.models import Profile
 from stockAnalysis.models import AnalyzedStocks
 
 
-# popularity = likes + 5 * Count(comments)
-# TODO create a factory for the users, profiles, analized_stocks
-
-
 class PostManager(models.Manager):
 
     def sort_posts_by_time(self):
