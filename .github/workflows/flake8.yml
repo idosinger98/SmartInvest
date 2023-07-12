@@ -28,7 +28,9 @@ jobs:
         run: pipenv sync --dev
       - name: Upload server
         run: pipenv run python manage.py runserver 0.0.0.0:8000 &
+      - name: Run PyTest
+        run: |
+          echo "mail: $MAIL_KEY"
+          pipenv run pytest -v
         env:
           MAIL_KEY: ${{ secrets.MAIL_KEY }}
-      - name: Run PyTest
-        run: pipenv run pytest -v
