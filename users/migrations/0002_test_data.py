@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     def generate_data(apps, schema_editor):
         test_data = [('TalTheUser', 'TalPassword', 'Tal', 'Reinfeld', 'tal@email.com', '111111111', 'US'),
-                     ('IdoTheUser', 'TalPassword', 'Ido', 'Singer', 'ido@email.com', '222222222', 'US'),
+                     ('Manager', 'TalPassword', 'Smart', 'Invest', 'smartinvest850@gmail.com', '222222222', 'US'),
                      ('Ido2TheUser', 'Ido2Password', 'Ido2', 'Yekutiel', 'ido2@email.com', '333333333', 'US'),
                      ('PatTheUser', 'PatPassword', 'Pat', 'Kaplun', 'pat@email.com', '444444444', 'US'),
                      ('OfirTheUser', 'OfirPassword', 'Ofir', 'Bachar', 'ofir@email.com', '555555555', 'US'),
