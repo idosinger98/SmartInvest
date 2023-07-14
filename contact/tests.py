@@ -21,8 +21,9 @@ class TestContactView:
         response = client.post(url, data=form_data, follow=True)
         assert response.status_code == 200
         messages = list(get_messages(response.wsgi_request))
+        assert len(messages) > 0  # Check if messages list is not empty
         assert messages[0].level_tag == 'success'
-        assert messages[0].message == 'Email send successfully'
+        assert messages[0].message == 'Email sent successfully'
 
     def test_contact_form_post_invalid_email(self, client):
         url = reverse('contact')

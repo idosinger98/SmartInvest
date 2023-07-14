@@ -1,11 +1,8 @@
-from django.contrib import messages
 from contact.forms import ContactForm
-import sib_api_v3_sdk
-from sib_api_v3_sdk.rest import ApiException
 from django.http import HttpResponse
-import os
 from dotenv import load_dotenv
-from email_utils import connectedApiAndSendEmail
+from utils.email_utils import connectedApiAndSendEmail
+from django.contrib import messages
 
 
 load_dotenv()
@@ -22,7 +19,7 @@ def contact(request):
             }
             message = f"Name: {body['name']}<br><br>Email: {body['email']}<br><br>Message: {body['message']}"
             connectedApiAndSendEmail(subject_str=form.cleaned_data['subject'], content=message)
-
+            messages.success(request, 'Email sent successfully')  # Add success message
             return HttpResponse()
 
     return HttpResponse()
