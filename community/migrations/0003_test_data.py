@@ -75,20 +75,16 @@ class Migration(migrations.Migration):
                 for profile in profiles:
                     post.likes.add(profile)
 
-            post.save()
-
         with transaction.atomic():
-            for publisher_id, content, post_id, profiles, time in comment_test_data:
+            for publisher_id, content, post_id, comments, time in comment_test_data:
                 comment = Comment.objects.create(
                     publisher_id=Profile.objects.get(pk=publisher_id),
                     content=content,
                     post_id=Post.objects.get(pk=post_id),
                     time=time,
                 )
-                for profile in profiles:
-                    comment.likes.add(profile)
-
-            comment.save()
+                for com in comments:
+                    comment.likes.add(com)
 
     operations = [
         migrations.RunPython(generate_data),

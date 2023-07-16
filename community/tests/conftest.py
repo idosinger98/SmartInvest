@@ -36,6 +36,24 @@ def test_user3(db):
 
 @pytest.fixture
 @pytest.mark.django_db
+def test_user4(db):
+    # Create a test user object for the analyst_id field
+    user = User.objects.create_user(username='test_user4', password='test_password4')
+    profile = Profile.objects.create(user_id=user, phone_number='1234567890')
+    return profile
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def test_user5(db):
+    # Create a test user object for the analyst_id field
+    user = User.objects.create_user(username='test_user5', password='test_password5')
+    profile = Profile.objects.create(user_id=user, phone_number='1234567890')
+    return profile
+
+
+@pytest.fixture
+@pytest.mark.django_db
 def test_analyzed_stock(db, test_user):
     # Create a test AnalyzedStocks object for testing
     analyzed_stock = AnalyzedStocks.objects.create(

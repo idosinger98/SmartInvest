@@ -144,18 +144,52 @@
               </div><!-- End post content -->
 
               <div class="meta-bottom">
-                <button id="likeButton" data-post-id="{{ post.id }}" class="likeButton">{{ post.likes }} &#128077;</button>
+                <button id="likeButton" data-post-id="{{ post.id }}" data-profile-id="5" class="likeButton">
+                  <span id="likesCount">({{ post.likes.count }})</span>
+                  <span id="likeIcon">&#128077;</span>
+                </button>
+
+                  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                  <script>
+                    $(document).ready(function() {
+                      let likeButton = $('#likeButton');
+                      let postId = likeButton.data('post-id');
+                      let profileId = likeButton.data('profile-id');
+
+                      $.ajax({
+                        url: 'check-like/',
+                        method: 'GET',
+                        data: {
+                          'post_id': postId,
+                          'profile_id': profileId
+                        },
+                        success: function(response) {
+                          if (response.liked) {
+                            $('#likeIcon').text('Unlike');
+                          } else {
+                            $('#likeIcon').text('Like');
+                          }
+                        }
+                      });
+                    });
+                  </script>
 
                   <script>
                     document.getElementById('likeButton').addEventListener('click', function() {
+                      let profileId = this.getAttribute('data-profile-id');
                       let postId = this.getAttribute('data-post-id');
                       let xhr = new XMLHttpRequest();
-                      xhr.open('POST', '/community/like_post/' + postId + '/');
+                      xhr.open('POST', '/community/like_post/' + postId + '/' + profileId + '/');
                       xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                       xhr.onload = function() {
                           if (xhr.status === 200) {
                               let response = JSON.parse(xhr.responseText);
-                              document.getElementById('likeButton').innerHTML = response.likes + ' &#128077;';
+                              if(response.is_liked) {
+                                document.getElementById('likeButton').innerHTML = '(' + response.likes + ') Like';
+                              }
+                              else {
+                                document.getElementById('likeButton').innerHTML = '(' + response.likes + ') Unlike';
+                              }
                           }
                       };
                       xhr.send();
@@ -202,6 +236,58 @@
                     <p>
                       {{comment.content}}
                     </p>
+                    <div class="meta-bottom">
+                      <button id="likeCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-profile-id="5" class="likeButton">
+                        <span id="likesCommentCount{{ forloop.counter }}">({{ comment.likes.count }})</span>
+                        <span id="likeCommentIcon{{ forloop.counter }}">&#128077;</span>
+                      </button>
+                      <script>
+                        $(document).ready(function() {
+                          let likeCommentButton = $('#likeCommentButton{{ forloop.counter }}');
+                          let commentId = likeCommentButton.data('comment-id');
+                          let profileId = likeCommentButton.data('profile-id');
+
+                          $.ajax({
+                            url: 'check-comment-like/',
+                            method: 'GET',
+                            data: {
+                              'comment_id': commentId,
+                              'profile_id': profileId
+                            },
+                            success: function(response) {
+                              let likeCommentIcon = $('#likeCommentIcon{{ forloop.counter }}')
+                              if (response.liked) {
+                                likeCommentIcon.text('Unlike');
+                              } else {
+                                likeCommentIcon.text('Like');
+                              }
+                            }
+                          });
+                        });
+                      </script>
+                      <script>
+                        document.getElementById('likeCommentButton{{ forloop.counter }}').addEventListener('click', function() {
+                          let profileId = this.getAttribute('data-profile-id');
+                          let commentId = this.getAttribute('data-comment-id');
+                          let xhr = new XMLHttpRequest();
+                          xhr.open('POST', '/community/like_comment/' + commentId + '/' + profileId + '/');
+                          xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                          xhr.onload = function() {
+                              if (xhr.status === 200) {
+                                  let response = JSON.parse(xhr.responseText);
+                                  let likeCommentIcon = document.getElementById('likeCommentButton{{ forloop.counter }}')
+                                  if(response.is_liked) {
+                                    likeCommentIcon.innerHTML = '(' + response.likes + ') Like';
+                                  }
+                                  else {
+                                    likeCommentIcon.innerHTML = '(' + response.likes + ') Unlike';
+                                  }
+                              }
+                          };
+                          xhr.send();
+                        });
+                      </script>
+              </div>
                   </div>
                 </div>
               </div>

@@ -11,21 +11,38 @@ class PostManager(models.Manager):
         return self.get_queryset().order_by('-time')
 
     def sort_posts_by_popularity(self):
-        return self.annotate(popularity=F('likes') + 5 * Count('comment')).order_by('-popularity')
+        return self.get_queryset().annotate(
+            popularity=(5 * Count('comment', distinct=True)) + Count('likes', distinct=True)).order_by('-popularity')
+
+    def sort_posts_by_likes(self):
+        return self.get_queryset().annotate(popularity=Count('likes')).order_by('-popularity')
+
+    def sort_posts_by_comments(self):
+        return self.get_queryset().annotate(popularity=Count('comment')).order_by('-popularity')
 
     def get_posts_by_publisher_id(self, publisher_id: int):
         analyzed_stocks_list = AnalyzedStocks.objects.get_user_stocks(analyst_id=publisher_id)
         return self.filter(analysis_id__in=analyzed_stocks_list)
 
-    # def like_post(self, post_id):
-    #     post = Post.objects.get(id=post_id)
-    #     post.likes += 1
-    #     post.save()
-    #
-    # def unlike_post(self, post_id):
-    #     post = Post.objects.get(id=post_id)
-    #     post.likes -= 1
-    #     post.save()
+    # def get_amount_of_likes(self, post_id):
+    #     return Post.objects.get(pk=post_id).count('likes')
+
+    def like_post(self, post_id, profile_id):
+        post = Post.objects.get(id=post_id)
+        profile = Profile.objects.get(pk=profile_id)
+        post.likes.add(profile)
+        post.save()
+
+    def unlike_post(self, post_id, profile_id):
+        post = Post.objects.get(id=post_id)
+        profile = Profile.objects.get(pk=profile_id)
+        post.likes.remove(profile)
+        post.save()
+
+    def check_if_profile_liked_the_post(self, post_id, profile_id):
+        profile = Profile.objects.get(pk=profile_id)
+        post = Post.objects.get(pk=post_id)
+        return profile in post.likes.all()
 
 
 class Post(models.Model):
@@ -48,15 +65,27 @@ class CommentManager(models.Manager):
     def sort_comments_by_likes(self, post_id: int):
         return self.get_queryset().annotate(likes_count=models.Count('likes')).order_by('-likes_count')
 
-    # def like_comment(self, comment_id):
-    #     comment = Comment.objects.get(id=comment_id)
-    #     comment.likes += 1
-    #     comment.save()
+    def like_comment(self, comment_id, profile_id):
+        comment = Comment.objects.get(id=comment_id)
+        profile = Profile.objects.get(pk=profile_id)
+        comment.likes.add(profile)
+        comment.save()
+
+    def unlike_comment(self, comment_id, profile_id):
+        comment = Comment.objects.get(id=comment_id)
+        profile = Profile.objects.get(pk=profile_id)
+        comment.likes.remove(profile)
+        comment.save()
 
     def comment_post(self, post_id, content, publisher_id):
         comment = Comment.objects.create(publisher_id=publisher_id, content=content, post_id=post_id)
         comment.save()
         return comment
+
+    def check_if_profile_liked_the_comment(self, comment_id, profile_id):
+        profile = Profile.objects.get(pk=profile_id)
+        comment = Comment.objects.get(pk=comment_id)
+        return profile in comment.likes.all()
 
 
 class Comment(models.Model):
