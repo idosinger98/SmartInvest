@@ -293,31 +293,73 @@
               </div>
               {% endfor %}
 
+<!--              <div class="reply-form">-->
+
+<!--                <h4>Leave a Reply</h4>-->
+
+<!--                <form  method="POST">-->
+<!--                  {% csrf_token %}-->
+<!--                  <div class="row">-->
+<!--                    <div class="col form-group">-->
+<!--                      <textarea name="comment" class="form-control" placeholder="Your Comment*" required></textarea>-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+<!--                  <div class="text-center">-->
+<!--                    <button id="commentButton" type="submit" class="btn btn-primary">Post Comment</button>-->
+<!--                  </div>-->
+<!--                </form>-->
+<!--              </div>-->
               <div class="reply-form">
+  <h4>Leave a Reply</h4>
+  <form id="commentForm" method="POST" action="{% url 'create_comment' post.id 5 %}">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col form-group">
+        <textarea id="commentInput" name="content" class="form-control" placeholder="Your Comment*" required></textarea>
+      </div>
+    </div>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary">Post Comment</button>
+    </div>
+  </form>
+</div>
 
-                <h4>Leave a Reply</h4>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#commentForm').submit(function(event) {
+      event.preventDefault(); // Prevent the default form submission
 
-                <form action="">
+      // Retrieve the comment content and post ID
+      let commentContent = $('#commentInput').val();
+      let postId = {{ post.id }}; // Replace with the actual post ID
+      let profile_id = 5;
 
-                  <div class="row">
-                    <div class="col form-group">
-                      <textarea name="comment" class="form-control" placeholder="Your Comment*"></textarea>
-                    </div>
-                  </div>
-
-                  <div class="text-center">
-                    <button id="commentButton" type="submit" class="btn btn-primary">Post Comment</button>
-
-                  </div>
-
-                </form>
-
-              </div>
-
+      // Send an AJAX request to the comment creation URL
+      $.ajax({
+        url: 'create-comment/', // Replace with the actual comment creation URL
+        method: 'POST',
+        data: {
+          'comment': commentContent,
+          'post_id': postId
+          'profile_id': profile_id
+        },
+        success: function(response) {
+          // Handle the success response
+          console.log('Comment created successfully!');
+          // Optionally, you can perform additional actions like updating the comment section with the newly created comment
+        },
+        error: function(xhr, status, error) {
+          // Handle the error response
+          console.error('Error creating comment:', error);
+        }
+      });
+    });
+  });
+</script>
             </div><!-- End blog comments -->
-
           </div>
-
           <div class="col-lg-4">
 
             <div class="sidebar">
