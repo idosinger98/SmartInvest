@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'review.apps.ReviewConfig',
     'community.apps.CommunityConfig',
     'contact.apps.ContactConfig',
+    'landingPage.apps.LandingpageConfig',
 ]
 
 MIDDLEWARE = [
