@@ -44,6 +44,16 @@ class PostManager(models.Manager):
         post = Post.objects.get(pk=post_id)
         return profile in post.likes.all()
 
+    def delete_post(self, post_id, profile_id):
+        post = Post.objects.get(pk=post_id)
+        is_correct_profile = post.analysis_id.analyst_id.profile_id == profile_id
+        if is_correct_profile:
+            for comment in Comment.objects.get_all_comments_on_post(post_id=post_id):
+                Comment.objects.delete_comment(comment_id=comment.id, profile_id=comment.publisher_id.profile_id)
+            post.delete()
+
+        return is_correct_profile
+
 
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -86,6 +96,14 @@ class CommentManager(models.Manager):
         profile = Profile.objects.get(pk=profile_id)
         comment = Comment.objects.get(pk=comment_id)
         return profile in comment.likes.all()
+
+    def delete_comment(self, comment_id, profile_id):
+        comment = Comment.objects.get(pk=comment_id)
+        is_correct_profile = comment.publisher_id.profile_id == profile_id
+        if is_correct_profile:
+            comment.delete()
+
+        return is_correct_profile
 
 
 class Comment(models.Model):

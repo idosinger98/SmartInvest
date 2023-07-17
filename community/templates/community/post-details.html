@@ -144,7 +144,7 @@
               </div><!-- End post content -->
 
               <div class="meta-bottom">
-                <button id="likeButton" data-post-id="{{ post.id }}" data-profile-id="5" class="likeButton">
+                <button id="likeButton" data-post-id="{{ post.id }}" data-profile-id="{{ user.profile.profile_id }}" class="likeButton">
                   <span id="likesCount">({{ post.likes.count }})</span>
                   <span id="likeIcon">&#128077;</span>
                 </button>
@@ -237,10 +237,48 @@
                       {{comment.content}}
                     </p>
                     <div class="meta-bottom">
-                      <button id="likeCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-profile-id="5" class="likeButton">
+                      <button id="likeCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-profile-id="{{ user.profile.profile_id }}" class="likeButton">
                         <span id="likesCommentCount{{ forloop.counter }}">({{ comment.likes.count }})</span>
                         <span id="likeCommentIcon{{ forloop.counter }}">&#128077;</span>
                       </button>
+                      {% if comment.publisher_id.profile_id == user.profile.profile_id %}
+                      <button id="deleteCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-post-id="{{ post.id }}" data-profile-id="{{ user.profile.profile_id }}" class="likeButton">
+                        <span id="deleteCommentIcon{{ forloop.counter }}">Delete</span>
+                      </button>
+                      <script>
+                      document.getElementById('deleteCommentButton{{ forloop.counter }}').addEventListener('click', function() {
+                        let comment_id = this.getAttribute('data-comment-id');
+                        let post_id = this.getAttribute('data-post-id');
+                        let profile_id = this.getAttribute('data-profile-id');
+                        confirmDelete(post_id, comment_id, profile_id);
+                      });
+
+                      function confirmDelete(post_id, comment_id, profile_id) {
+                          const confirmation = confirm("Are you sure you want to delete this comment?");
+                          if (confirmation) {
+                              fetch(`/community/delete-comment/${post_id}/${comment_id}/${profile_id}/`, {
+                                  method: 'DELETE',
+                                  headers: {
+                                      'X-CSRFToken': '{{ csrf_token }}'  // Replace with the appropriate way to get the CSRF token in your template
+                                  }
+                              })
+                              .then(response => {
+                                  if (response.ok) {
+                                      // Reload the page or perform any necessary actions
+                                      window.location.reload();
+                                  } else {
+                                      console.error('Error deleting comment:', response.status);
+                                      // Handle the error or display an appropriate message to the user
+                                  }
+                              })
+                              .catch(error => {
+                                  console.error('Error deleting comment:', error);
+                                  // Handle the error or display an appropriate message to the user
+                              });
+                          }
+                      }
+                      </script>
+                      {% endif %}
                       <script>
                         $(document).ready(function() {
                           let likeCommentButton = $('#likeCommentButton{{ forloop.counter }}');
@@ -293,71 +331,55 @@
               </div>
               {% endfor %}
 
-<!--              <div class="reply-form">-->
 
-<!--                <h4>Leave a Reply</h4>-->
-
-<!--                <form  method="POST">-->
-<!--                  {% csrf_token %}-->
-<!--                  <div class="row">-->
-<!--                    <div class="col form-group">-->
-<!--                      <textarea name="comment" class="form-control" placeholder="Your Comment*" required></textarea>-->
-<!--                    </div>-->
-<!--                  </div>-->
-
-<!--                  <div class="text-center">-->
-<!--                    <button id="commentButton" type="submit" class="btn btn-primary">Post Comment</button>-->
-<!--                  </div>-->
-<!--                </form>-->
-<!--              </div>-->
               <div class="reply-form">
-  <h4>Leave a Reply</h4>
-  <form id="commentForm" method="POST" action="{% url 'create_comment' post.id 5 %}">
-    {% csrf_token %}
-    <div class="row">
-      <div class="col form-group">
-        <textarea id="commentInput" name="content" class="form-control" placeholder="Your Comment*" required></textarea>
-      </div>
-    </div>
-    <div class="text-center">
-      <button type="submit" class="btn btn-primary">Post Comment</button>
-    </div>
-  </form>
-</div>
+                <h4>Leave a Reply</h4>
+                <form id="commentForm" method="POST" action="{% url 'post-details' post.id user.profile.profile_id %}">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col form-group">
+                      <textarea id="commentInput" name="content" class="form-control" placeholder="Your Comment*" required></textarea>
+                    </div>
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                  </div>
+                </form>
+              </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $('#commentForm').submit(function(event) {
-      event.preventDefault(); // Prevent the default form submission
+              <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+              <script>
+                $(document).ready(function() {
+                  $('#commentForm').submit(function(event) {
+                    event.preventDefault(); // Prevent the default form submission
 
-      // Retrieve the comment content and post ID
-      let commentContent = $('#commentInput').val();
-      let postId = {{ post.id }}; // Replace with the actual post ID
-      let profile_id = 5;
+                    // Retrieve the comment content and post ID
+                    let commentContent = $('#commentInput').val();
+                    let postId = {{ post.id }}; // Replace with the actual post ID
+                    let profile_id = {{ user.profile.profile_id }};
 
-      // Send an AJAX request to the comment creation URL
-      $.ajax({
-        url: 'create-comment/', // Replace with the actual comment creation URL
-        method: 'POST',
-        data: {
-          'comment': commentContent,
-          'post_id': postId
-          'profile_id': profile_id
-        },
-        success: function(response) {
-          // Handle the success response
-          console.log('Comment created successfully!');
-          // Optionally, you can perform additional actions like updating the comment section with the newly created comment
-        },
-        error: function(xhr, status, error) {
-          // Handle the error response
-          console.error('Error creating comment:', error);
-        }
-      });
-    });
-  });
-</script>
+                    // Send an AJAX request to the comment creation URL
+                    $.ajax({
+                      url: 'create-comment/', // Replace with the actual comment creation URL
+                      method: 'POST',
+                      data: {
+                        'comment': commentContent,
+                        'post_id': postId
+                        'profile_id': profile_id
+                      },
+                      success: function(response) {
+                        // Handle the success response
+                        console.log('Comment created successfully!');
+                        // Optionally, you can perform additional actions like updating the comment section with the newly created comment
+                      },
+                      error: function(xhr, status, error) {
+                        // Handle the error response
+                        console.error('Error creating comment:', error);
+                      }
+                    });
+                  });
+                });
+              </script>
             </div><!-- End blog comments -->
           </div>
           <div class="col-lg-4">
