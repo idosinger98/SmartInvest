@@ -14,7 +14,6 @@ def community(request):
 
 
 @csrf_exempt
-@login_required
 def show_post(request, post_id, profile_id):
     if request.method == 'POST':
         form = CreateCommentForm(request.POST)
@@ -23,8 +22,7 @@ def show_post(request, post_id, profile_id):
             publisher = Profile.objects.get(pk=profile_id)
             post = Post.objects.get(pk=post_id)
             Comment.objects.comment_post(post_id=post, content=content, publisher_id=publisher)
-    else:
-        form = CreateCommentForm()
+
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
     context = {'posts': Post.objects.all().values, 'post': post, 'comments': comments}
@@ -90,3 +88,22 @@ def delete_comment(request, post_id, comment_id, profile_id):
     context = {'posts': Post.objects.all().values, 'post': post, 'comments': comments}
 
     return render(request, 'community/post-details.html', context)
+
+
+def get_all_posts_as_json(request):
+    posts = Post.objects.all()
+
+    data = []
+
+    for post in posts:
+        with open('static/assets/img/blog/blog-1.jpg', 'rb') as image_file:
+            image_data = image_file.read()
+        base64_image = base64.b64encode(image_data).decode('utf-8')
+        data.append({
+            'id': post.id,
+            'title': post.title,
+            'time': post.time,
+            'image': base64_image,
+        })
+
+    return JsonResponse(data, safe=False)

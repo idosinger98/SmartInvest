@@ -25,6 +25,8 @@
   <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
+
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
@@ -233,18 +235,63 @@
                   <div>
                     <h5><a href="">{{comment.publisher_id.user_id.get_full_name}}</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
                     <time datetime="{{comment.time}}">{{comment.time}}</time>
+                    <h5><label id="likesCommentCounter{{ forloop.counter }}">({{ comment.likes.count }})</label> <a class="likeComment" id="likesCommentIcon{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-profile-id="{{ user.profile.profile_id }}" >&#128077;</a></h5>
                     <p>
                       {{comment.content}}
                     </p>
+                      <script>
+                        $(document).ready(function() {
+                          let likesCommentIcon = $('#likesCommentIcon{{ forloop.counter }}');
+                          let commentId = likesCommentIcon.data('comment-id');
+                          let profileId = likesCommentIcon.data('profile-id');
+
+                          $.ajax({
+                            url: 'check-comment-like/',
+                            method: 'GET',
+                            data: {
+                              'comment_id': commentId,
+                              'profile_id': profileId
+                            },
+                            success: function(response) {
+                              if (response.liked) {
+                                likesCommentIcon.text('Unlike');
+                              } else {
+                                likesCommentIcon.text('Like');
+                              }
+                            }
+                          });
+                        });
+                      </script>
+                      <script>
+                        document.getElementById('likesCommentIcon{{ forloop.counter }}').addEventListener('click', function() {
+                          let profileId = this.getAttribute('data-profile-id');
+                          let commentId = this.getAttribute('data-comment-id');
+                          let xhr = new XMLHttpRequest();
+                          xhr.open('POST', '/community/like_comment/' + commentId + '/' + profileId + '/');
+                          xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                          xhr.onload = function() {
+                              if (xhr.status === 200) {
+                                  let response = JSON.parse(xhr.responseText);
+                                  let likesCommentIcon = document.getElementById('likesCommentIcon{{ forloop.counter }}')
+                                  let likesCommentCounter = document.getElementById('likesCommentCounter{{ forloop.counter }}')
+                                  likesCommentCounter.innerHTML =  '(' + response.likes + ')'
+                                  if(response.is_liked) {
+                                    likesCommentIcon.innerHTML = 'Like';
+                                  }
+                                  else {
+                                    likesCommentIcon.innerHTML = 'Unlike';
+                                  }
+                              }
+                          };
+                          xhr.send();
+                        });
+                      </script>
                     <div class="meta-bottom">
-                      <button id="likeCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-profile-id="{{ user.profile.profile_id }}" class="likeButton">
-                        <span id="likesCommentCount{{ forloop.counter }}">({{ comment.likes.count }})</span>
-                        <span id="likeCommentIcon{{ forloop.counter }}">&#128077;</span>
-                      </button>
                       {% if comment.publisher_id.profile_id == user.profile.profile_id %}
-                      <button id="deleteCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-post-id="{{ post.id }}" data-profile-id="{{ user.profile.profile_id }}" class="likeButton">
-                        <span id="deleteCommentIcon{{ forloop.counter }}">Delete</span>
-                      </button>
+                      <h5><a class="likeComment" id="deleteCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-post-id="{{ post.id }}" data-profile-id="{{ user.profile.profile_id }}">🗑️</a></h5>
+<!--                      <button id="deleteCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-post-id="{{ post.id }}" data-profile-id="{{ user.profile.profile_id }}" class="likeButton">-->
+<!--                        <span id="deleteCommentIcon{{ forloop.counter }}">Delete</span>-->
+<!--                      </button>-->
                       <script>
                       document.getElementById('deleteCommentButton{{ forloop.counter }}').addEventListener('click', function() {
                         let comment_id = this.getAttribute('data-comment-id');
@@ -279,52 +326,6 @@
                       }
                       </script>
                       {% endif %}
-                      <script>
-                        $(document).ready(function() {
-                          let likeCommentButton = $('#likeCommentButton{{ forloop.counter }}');
-                          let commentId = likeCommentButton.data('comment-id');
-                          let profileId = likeCommentButton.data('profile-id');
-
-                          $.ajax({
-                            url: 'check-comment-like/',
-                            method: 'GET',
-                            data: {
-                              'comment_id': commentId,
-                              'profile_id': profileId
-                            },
-                            success: function(response) {
-                              let likeCommentIcon = $('#likeCommentIcon{{ forloop.counter }}')
-                              if (response.liked) {
-                                likeCommentIcon.text('Unlike');
-                              } else {
-                                likeCommentIcon.text('Like');
-                              }
-                            }
-                          });
-                        });
-                      </script>
-                      <script>
-                        document.getElementById('likeCommentButton{{ forloop.counter }}').addEventListener('click', function() {
-                          let profileId = this.getAttribute('data-profile-id');
-                          let commentId = this.getAttribute('data-comment-id');
-                          let xhr = new XMLHttpRequest();
-                          xhr.open('POST', '/community/like_comment/' + commentId + '/' + profileId + '/');
-                          xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-                          xhr.onload = function() {
-                              if (xhr.status === 200) {
-                                  let response = JSON.parse(xhr.responseText);
-                                  let likeCommentIcon = document.getElementById('likeCommentButton{{ forloop.counter }}')
-                                  if(response.is_liked) {
-                                    likeCommentIcon.innerHTML = '(' + response.likes + ') Like';
-                                  }
-                                  else {
-                                    likeCommentIcon.innerHTML = '(' + response.likes + ') Unlike';
-                                  }
-                              }
-                          };
-                          xhr.send();
-                        });
-                      </script>
               </div>
                   </div>
                 </div>
@@ -360,7 +361,7 @@
 
                     // Send an AJAX request to the comment creation URL
                     $.ajax({
-                      url: 'create-comment/', // Replace with the actual comment creation URL
+                      url: 'create-comment/'
                       method: 'POST',
                       data: {
                         'comment': commentContent,
@@ -389,84 +390,24 @@
               <div class="sidebar-item search-form">
                 <h3 class="sidebar-title">Search</h3>
                 <form action="" class="mt-3">
-                  <input type="text">
+                  <input type="text" id="search" data-posts="{{ posts }}">
                   <button type="submit"><i class="bi bi-search"></i></button>
                 </form>
               </div><!-- End sidebar search formn-->
-
-              <div class="sidebar-item categories">
-                <h3 class="sidebar-title">Categories</h3>
-                <ul class="mt-3">
-                  <li><a href="#">General <span>(25)</span></a></li>
-                  <li><a href="#">Lifestyle <span>(12)</span></a></li>
-                  <li><a href="#">Travel <span>(5)</span></a></li>
-                  <li><a href="#">Design <span>(22)</span></a></li>
-                  <li><a href="#">Creative <span>(8)</span></a></li>
-                  <li><a href="#">Educaion <span>(14)</span></a></li>
-                </ul>
-              </div><!-- End sidebar categories-->
-
               <div class="sidebar-item recent-posts">
                 <h3 class="sidebar-title">Recent Posts</h3>
-
+                  <div class="post-item" data-posts-container></div>
+                  {% for post in posts %}
                 <div class="post-item">
                   <img src="{% static 'assets/img/blog/blog-recent-1.jpg' %}" alt="" class="flex-shrink-0">
                   <div>
-                    <h4><a href="blog-details.html">Nihil blanditiis at in nihil autem</a></h4>
-                    <time datetime="2020-01-01">Jan 1, 2020</time>
+                    <h4><a href="{% url 'post-details' post.id user.profile.profile_id %}">{{post.title}}</a></h4>
+                    <time datetime="2020-01-01">{{ post.time }}</time>
                   </div>
                 </div><!-- End recent post item-->
-
-                <div class="post-item">
-                  <img src="{% static 'assets/img/blog/blog-recent-2.jpg' %}" alt="" class="flex-shrink-0">
-                  <div>
-                    <h4><a href="blog-details.html">Quidem autem et impedit</a></h4>
-                    <time datetime="2020-01-01">Jan 1, 2020</time>
-                  </div>
-                </div><!-- End recent post item-->
-
-                <div class="post-item">
-                  <img src="{% static 'assets/img/blog/blog-recent-3.jpg' %}" alt="" class="flex-shrink-0">
-                  <div>
-                    <h4><a href="blog-details.html">Id quia et et ut maxime similique occaecati ut</a></h4>
-                    <time datetime="2020-01-01">Jan 1, 2020</time>
-                  </div>
-                </div><!-- End recent post item-->
-
-                <div class="post-item">
-                  <img src="{% static 'assets/img/blog/blog-recent-4.jpg' %}" alt="" class="flex-shrink-0">
-                  <div>
-                    <h4><a href="blog-details.html">Laborum corporis quo dara net para</a></h4>
-                    <time datetime="2020-01-01">Jan 1, 2020</time>
-                  </div>
-                </div><!-- End recent post item-->
-
-                <div class="post-item">
-                  <img src="{% static 'assets/img/blog/blog-recent-5.jpg' %}" alt="" class="flex-shrink-0">
-                  <div>
-                    <h4><a href="blog-details.html">Et dolores corrupti quae illo quod dolor</a></h4>
-                    <time datetime="2020-01-01">Jan 1, 2020</time>
-                  </div>
-                </div><!-- End recent post item-->
+                  {% endfor %}
 
               </div><!-- End sidebar recent posts-->
-
-              <div class="sidebar-item tags">
-                <h3 class="sidebar-title">Tags</h3>
-                <ul class="mt-3">
-                  <li><a href="#">App</a></li>
-                  <li><a href="#">IT</a></li>
-                  <li><a href="#">Business</a></li>
-                  <li><a href="#">Mac</a></li>
-                  <li><a href="#">Design</a></li>
-                  <li><a href="#">Office</a></li>
-                  <li><a href="#">Creative</a></li>
-                  <li><a href="#">Studio</a></li>
-                  <li><a href="#">Smart</a></li>
-                  <li><a href="#">Tips</a></li>
-                  <li><a href="#">Marketing</a></li>
-                </ul>
-              </div><!-- End sidebar tags-->
 
             </div><!-- End Sidebar -->
 

@@ -54,6 +54,16 @@ class PostManager(models.Manager):
 
         return is_correct_profile
 
+    def search_post(self, search_input):
+        posts = []
+        all_posts = Post.objects.all()
+        for post in all_posts:
+            if search_input in post.title or\
+                    search_input in post.analysis_id.analyst_id.user_id.get_full_name():
+                posts.append(post)
+
+        return posts
+
 
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)

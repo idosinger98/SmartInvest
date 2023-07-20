@@ -2612,6 +2612,14 @@ section {
   color: var(--color-inverse);
 }
 
+.deleteComment {
+    cursor: pointer;
+}
+
+.likeComment {
+    cursor: pointer;
+}
+
 .blog-details .meta-bottom .share {
   font-size: 16px;
 }

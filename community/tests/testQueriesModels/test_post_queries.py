@@ -36,11 +36,24 @@ class TestPostManager:
         post_2 = make_post(analysis_id=analyzed_stock_2, time=time_2)
         post_3 = make_post(analysis_id=analyzed_stock_3, time=time_3)
 
-        print(Post.objects.sort_posts_by_time())
-
         assert Post.objects.sort_posts_by_time()[0] == post_3
         assert Post.objects.sort_posts_by_time()[1] == post_2
         assert Post.objects.sort_posts_by_time()[2] == post_1
+
+    def test_search_post(self, make_post, test_analyzed_stock, test_analyzed_stock2, test_analyzed_stock3):
+        analyzed_stock_1 = test_analyzed_stock
+        analyzed_stock_2 = test_analyzed_stock2
+        analyzed_stock_3 = test_analyzed_stock3
+
+        post_1 = make_post(analysis_id=analyzed_stock_1, title='aaa')
+        post_2 = make_post(analysis_id=analyzed_stock_2, title='bbb')
+        post_3 = make_post(analysis_id=analyzed_stock_3, title='aabb')
+
+        posts = Post.objects.search_post('aa')
+
+        assert post_1 in posts
+        assert post_2 not in posts
+        assert post_3 in posts
 
     def test_sort_posts_by_popularity(self, make_post, make_comment,
                                       test_user, test_user2, test_user3, test_user4, test_user5,

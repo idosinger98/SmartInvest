@@ -112,7 +112,7 @@
               </div>
 
               <h2 class="title">
-                <a href="{% url 'post-details' post.id 5 %}">{{post.title}}</a>
+                <a href="{% url 'post-details' post.id user.profile.profile_id %}">{{post.title}}</a>
               </h2>
 
               <div class="d-flex align-items-center">
