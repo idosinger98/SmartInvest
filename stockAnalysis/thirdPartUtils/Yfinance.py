@@ -15,6 +15,13 @@ OPEN_PRICE = 'Open'
 VOLUME = 'Volume'
 
 
+def get_last_price_stock(stock_name):
+    ticker = yf.Ticker(stock_name).history()
+    handle_response(ticker)
+
+    return ticker.tail(1)["Close"].iloc[0]
+
+
 def get_stock_by_date(stock_name, start_date, end_date, interval):
     if interval not in AVAILABLE_INTERVAL:
         interval = '1d'

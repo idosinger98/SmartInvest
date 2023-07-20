@@ -8,11 +8,26 @@ from http import HTTPStatus
 import json
 from .thirdPartUtils.IndicatorsAlgo import calculate_algorithms
 from django.shortcuts import render
+from .exceptions.StockNotFoundException import StockNotFoundException
 
 INTERVAL = 'interval'
 FROM = 'from'
 TO = 'to'
 STOCK_SYMBOL = 'sy'
+
+
+def get_biggest_indices(request):
+    stocks = ['^IXIC', '^DJI', '^GSPC']
+    dictionary = {}
+
+    for stock in stocks:
+        try:
+            price = Yfinance.get_last_price_stock(stock)
+            dictionary[stock] = str(price)
+        except StockNotFoundException:
+            dictionary[stock] = '-'
+
+    return JsonResponse(dictionary)
 
 
 @csrf_exempt
