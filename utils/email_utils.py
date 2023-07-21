@@ -4,7 +4,10 @@ import os
 from django.contrib.auth.models import User
 
 
-def connectedApiAndSendEmail(subject_str, content, user=User.objects.filter(username='Manager')[0]):
+def connectedApiAndSendEmail(subject_str, content, user=None):
+
+    if user is None:
+        user = User.objects.filter(username='Manager').first()
     # Configure API key authorization: api-key
     configuration = sib_api_v3_sdk.Configuration()
     configuration.api_key['api-key'] = os.environ.get('MAIL_KEY')
