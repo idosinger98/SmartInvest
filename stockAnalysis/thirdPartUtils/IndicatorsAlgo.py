@@ -22,6 +22,13 @@ class Indicators(enum.Enum):
     MA21 = 'ma_golden_death_cross'
 
 
+def get_indicators_dict():
+    dictionary = {}
+    for alg in Indicators.__members__:
+        dictionary[alg] = "some data on the algorithm"
+
+    return dictionary
+
 def calculate_algorithms(chosen_algos_list, stock_df):
     result = {}
     for alg in chosen_algos_list:

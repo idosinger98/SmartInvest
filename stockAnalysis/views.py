@@ -9,6 +9,7 @@ import json
 from .thirdPartUtils.IndicatorsAlgo import calculate_algorithms
 from django.shortcuts import render
 from .exceptions.StockNotFoundException import StockNotFoundException
+from .thirdPartUtils.IndicatorsAlgo import get_indicators_dict
 
 INTERVAL = 'interval'
 FROM = 'from'
@@ -43,7 +44,10 @@ def search_stock_view(request):
         stock_details = Yfinance.get_stock_by_date(symbol, from_date, to_date, interval)
         response_dict = handle_post_search_stock(request, stock_details)
         response_dict.update({'stock': stock_details.to_json()})
-        response = render(request, 'stockAnalysis/graph_page.html', {'symbol': symbol, 'stock_data': response_dict})
+        response = render(request,
+                          'stockAnalysis/graph_page.html',
+                          {'symbol': symbol, 'stock_data': response_dict,
+                           'indicators': get_indicators_dict()})
         # response = JsonResponse(response_dict, status=HTTPStatus.OK, safe=False)
     except Exception as e:
         error_msg, status_code = handle_exception(e)
@@ -80,8 +84,3 @@ def handle_post_search_stock(request, stock_df):
         dictionary.update(calculate_algorithms(algos_array, stock_df))
 
     return dictionary
-
-# now we used to_json() on data frame to return the stock data frame as json to client.
-# TODO:  need to choose dataformat to return or if json so need to check if we serialized
-#  manually be more efficient(to_json returns maps from date to value for each value
-#  (returns same date a lot of time))

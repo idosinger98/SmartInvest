@@ -1,0 +1,118 @@
+.algoCheckBox{      <!--  class of the check boxes near the graph -->
+    padding: 10px;
+    margin-left: 10px;
+}
+
+#checkboxesContainer{
+  display: flow;        /* Set display to flex */
+  flex-direction: row;  /* Arrange items in a row */
+  max-width: 800px;
+}
+
+#chart_container{
+    width: 900px;
+    height: 500px;
+}
+
+.ul.ks-cboxtags {
+    list-style: none;
+    padding: 20px;
+}
+
+ul.ks-cboxtags li{
+  display: inline;
+}
+
+ul.ks-cboxtags li label{
+    display: inline-block;
+    background-color: rgba(255, 255, 255, .9);
+    border: 2px solid rgba(139, 139, 139, 0.4);
+    color: #a0a0a0;
+    border-radius: 25px;
+    white-space: nowrap;
+    margin: 3px 0px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all .2s;
+}
+
+ul.ks-cboxtags li label {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+ul.ks-cboxtags li label::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Font Awesome 5 Free", serif;
+    font-weight: 900;
+    font-size: 12px;
+    padding: 2px 6px 2px 2px;
+    content: "\f067";
+    transition: transform .3s ease-in-out;
+}
+
+ul.ks-cboxtags li i.fas.fa-exclamation-circle {
+    position: relative;
+    display: inline-block;
+    font-weight: 900;
+    padding: 4px 6px 4px 4px;
+    color: rgba(160, 160, 160, 0.56);
+}
+
+ul.ks-cboxtags li i.fas.fa-exclamation-circle:hover{
+    color: #a0a0a0;
+}
+
+ul.ks-cboxtags li i.fas.fa-exclamation-circle .tooltip {
+    visibility: hidden;
+    position: absolute;
+    top: 35px; /* Adjust the distance from the icon */
+
+    left: 50%; /* Position at the center of the icon */
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 80px;
+    background-color: #a0a0a0;
+    color: #fff;
+    font-size: 14px;
+    font-style: normal;
+    padding: 2px 10px 2px 10px;
+    border-radius: 25px;
+}
+
+ul.ks-cboxtags li i.fas.fa-exclamation-circle:hover .tooltip{
+    visibility: visible;
+}
+
+ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
+    content: "\f00c";
+    transform: rotate(-360deg);
+    transition: transform .3s ease-in-out;
+}
+
+ul.ks-cboxtags li input[type="checkbox"]:checked + label {
+    border: 2px solid #1bdbf8;
+    background-color: #12bbd4;
+    color: #fff;
+    transition: all .2s;
+}
+
+ul.ks-cboxtags li input[type="checkbox"] {
+  display: absolute;
+}
+
+ul.ks-cboxtags li input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+ul.ks-cboxtags li input[type="checkbox"]:hover + label {
+  border: 2px solid #C3EDC0;
+}
