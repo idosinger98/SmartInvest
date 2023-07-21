@@ -64,7 +64,8 @@ class UserUpdateForm(forms.ModelForm):
 
 class UpdateProfileForm(forms.ModelForm):
     country = CountryField(blank_label='(Select country)').formfield(
-        widget=CountrySelectWidget(attrs={'class': 'form-control'}))
+        widget=CountrySelectWidget(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = Profile
