@@ -24,9 +24,6 @@ class PostManager(models.Manager):
         analyzed_stocks_list = AnalyzedStocks.objects.get_user_stocks(analyst_id=publisher_id)
         return self.filter(analysis_id__in=analyzed_stocks_list)
 
-    # def get_amount_of_likes(self, post_id):
-    #     return Post.objects.get(pk=post_id).count('likes')
-
     def like_post(self, post_id, profile_id):
         post = Post.objects.get(id=post_id)
         profile = Profile.objects.get(pk=profile_id)
@@ -63,6 +60,9 @@ class PostManager(models.Manager):
                 posts.append(post)
 
         return posts
+
+    def create_new_post(self, analysis_id, title='No title was added'):
+        return Post.objects.create(analysis_id=analysis_id, title=title, time=timezone.now())
 
 
 class Post(models.Model):

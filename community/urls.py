@@ -10,4 +10,5 @@ urlpatterns = [
     path('post-details/<int:commentId>/check-comment-like/', views.check_comment_like, name='check_comment_like'),
     path('delete-comment/<int:post_id>/<int:comment_id>/<int:profile_id>/', views.delete_comment, name='delete_comment'),
     path('fetch-posts', views.get_all_posts_as_json, name='fetch_posts'),
+    path('create-new-post', views.create_new_post, name='create-new-post'),
 ]

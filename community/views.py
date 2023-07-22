@@ -5,6 +5,7 @@ from users.models import Profile
 from django.http import JsonResponse
 from community.forms import CreateCommentForm
 from django.contrib.auth.decorators import login_required
+from community.forms import CreatePostForm
 
 
 def community(request):
@@ -107,3 +108,16 @@ def get_all_posts_as_json(request):
         })
 
     return JsonResponse(data, safe=False)
+
+
+def create_new_post(request):
+    if request.method == 'GET':
+        post_form = CreatePostForm()
+        return render(request, 'users/register.html', {'post_form': post_form})
+
+    else:
+        post_form = CreatePostForm(request.POST)
+
+        # post = Post.objects.create_new_post(analysis_id=analysis_id, title=title)
+
+        return redirect(f'post-details/{post_form.id}/{post_form.analysis_id.analyst_id.profile_id}')

@@ -9,8 +9,10 @@ class CreateCommentForm(forms.ModelForm):
         model = Comment
         fields = ['content']
 
-    # def clean_content(self):
-    #     email = self.cleaned_data.get('email')
-    #     if User.objects.filter(email=email).exclude(username=self.instance.username).exists():
-    #         raise forms.ValidationError('This email address is already in use.')
-    #     return email
+
+class CreatePostForm(forms.ModelForm):
+    title = forms.CharField(max_length=50)
+
+    class Meta:
+        model = Post
+        fields = ['title', 'analysis_id']

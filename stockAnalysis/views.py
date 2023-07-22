@@ -52,6 +52,17 @@ def search_stock_view(request):
     return response
 
 
+def search_stock_wrapper(request):
+    from landingPage.views import home
+    from django.http import HttpResponse
+    response = search_stock_view(request=request)
+    if response.status_code != 200:
+        # return HttpResponse()
+        return home(request=request, return_after_wrong_symbol=True)
+    else:
+        return response
+
+
 def handle_exception(exception):
     status_code = eh.EXCEPTION_HANDLER.get(type(exception), HTTPStatus.INTERNAL_SERVER_ERROR)
     error_msg = exception.args[0]

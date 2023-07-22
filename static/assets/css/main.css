@@ -2932,6 +2932,7 @@ section {
   background-color: rgba(var(--color-primary-rgb), 0.8);
 }
 
+/* Circular-component for the top 3 stocks */
 .circular-component {
   margin-top: 25px;
   margin-right: 25px;
@@ -2968,7 +2969,7 @@ section {
 
 .circular-component .icon {
   display: inline-block;
-  font-size: 15px; /* Adjust the icon size */
+  font-size: 15px;
 }
 
 .circular-component .icon .icon-picture{
@@ -3003,6 +3004,32 @@ section {
   text-align: center;
   padding: 10px;
 }
+
+/*stocks-names under the search bar */
+/*.stock_list_container {
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.stock_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.stock_list li {
+    padding: 10px;
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+.stock_list li:nth-child(odd) {
+    background: #f2f2f2;
+    color: black;
+}
+.stock_list li:hover {
+    background: #e84545;
+}
+.stock_list li.hide { display: none; }*/
+
 
 element.style {
 }

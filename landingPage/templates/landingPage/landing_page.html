@@ -26,16 +26,84 @@
             <p data-aos="fade-up" data-aos-delay="200">Our goal is to teach, help and improve your thinking about finance and stocks</p>
           </div>
           <div class="col-lg-5">
-            <form action="#" class="sign-up-form d-flex" data-aos="fade-up" data-aos-delay="300">
-              <input type="text" class="form-control" placeholder="Enter stock symbol">
+            <form action="/stockgraph" method="GET" class="sign-up-form d-flex" data-aos="fade-up" data-aos-delay="300">
+              <input type="text" class="form-control" name="sy" id="stockInput" placeholder="Enter stock symbol">
               <input type="submit" class="btn btn-primary" value="Get graph">
             </form>
+            {% if wrong_symbol %}
+              <small class="text-danger">The symbol does not exist!</small>
+            {% endif %}
+            <div id="stock_list_container" style="height: 200px; overflow-x: auto;">
+              <ul id="stock_list">
+                {% for stock in stocks_names %}
+                <li class="stock-item">{{ stock }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <style>
+              #stock_list_container {
+                margin: 10px 0;
+                border: 1px solid #ccc;
+                padding: 10px;
+              }
+              #stock_list {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+              }
+              #stock_list li {
+                padding: 10px;
+                border: 1px solid #eee;
+                cursor: pointer;
+              }
+              #stock_list li:nth-child(odd) {
+                background: #f2f2f2;
+                color: black;
+              }
+              #stock_list li:hover {
+                background: #e84545;
+              }
+              #stock_list li.hide { display: none; }
+            </style>
+
+            <script>
+              window.addEventListener("load", function() {
+                document.getElementById("stockInput").addEventListener("keyup", function() {
+                  let search = this.value.toLowerCase();
+                  let all = document.querySelectorAll("#stock_list li");
+
+                  for ( let i of all) {
+                    let item = i.innerHTML.toLowerCase();
+
+                    if (item.indexOf(search) == -1) {
+                      i.classList.add("hide");
+                    }
+
+                    else {
+                      i.classList.remove("hide");
+                    }
+                  }
+                });
+
+                let stockItems = document.querySelectorAll(".stock-item");
+                stockItems.forEach(item => {
+                  item.addEventListener("click", function() {
+                    let stockSymbol = this.innerText;
+                    let url = "/stockgraph?sy=" + encodeURIComponent(stockSymbol);
+                    window.location.href = url;
+                  });
+                });
+              });
+            </script>
+
+<!--            -->
             <div class="top-3-stocks">
               {% for stock in best_stocks %}
-<!--              add onclick to go to the stock graph-->
               <a class="circular-component" id="stock-{{ forloop.counter }}" href="/stockgraph?sy={{ stock.name }}">
                 <div class="icon" id="icon-{{ forloop.counter }}">
 <!--                  <img class="icon-picture" src="{% static 'assets/img/icons/apple-icon.png' %}">-->
+<!--                  optional to add an icon-->
                 </div>
                 <h1 class="title" id="title-{{ forloop.counter }}">
                   {{ stock.name }}
