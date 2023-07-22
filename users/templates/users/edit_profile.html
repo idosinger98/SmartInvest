@@ -10,27 +10,30 @@
 
 {% block content2 %}
 <body>
+        <form method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
         <hr class="mt-0 mb-4">
         <div class="row">
             <div class="col-xl-4">
                 <div class="card mb-4 mb-xl-0">
                     <div class="card-header">Profile Picture</div>
-                    <div class="card-body text-center">
-                        {% if profile.image %}
-                            <img class="img-account-profile rounded-circle mb-2" src="{{ profile.image.url }}" alt="">
-                        {% else %}
-                            <img class="img-account-profile rounded-circle mb-2" src="{% static 'images/blank_profile.png' %}" alt="">
-                        {% endif %}
-                    </div>
-                    <button class="btn btn-primary" type="button">Upload new image</button>
+                        <div class="card-body text-center">
+                            {% if profile.image %}
+                                <img id="profileImage" class="img-account-profile rounded-circle mb-2" src="{{ profile.image.url }}" alt="">
+                            {% else %}
+                                <img id="profileImage" class="img-account-profile rounded-circle mb-2" src="{% static 'images/blank_profile.png' %}" alt="">
+                            {% endif %}
+                        </div>
+                    <button class="btn btn-primary" type="button" id="uploadBtn">Upload new image</button>
+                    <input type="file" name="image" id="fileInput" style="display: none;">
+                    <input type="submit" value="Save" style="display: none;">
                 </div>
             </div>
             <div class="col-xl-8">
                 <div class="card mb-4">
                     <div class="card-header">Edit Details</div>
                     <div class="card-body">
-                        <form method="post" action="{% url 'edit_profile' %}">
-                            {% csrf_token %}
+                        <div class="row gx-3 mb-3">
                             <div class="form-group">
                                 <label class="form-label" for="username">Username</label>
                                 <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" value="{{ user_form.username.value }}">
@@ -38,20 +41,24 @@
                                     <small class="error">{{ user_form.username.errors|striptags }}</small>
                                 {% endif %}
                             </div>
-                            <div class="form-group">
+                        </div>
+                           <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
                                 <label class="form-label" for="first_name">First Name</label>
                                 <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter your first name" value="{{ user_form.first_name.value }}">
                                 {% if user_form.first_name.errors %}
                                     <small class="error">{{ user_form.first_name.errors|striptags }}</small>
                                 {% endif %}
-                            </div>
-                            <div class="form-group">
+                                </div>
+                                <div class="col-md-6">
                                 <label class="form-label" for="last_name">Last Name</label>
                                 <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter your last name" value="{{ user_form.last_name.value }}">
                                 {% if user_form.last_name.errors %}
                                     <small class="error">{{ user_form.last_name.errors|striptags }}</small>
                                 {% endif %}
-                            </div>
+                                </div>
+                           </div>
+                            <div class="row gx-3 mb-3">
                            <div class="form-group">
                              <label class="form-label" for="country">Country</label>
                                 {{ profile_form.country }}
@@ -59,7 +66,8 @@
                                 <small class="error">{{ profile_form.country.errors|striptags }}</small>
                                 {% endif %}
                             </div>
-
+                            </div>
+                            <div class="row gx-3 mb-3">
                             <div class="form-group">
                                 <label class="form-label" for="email">Email Address</label>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" value="{{ user_form.email.value }}">
@@ -67,6 +75,8 @@
                                     <small class="error">{{ user_form.email.errors|striptags }}</small>
                                 {% endif %}
                             </div>
+                            </div>
+                            <div class="row gx-3 mb-3">
                             <div class="form-group">
                                 <label class="form-label" for="phone_number">Phone Number</label>
                                 <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter your phone number" value="{{ profile_form.phone_number.value }}">
@@ -74,13 +84,46 @@
                                     <small class="error">{{ profile_form.phone_number.errors|striptags }}</small>
                                 {% endif %}
                             </div>
+                            </div>
                           <div class="form-group text-center mt-4">
                                 <button class="btn btn-outline-info" type="submit">Update</button>
                           </div>
-                        </form>
+
                     </div>
                 </div>
             </div>
         </div>
+         </form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#uploadBtn').click(function() {
+            $('#fileInput').click();
+        });
+
+        // When a new file is selected, update the profile image with the selected file (optional).
+        $('#fileInput').change(function() {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    $('#profileImage').attr('src', event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form submission event handling
+        $('#updateProfileForm').submit(function(event) {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+
+            // Optionally, you can add code here to handle form submission via AJAX if needed.
+            // For now, I'll assume you want to submit the form traditionally.
+            this.submit();
+        });
+    });
+</script>
+
 </body>
 {% endblock %}

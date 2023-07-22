@@ -108,15 +108,6 @@ def show_details(request):
 
 @login_required
 def edit_profile(request):
-    if request.method == 'POST':
-        user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            return redirect('show_details')
-
-
     profile = Profile.objects.filter(user_id=request.user)[0]
     user_form = UserUpdateForm(instance=request.user)
     profile_form = UpdateProfileForm(instance=request.user.profile)
@@ -126,6 +117,21 @@ def edit_profile(request):
         'user_form': user_form,
         'profile_form': profile_form
     }
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('show_details')
+        else:
+            context2 = {
+                'profile': profile,
+                'user_form': user_form,
+                'profile_form': profile_form
+            }
+            return render(request, 'users/edit_profile.html', context2)
+
     return render(request, 'users/edit_profile.html', context)
 
 

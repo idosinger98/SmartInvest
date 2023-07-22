@@ -28,7 +28,7 @@
                     <div class="mb-3">
                         <h3>Register</h3>
                     </div>
-                    <form method="post" action="{% url 'register' %}">
+                    <form method="post" action="{% url 'register' %}" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="form-group">
                             <input type="text" class="form-control form-control-sm" id="username" name="username"
