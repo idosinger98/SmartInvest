@@ -116,10 +116,10 @@ def edit_profile(request):
             profile_form.save()
             return redirect('show_details')
 
-    else:
-        profile = Profile.objects.filter(user_id=request.user)[0]
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    profile = Profile.objects.filter(user_id=request.user)[0]
+    user_form = UserUpdateForm(instance=request.user)
+    profile_form = UpdateProfileForm(instance=request.user.profile)
 
     context = {
         'profile': profile,
