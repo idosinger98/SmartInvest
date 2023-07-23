@@ -17,7 +17,8 @@ STOCK_SYMBOL = 'sy'
 
 
 def get_biggest_indices(request):
-    stocks = ['^IXIC', '^DJI', '^GSPC']
+    # stocks = ['^IXIC', '^DJI', '^GSPC']
+    stocks = ['AAPL', 'TSLA', 'META']
     dictionary = {}
 
     for stock in stocks:

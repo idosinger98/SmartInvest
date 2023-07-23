@@ -16,13 +16,14 @@ def community(request):
 
 @csrf_exempt
 def show_post(request, post_id, profile_id):
+    form = CreateCommentForm(request.POST or None)
     if request.method == 'POST':
-        form = CreateCommentForm(request.POST)
         if form.is_valid():
             content = form.cleaned_data['content']
             publisher = Profile.objects.get(pk=profile_id)
             post = Post.objects.get(pk=post_id)
             Comment.objects.comment_post(post_id=post, content=content, publisher_id=publisher)
+            return redirect('post-details', post_id=post_id, profile_id=profile_id)
 
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
@@ -91,6 +92,13 @@ def delete_comment(request, post_id, comment_id, profile_id):
     return render(request, 'community/post-details.html', context)
 
 
+@login_required
+def delete_post(request, post_id, profile_id):
+    Post.objects.delete_post(post_id=post_id, profile_id=profile_id)
+
+    return community(request=request)
+
+
 def get_all_posts_as_json(request):
     posts = Post.objects.all()
 
@@ -121,3 +129,15 @@ def create_new_post(request):
         # post = Post.objects.create_new_post(analysis_id=analysis_id, title=title)
 
         return redirect(f'post-details/{post_form.id}/{post_form.analysis_id.analyst_id.profile_id}')
+
+def dashboard(request, publisher_id):
+    if request.method == "POST":
+        form = CreatePostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            return redirect("community:dashboard")
+
+
+    form = CreatePostForm()
+    my_posts = Post.objects.get_posts_by_publisher_id(publisher_id=publisher_id)
+    return render(request, "community/dashboard.html", {'form': form, 'posts': my_posts})

@@ -11,7 +11,7 @@ class CreateCommentForm(forms.ModelForm):
 
 
 class CreatePostForm(forms.ModelForm):
-    title = forms.CharField(max_length=50)
+    title = forms.CharField(max_length=50, required=True)
 
     class Meta:
         model = Post
