@@ -1,8 +1,8 @@
-import pytest
-from django.urls import reverse
-from community.models import Post
-
-
+# import pytest
+# from django.urls import reverse
+# from community.models import Post
+#
+#
 # @pytest.mark.django_db
 # class TestPostView:
 #     def test_enter_community_page(self, client):

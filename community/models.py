@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.db.models import F, Count
+from django.db.models import Count
 from users.models import Profile
 from stockAnalysis.models import AnalyzedStocks
 

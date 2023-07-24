@@ -99,25 +99,6 @@ def delete_post(request, post_id, profile_id):
     return community(request=request)
 
 
-def get_all_posts_as_json(request):
-    posts = Post.objects.all()
-
-    data = []
-
-    for post in posts:
-        with open('static/assets/img/blog/blog-1.jpg', 'rb') as image_file:
-            image_data = image_file.read()
-        base64_image = base64.b64encode(image_data).decode('utf-8')
-        data.append({
-            'id': post.id,
-            'title': post.title,
-            'time': post.time,
-            'image': base64_image,
-        })
-
-    return JsonResponse(data, safe=False)
-
-
 def create_new_post(request):
     if request.method == 'GET':
         post_form = CreatePostForm()

@@ -5,7 +5,6 @@ from contact.forms import ContactForm
 from community.models import Post
 from stockAnalysis.views import get_biggest_indices
 import json
-from django.http import JsonResponse
 
 
 def home(request, return_after_wrong_symbol=False):
