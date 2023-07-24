@@ -8,6 +8,9 @@ from http import HTTPStatus
 import json
 from .thirdPartUtils.IndicatorsAlgo import calculate_algorithms
 from stockAnalysis.exceptions.StockNotFoundException import StockNotFoundException
+from .models import AnalyzedStocks
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 
 INTERVAL = 'interval'
@@ -29,6 +32,13 @@ def get_biggest_indices(request):
             dictionary[stock] = '-'
 
     return JsonResponse(dictionary)
+
+
+@login_required
+def my_analysis_page(request, analyst_id):
+    my_analysis = AnalyzedStocks.objects.get_user_stocks(analyst_id=analyst_id)
+    context = {'analysis': my_analysis}
+    return render(request, 'stockAnalysis/my-analysis.html', context)
 
 
 @csrf_exempt

@@ -43,8 +43,8 @@
 
             <style>
               #stock_list_container {
-                margin: 10px 0;
-                border: 1px solid #ccc;
+<!--                margin: 10px 0;-->
+<!--                border: 1px solid #ccc;-->
                 padding: 10px;
               }
               #stock_list {
@@ -57,14 +57,47 @@
                 border: 1px solid #eee;
                 cursor: pointer;
               }
-              #stock_list li:nth-child(odd) {
-                background: #f2f2f2;
-                color: black;
-              }
+<!--              #stock_list li:nth-child(odd) {-->
+<!--                background: white;-->
+<!--                color: black;-->
+<!--              }-->
               #stock_list li:hover {
                 background: #e84545;
               }
               #stock_list li.hide { display: none; }
+
+<!--#searchBar {-->
+<!--  width: 100%;-->
+<!--  padding: 10px;-->
+<!--  font-size: 16px;-->
+<!--  border: 1px solid #ccc;-->
+<!--  border-radius: 5px;-->
+<!--  margin-bottom: 10px;-->
+<!--}-->
+
+<!--/* Styles for the container that holds the filtered results */-->
+<!--#stock_list_container {-->
+<!--  position: relative;-->
+<!--  height: 200px;-->
+<!--  overflow-x: auto;-->
+<!--}-->
+
+<!--/* Styles for the dynamically generated list items */-->
+<!--.stock-item {-->
+<!--  display: none; /* Hide all items by default */-->
+<!--  padding: 10px;-->
+<!--  border-bottom: 1px solid #ccc;-->
+<!--}-->
+
+<!--/* Styles for the visible (filtered) list items */-->
+<!--.stock-item.active {-->
+<!--  display: block; /* Show the filtered items */-->
+<!--  position: absolute;-->
+<!--  width: 100%;-->
+<!--  background-color: #fff;-->
+<!--  z-index: 1;-->
+<!--  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);-->
+<!--}-->
             </style>
 
             <script>
@@ -73,17 +106,27 @@
                   let search = this.value.toLowerCase();
                   let all = document.querySelectorAll("#stock_list li");
 
-                  for ( let i of all) {
-                    let item = i.innerHTML.toLowerCase();
-
-                    if (item.indexOf(search) == -1) {
+                  if (search == '') {
+                    for ( let i of all) {
+                      let item = i.innerHTML.toLowerCase();
                       i.classList.add("hide");
                     }
+                  }
 
-                    else {
-                      i.classList.remove("hide");
+                  else {
+                    for ( let i of all) {
+                      let item = i.innerHTML.toLowerCase();
+
+                      if (item.indexOf(search) == -1) {
+                        i.classList.add("hide");
+                      }
+
+                      else {
+                        i.classList.remove("hide");
+                      }
                     }
                   }
+
                 });
 
                 let stockItems = document.querySelectorAll(".stock-item");
@@ -98,6 +141,7 @@
             </script>
 
 <!--            -->
+<!--            TOP 3 STOCKS                  -->
             <div class="top-3-stocks">
               {% for stock in best_stocks %}
               <a class="circular-component" id="stock-{{ forloop.counter }}" href="/stockgraph?sy={{ stock.name }}">

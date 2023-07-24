@@ -129,15 +129,3 @@ def create_new_post(request):
         # post = Post.objects.create_new_post(analysis_id=analysis_id, title=title)
 
         return redirect(f'post-details/{post_form.id}/{post_form.analysis_id.analyst_id.profile_id}')
-
-def dashboard(request, publisher_id):
-    if request.method == "POST":
-        form = CreatePostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            return redirect("community:dashboard")
-
-
-    form = CreatePostForm()
-    my_posts = Post.objects.get_posts_by_publisher_id(publisher_id=publisher_id)
-    return render(request, "community/dashboard.html", {'form': form, 'posts': my_posts})

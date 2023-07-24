@@ -18,10 +18,25 @@ def home(request, return_after_wrong_symbol=False):
     form = ReviewForm()
     from_contant = ContactForm()
 
-    stocks_names = ["PKG", "AAPL", "MSFT", "GOOG", "AMZN", "NVDA", "TSLA", "META", "JPM"]
+    stocks_names = get_symbols()
 
     sorted_stocks_names = sorted(stocks_names)
     context = {'list_review': list_review, 'form': form, 'from_contant': from_contant,
                'last_three_posts': last_three_posts, 'best_stocks': best_stocks,
                'wrong_symbol': return_after_wrong_symbol, 'stocks_names': sorted_stocks_names}
     return render(request, 'landingPage/landing_page.html', context)
+
+
+def get_symbols():
+    from stocksymbol import StockSymbol
+
+    api_key = 'f9c2802b-2dc4-407e-bf3c-846012d359ca'
+    ss = StockSymbol(api_key)
+    symbol_list_us = ss.get_symbol_list(market="US")
+
+    symbols = []
+
+    for symbol in symbol_list_us:
+        symbols.append(symbol.get('symbol'))
+
+    return symbols

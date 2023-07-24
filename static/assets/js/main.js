@@ -209,4 +209,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   window.addEventListener('load', aosInit);
 
+//  const searchBar = document.getElementById("stockInput");
+//  const wordContainer = document.getElementById("stock_list");
+//
+//  searchBar.addEventListener("input", function () {
+//    const searchText = searchBar.value.toLowerCase();
+//    const words = wordContainer.getElementsByTagName("stock-item");
+//
+//    for (const word of words) {
+//      const wordText = word.innerText.toLowerCase();
+//      if (wordText.includes(searchText)) {
+//        word.style.display = "block";
+//      } else {
+//        word.style.display = "none";
+//      }
+//    }
+//  });
+
 });

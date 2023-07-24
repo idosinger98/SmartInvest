@@ -28,6 +28,8 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 
   <!-- =======================================================
   * Template Name: Append
@@ -87,6 +89,24 @@
           </div>
         </div>
       </div>
+      <div class="container" id="my-posts-container">
+        <div class="row gy-4 posts-list">
+          <label class="my-posts">My Posts</label>
+          {% for post in posts %}
+            {% if user.profile.profile_id == post.analysis_id.analyst_id.profile_id %}
+              <div class="col-xl-4 col-lg-3">
+              <article>
+                <div class="box">
+                  {{ post.title }}
+                  <span class="is-small has-text-grey-light">{{ post.time }}</span>
+                </div>
+              </article>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+        </div>
+      </div>
       <nav class="breadcrumbs">
         <div class="container">
           <ol>
@@ -99,9 +119,7 @@
 
     <!-- Blog Section - Blog Page -->
     <section id="blog" class="blog">
-
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-
         <div class="row gy-4 posts-list">
             {% for post in posts %}
           <div class="col-xl-4 col-lg-6">
