@@ -12,7 +12,10 @@
     </head>
     <body>
         <div>
-            <div id="chart_container"></div>
+            <div id="container">
+                <div id="chart_container"></div>
+                <button id="saveButton" class="button-17" role="button">KEEP CHART</button>
+            </div>
              <div id="checkboxesContainer">
                  <ul id="checkboxList" class="ks-cboxtags"></ul>
              </div>
@@ -28,9 +31,8 @@
         <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
         <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
         <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
-        <!--<script src="{% static 'js/createGraph.js' %}"></script>
-        <script src="{% static 'js/indicators.js' %}"></script> for production environment-->
-        <script src="../../static/js/indicators.js"></script>
-        <script src="../../static/js/createGraph.js"></script>
+        <!--<script src="{% static 'js/stockChart.js' %}"></script>
+        <script src="{% static 'js/indicatorCheckBox.js' %}"></script> for production environment-->
+        <script type="module" src="../../static/js/index.js"></script>
     </body>
 </html>
