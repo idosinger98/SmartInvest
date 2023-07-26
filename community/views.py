@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect, get_object_or_404
 from community.models import Post, Comment
+from django.core.paginator import Paginator
 from users.models import Profile
 from django.http import JsonResponse
 from community.forms import CreateCommentForm
@@ -8,8 +9,16 @@ from django.contrib.auth.decorators import login_required
 
 
 def community(request):
-    posts = Post.objects.sort_posts_by_popularity()
-    context = {'posts': posts}
+    posts = Post.objects.order_by('-time')
+    paginator = Paginator(posts, 6)  # 6 posts per page
+    page_number = request.GET.get('page')
+    paginated_posts = paginator.get_page(page_number)
+
+    context = {
+        'paginated_posts': paginated_posts,
+        'posts': posts
+    }
+
     return render(request, 'community/community.html', context)
 
 

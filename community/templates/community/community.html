@@ -8,7 +8,6 @@
 </head>
 {% block content %}
 <body class="blog-page" data-bs-spy="scroll" data-bs-target="#navmenu">
-
   <main id="main">
 
     <!-- Blog Page Title & Breadcrumbs -->
@@ -33,52 +32,50 @@
       </nav>
     </div><!-- End Page Title -->
 
-    <!-- Blog Section - Blog Page -->
-    <section id="blog" class="blog">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row gy-4 posts-list">
-            {% for post in posts %}
-          <div class="col-xl-4 col-lg-6">
-            <article>
-
-              <div class="post-img">
-                <img src="{% static 'assets/img/blog/blog-1.jpg' %}" alt="" class="img-fluid">
+<section id="blog" class="blog">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-4 posts-list">
+      {% for post in paginated_posts %}
+        <div class="col-xl-4 col-lg-6">
+          <article>
+            <div class="post-img">
+              <img src="{% static 'assets/img/my-stocks.jpg' %}" alt="" class="img-fluid">
+            </div>
+            <h2 class="title">
+              <a href="{% url 'post-details' post.id user.profile.profile_id %}">{{post.title}}</a>
+            </h2>
+            <div class="d-flex align-items-center">
+              {% if post.analysis_id.analyst_id.image %}
+                <img src="{{ post.analysis_id.analyst_id.image.url }}" class="img-fluid post-author-img flex-shrink-0" alt="">
+              {% else %}
+                <img  src="{% static 'images/blank_profile.png' %}" class="img-fluid post-author-img flex-shrink-0" alt="">
+              {% endif %}
+              <div class="post-meta">
+                <p class="post-author">{{ post.analysis_id.analyst_id.user_id.username }}</p>
+                <p class="post-date">
+                  <time datetime="2022-01-01">{{ post.time }}</time>
+                </p>
               </div>
-
-              <h2 class="title">
-                <a href="{% url 'post-details' post.id user.profile.profile_id %}">{{post.title}}</a>
-              </h2>
-
-              <div class="d-flex align-items-center">
-                  {% if post.analysis_id.analyst_id.image %}
-                      <img src="{{ post.analysis_id.analyst_id.image.url }}" class="img-fluid post-author-img flex-shrink-0" alt="">
-                  {% else %}
-                      <img  src="{% static 'images/blank_profile.png' %}" class="img-fluid post-author-img flex-shrink-0" alt="">
-                  {% endif %}
-                <div class="post-meta">
-                  <p class="post-author">{{ post.analysis_id.analyst_id.user_id.username }}</p>
-                  <p class="post-date">
-                    <time datetime="2022-01-01">{{ post.time }}</time>
-                  </p>
-                </div>
-              </div>
-
-            </article>
-          </div>
-            {% endfor %}
+            </div>
+          </article>
         </div>
-
-        <div class="pagination d-flex justify-content-center">
-          <ul>
-            <li><a href="#">1</a></li>
-            <li class="active"><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-          </ul>
-        </div><!-- End pagination -->
-
-      </div>
-
-    </section><!-- End Blog Section -->
+      {% endfor %}
+    </div>
+    <div class="pagination d-flex justify-content-center">
+      <ul>
+        {% if paginated_posts.has_previous %}
+          <li><a href="?page={{ paginated_posts.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        {% for page_number in paginated_posts.paginator.page_range %}
+          <li {% if paginated_posts.number == page_number %}class="active"{% endif %}><a href="?page={{ page_number }}">{{ page_number }}</a></li>
+        {% endfor %}
+        {% if paginated_posts.has_next %}
+          <li><a href="?page={{ paginated_posts.next_page_number }}">Next</a></li>
+        {% endif %}
+      </ul>
+    </div><!-- End pagination -->
+  </div>
+</section><!-- End -->
 
   </main>
 
@@ -167,8 +164,6 @@
   <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
   <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
 
-  <!-- Template Main JS File -->
 
 </body>
 {% endblock content %}
-
