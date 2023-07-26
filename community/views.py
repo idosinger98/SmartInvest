@@ -5,7 +5,6 @@ from users.models import Profile
 from django.http import JsonResponse
 from community.forms import CreateCommentForm
 from django.contrib.auth.decorators import login_required
-from community.forms import CreatePostForm
 
 
 def community(request):
@@ -80,9 +79,6 @@ def check_comment_like(request, commentId):
 
 @login_required
 def delete_comment(request, post_id, comment_id, profile_id):
-    # comment_id = request.GET.get('comment_id')
-    # profile_id = request.GET.get('profile_id')
-
     Comment.objects.delete_comment(comment_id=comment_id, profile_id=profile_id)
 
     post = get_object_or_404(Post, pk=post_id)
@@ -97,16 +93,3 @@ def delete_post(request, post_id, profile_id):
     Post.objects.delete_post(post_id=post_id, profile_id=profile_id)
 
     return community(request=request)
-
-
-def create_new_post(request):
-    if request.method == 'GET':
-        post_form = CreatePostForm()
-        return render(request, 'users/register.html', {'post_form': post_form})
-
-    else:
-        post_form = CreatePostForm(request.POST)
-
-        # post = Post.objects.create_new_post(analysis_id=analysis_id, title=title)
-
-        return redirect(f'post-details/{post_form.id}/{post_form.analysis_id.analyst_id.profile_id}')

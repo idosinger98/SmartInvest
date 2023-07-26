@@ -1,27 +1,15 @@
 {% extends 'nav_menu.html' %}
 {% load static %}
-
+<head>
+  {% block head %}
+  <link href="{% static 'css/my-analysis.css' %}" rel="stylesheet">
+  {% endblock head %}
+</head>
 {% block content %}
-<body class="index-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+<body class="my-analysis-page" data-bs-spy="scroll" data-bs-target="#navmenu">
   <main id="main">
-
-    <!-- Hero Section - Home Page -->
-    <section id="hero" class="hero">
-      <img src=" {% static 'assets/img/my-stocks.jpg' %}" alt="" data-aos="fade-in">
-
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-10">
-            <h2 data-aos="fade-up" data-aos-delay="100">Smart Invest, Think Different</h2>
-            <p data-aos="fade-up" data-aos-delay="200">Our goal is to teach, help and improve your thinking about finance and stocks</p>
-          </div>
-        </div>
-      </div>
-
-    </section><!-- End Hero Section -->
-
     <!-- Services Section - Home Page -->
-    <section id="services" class="services">
+    <section id="my-analysis" class="services">
 
       <!--  Section Title -->
       <div class="container section-title" data-aos="fade-up">

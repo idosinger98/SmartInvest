@@ -8,11 +8,3 @@ class CreateCommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
-
-
-class CreatePostForm(forms.ModelForm):
-    title = forms.CharField(max_length=50, required=True)
-
-    class Meta:
-        model = Post
-        fields = ['title', 'analysis_id']
