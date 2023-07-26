@@ -5,7 +5,12 @@ export class IndicatorCheckBox {
         this.label = document.createElement('label');
         this.infoIcon = document.createElement('i');
         this.tooltip = document.createElement('span');
+        this.initHtmlElement(name, info);
+        this.is_loaded = false;
+        this.data = {};
+    }
 
+    initHtmlElement(name, info){
         this.listItem.className = 'algoCheckBox';
         this.checkbox.type = 'checkbox';
         this.checkbox.value = name;
@@ -30,14 +35,53 @@ export class IndicatorCheckBox {
         return this.listItem;
     }
 
-    addEventListener(activeFunc,deactivateFunc){
+    addEventListener(activeFunc,deactivateFunc,data){
         this.checkbox.addEventListener('change',()=> {
                 if (this.checkbox.checked) {
-                    activeFunc(this.checkbox.value);
+                    this.checkbox.disabled = true;
+                    activeFunc(data);
                 } else {
                     deactivateFunc(this.checkbox.value);
                 }
             }
         );
+    }
+
+    getIndicatorAsync(data, chart) {
+        if (this.is_loaded) {
+            this.atomicCallback(chart,this.data);
+            return;
+        }
+
+        fetch('http://localhost:8000/algorithms', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'stock': data, 'algorithms': [this.checkbox.value]})
+        }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Request failed with status: ' + response.status + response.body);
+                }
+                return response.json();
+            }).then(data => {
+                data = Object.fromEntries(Object.keys(data).map(key => [key, JSON.parse(data[key])]));
+                Object.keys(data).forEach(key => {
+                    Object.entries(data[key]).forEach(([secondaryKey, value]) =>
+                        data[key][secondaryKey] = Object.entries(value).map(([key, value]) => [parseInt(key), value]));
+                });
+                this.data = data;
+                this.is_loaded = true;
+                this.atomicCallback(chart,data);
+            })
+            .catch(error => console.log(error));
+    }
+
+    atomicCallback(chart, data) {
+        this.checkbox.disabled = true;
+        if (this.checkbox.checked) {
+            chart.addIndicatorToChart(data);
+        }
+        this.checkbox.disabled = false;
     }
 }

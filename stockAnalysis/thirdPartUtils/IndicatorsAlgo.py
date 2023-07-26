@@ -29,6 +29,7 @@ def get_indicators_dict():
 
     return dictionary
 
+
 def calculate_algorithms(chosen_algos_list, stock_df):
     result = {}
     for alg in chosen_algos_list:

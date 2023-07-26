@@ -7,8 +7,6 @@ export class StockChart {
     }
 
     createFromData(data, volumeData) {
-        // create stock chart
-        // create first plot on the chart
         const plot = this.chart.plot(0);
         this.setupGraphSettings(plot, data);
         this.setupStockVolumeSettings(plot, volumeData);
@@ -30,7 +28,6 @@ export class StockChart {
     }
 
     setupStockVolumeSettings(plot, data){
-        // create volume series on the plot
         const volumeSeries = plot.column(data);
         // set series settings
         volumeSeries.name('Volume').zIndex(100).maxHeight('15%').bottom(0); // maybe remove the zindex
@@ -40,7 +37,6 @@ export class StockChart {
         // sets y-scale
         volumeSeries.yScale(customScale);
 
-        // set volume rising and falling stroke and fill settings
         volumeSeries.risingStroke('red');
         volumeSeries.fallingStroke('green');
         volumeSeries.risingFill('red 0.7');
@@ -53,11 +49,9 @@ export class StockChart {
 
     drawChart(container) {
         anychart.onDocumentReady(() => {
-            // set container id for the chart and draw
             this.chart.container(container);
             this.chart.draw();
 
-            // create and init range selector
             const rangeSelector = anychart.ui.rangeSelector().render(this.chart);
         });
     }
@@ -66,38 +60,54 @@ export class StockChart {
         return this.chart.toJson();
     }
 
-    // loadChartFromJson(json){
-    //     this.chart = anychart.fromJson(json);
-    // }
+    loadChartFromJson(json){
 
-    addIndicatorLineOnNewPlot(data, indicatorName, color) {
+    }
+
+    addIndicatorToChart(data) {
+        for (const key of Object.keys(data)) {
+            this.addIndicatorLineSeriesOnNewPlot(data[key], key);
+            // for now everyone is on new plot.
+        }
+    }
+
+    addIndicatorLineSeriesOnNewPlot(data, indicatorName, color) {
         const plotIndex = this.chart.getPlotsCount() + 1;
         const plot = this.chart.plot(plotIndex);
+
+        plot.title(indicatorName);
         this.indicator_to_plot_map[indicatorName] = plotIndex;
-
-        this.addIndicatorLineOnPlot(data,plot,indicatorName, color);
+        for(const key in data){
+            this.addLineSeriesOnPlot(data[key], plot, key, color);
+        }
     }
 
-    addIndicatorLineOnMainPlot(data, indicatorName, color) {
-        this.addIndicatorLineOnPlot(data,this.chart.plot(0),indicatorName, color);
-    }
-
-    addIndicatorLineOnPlot(data,plot, name, color) {
+    addLineSeriesOnPlot(data, plot, name, color) {
         const lineSeries = plot.line(data);
 
-        // Customize the line series appearance (optional)
         lineSeries.stroke(color);
         lineSeries.name(name);
         lineSeries.id(name);
     }
 
+    // addIndicatorLineSeriesOnMainPlot(data, indicatorName, color) {
+    //     this.addIndicatorLineOnPlot(data,this.chart.plot(0),indicatorName, color);
+    // }
+    //
+    // addAreaToPlot(data){
+    //     const areaSeries = this.chart.plot(0).area(data);
+    //     areaSeries.fill('rgba(255, 0, 0, 0.3)');
+    // }
+
     removeIndicatorLine(name){
         const plot_index = this.indicator_to_plot_map[name];
 
-        this.chart.plot(plot_index).removeSeries(name);
         if(plot_index !== 0){
             this.chart.plot(plot_index).remove();
             this.chart.plot(plot_index).enabled(false);
+        }
+        else{
+            this.chart.plot(plot_index).removeSeries(name);
         }
     }
 }

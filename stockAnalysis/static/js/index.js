@@ -1,6 +1,7 @@
 import {StockChart} from "./stockChart.js";
 import {IndicatorCheckBox} from "./indicatorCheckBox.js";
 
+
 const data =
     typeof stockData !== 'undefined' ?
         JSON.parse(stockData['stock']) :
@@ -114,14 +115,15 @@ for (const timestamp of Object.keys(data.Open)) {
 const chart = new StockChart();
 chart.createFromData(newData,volumeData);
 
-const lineData = [];
-
-for (const timestamp of Object.keys(data.Open)) {
-    lineData.push([
-        parseInt(timestamp),
-        data['Open'][timestamp],
-    ]);
-}
+// dummy data
+// const lineData = [];
+//
+// for (const timestamp of Object.keys(data.Open)) {
+//     lineData.push([
+//         parseInt(timestamp),
+//         data['Open'][timestamp],
+//     ]);
+// }
 
 chart.drawChart('chart_container');
 
@@ -135,9 +137,10 @@ for (const key of Object.keys(items)) {
     const listItem = new IndicatorCheckBox(key,items[key]);
 
     listItem.addEventListener(
-        (name)=> chart.addIndicatorLineOnNewPlot(lineData,name),
-        (name)=> chart.removeIndicatorLine(name));
-
+        (data)=> listItem.getIndicatorAsync(data, chart),
+        (name)=> chart.removeIndicatorLine(name),
+        data
+    );
     checkboxListDiv.appendChild(listItem.getElement());
 }
 
@@ -146,21 +149,3 @@ document.getElementById('saveButton').addEventListener('click', function () {
     this.blur();
 });
 
-
-// function get_algos(data,callback){
-//      fetch(url, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify(data)
-//   })
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error('Request failed with status: ' + response.status);
-//     }
-//     return response.json();
-//   })
-//   .then(data => callback(null, data))
-//   .catch(error => callback(error, null));
-// }
