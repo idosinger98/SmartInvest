@@ -8,14 +8,17 @@ from users.models import Profile
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
+from django.http import HttpResponse
+import os
 from dotenv import load_dotenv
-from utils.email_utils import connectedApiAndSendEmail
 
 
 load_dotenv()
@@ -73,13 +76,47 @@ class PasswordsChangeView(PasswordChangeView, LoginRequiredMixin):
 
 
 @login_required
+def delete_account(request):
+    if request.method == 'POST':
+        # Delete the user account
+        user = request.user
+        user.delete()
+
+        # Logout the user
+        logout(request)
+
+        # Redirect to a success page or homepage
+        return redirect('login')
+
+    # Render the delete account confirmation template
+    return render(request, 'users/change-password.html')
+
+
+@login_required
 def show_details(request):
     profile = Profile.objects.filter(user_id=request.user)[0]
-    return render(request, 'users/profile_details.html', {'profile': profile})
+    user_form = UserUpdateForm(instance=request.user)
+    profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    context = {
+        'profile': profile,
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request, 'users/profile_details.html', context)
 
 
 @login_required
 def edit_profile(request):
+    profile = Profile.objects.filter(user_id=request.user)[0]
+    user_form = UserUpdateForm(instance=request.user)
+    profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    context = {
+        'profile': profile,
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
@@ -87,14 +124,14 @@ def edit_profile(request):
             user_form.save()
             profile_form.save()
             return redirect('show_details')
-    else:
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
+        else:
+            context2 = {
+                'profile': profile,
+                'user_form': user_form,
+                'profile_form': profile_form
+            }
+            return render(request, 'users/edit_profile.html', context2)
 
-    context = {
-        'user_form': user_form,
-        'profile_form': profile_form
-    }
     return render(request, 'users/edit_profile.html', context)
 
 
@@ -128,9 +165,28 @@ def send_email(request, email, subject_str, email_template_html, message, flag, 
                 'token': default_token_generator.make_token(user),
                 'protocol': 'http',
             }
-            email_content = render_to_string(email_template_name, c)
+            email = render_to_string(email_template_name, c)
 
-            connectedApiAndSendEmail(subject_str, email_content, user)
+            # Configure API key authorization: api-key
+            configuration = sib_api_v3_sdk.Configuration()
+            configuration.api_key[
+                'api-key'] = os.environ.get('MAIL_KEY')
+
+            # create an instance of the API class
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+
+            subject = subject_str
+            html_content = email
+            sender = {"name": 'Smart Invest', "email": 'smartinvest850@gmail.com'}
+            to = [{"email": user.email, "name": 'Daniell'}]
+            headers = {"Some-Custom-Name": "unique-id-1234"}
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, headers=headers, html_content=html_content,
+                                                           sender=sender, subject=subject)
+            try:
+                api_instance.send_transac_email(send_smtp_email)
+                messages.success(request, "Email send successfully")
+            except ApiException:
+                return HttpResponse('Invalid header found.')
 
             return render(request, message)
 

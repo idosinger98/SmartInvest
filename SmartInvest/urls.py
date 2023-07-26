@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('users.urls')),
     path('', include('review.urls')),
     path('', include('contact.urls')),
+    path('', include('community.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

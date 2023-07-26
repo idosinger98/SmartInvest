@@ -1,27 +1,23 @@
+{% extends 'nav_menu.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
+
 <head>
     {% block head %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password</title>
 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-    <style>
-      .form-gap {
-        margin-top: 70px;
-      }
-    </style>
     {% endblock head %}
 </head>
+
+{% block content %}
 <body>
-    <main>
+    <main style="padding-top: 50px;">
         <div class="container">
             {% if messages %}
                 {% for message in messages %}
@@ -31,9 +27,9 @@
                 {% endfor %}
             {% endif %}
 
-            {% block content %}
-            {% endblock content %}
+            {% block content2 %}
+            {% endblock content2 %}
         </div>
     </main>
 </body>
-</html>
+{% endblock %}
