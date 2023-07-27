@@ -95,35 +95,7 @@
         </div>
          </form>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#uploadBtn').click(function() {
-            $('#fileInput').click();
-        });
-
-        // When a new file is selected, update the profile image with the selected file (optional).
-        $('#fileInput').change(function() {
-            var file = this.files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(event) {
-                    $('#profileImage').attr('src', event.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Form submission event handling
-        $('#updateProfileForm').submit(function(event) {
-            // Prevent the default form submission behavior
-            event.preventDefault();
-
-            // Optionally, you can add code here to handle form submission via AJAX if needed.
-            // For now, I'll assume you want to submit the form traditionally.
-            this.submit();
-        });
-    });
-</script>
+<script src=" {% static 'js/profile.js' %}"></script>
 
 </body>
 {% endblock %}
