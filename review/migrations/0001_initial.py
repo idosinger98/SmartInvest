@@ -20,7 +20,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('review_id', models.BigAutoField(primary_key=True, serialize=False)),
                 ('content', models.TextField()),
-                ('rating', models.IntegerField(validators=[django.core.validators.MaxValueValidator(5), django.core.validators.MinValueValidator(1)])),
+                ('rating', models.IntegerField(
+                    validators=[django.core.validators.MaxValueValidator(5),
+                                django.core.validators.MinValueValidator(1)]
+                )),
                 ('date', models.DateTimeField(default=django.utils.timezone.now)),
                 ('publisher_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.profile')),
             ],
