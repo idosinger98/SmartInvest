@@ -19,7 +19,7 @@
           <div class="row d-flex justify-content-center text-center">
             <div class="col-lg-8">
               <h1>Post Details</h1>
-              <p class="mb-0">Odio et unde deleniti. Deserunt numquam exercitationem. Officiis quo odio sint voluptas consequatur ut a odio voluptatem. Sit dolorum debitis veritatis natus dolores. Quasi ratione sint. Sit quaerat ipsum dolorem.</p>
+              <p class="mb-0"></p>
             </div>
           </div>
         </div>
@@ -128,89 +128,15 @@
                     <p>
                       {{comment.content}}
                     </p>
-                      <script>
-                        $(document).ready(function() {
-                          let likesCommentIcon = $('#likesCommentIcon{{ forloop.counter }}');
-                          let commentId = likesCommentIcon.data('comment-id');
-                          let profileId = likesCommentIcon.data('profile-id');
+                    <script>
+                    let counter = {{ comments|length }};
+                    let postId = {{ post.id }};
+                    let userId = {{ user.profile.profile_id }};
+                    </script>
 
-                          $.ajax({
-                            url: 'check-comment-like/',
-                            method: 'GET',
-                            data: {
-                              'comment_id': commentId,
-                              'profile_id': profileId
-                            },
-                            success: function(response) {
-                              if (response.liked) {
-                                likesCommentIcon.text('Unlike');
-                              } else {
-                                likesCommentIcon.text('Like');
-                              }
-                            }
-                          });
-                        });
-                      </script>
-                      <script>
-                        document.getElementById('likesCommentIcon{{ forloop.counter }}').addEventListener('click', function() {
-                          let profileId = this.getAttribute('data-profile-id');
-                          let commentId = this.getAttribute('data-comment-id');
-                          let xhr = new XMLHttpRequest();
-                          xhr.open('POST', '/community/like_comment/' + commentId + '/' + profileId + '/');
-                          xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-                          xhr.onload = function() {
-                              if (xhr.status === 200) {
-                                  let response = JSON.parse(xhr.responseText);
-                                  let likesCommentIcon = document.getElementById('likesCommentIcon{{ forloop.counter }}')
-                                  let likesCommentCounter = document.getElementById('likesCommentCounter{{ forloop.counter }}')
-                                  likesCommentCounter.innerHTML =  '(' + response.likes + ')'
-                                  if(response.is_liked) {
-                                    likesCommentIcon.innerHTML = 'Like';
-                                  }
-                                  else {
-                                    likesCommentIcon.innerHTML = 'Unlike';
-                                  }
-                              }
-                          };
-                          xhr.send();
-                        });
-                      </script>
                     <div class="meta-bottom">
                       {% if comment.publisher_id.profile_id == user.profile.profile_id %}
-                      <h5><a class="likeComment" id="deleteCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-post-id="{{ post.id }}" data-profile-id="{{ user.profile.profile_id }}">🗑️</a></h5>
-                      <script>
-                      document.getElementById('deleteCommentButton{{ forloop.counter }}').addEventListener('click', function() {
-                        let comment_id = this.getAttribute('data-comment-id');
-                        let post_id = this.getAttribute('data-post-id');
-                        let profile_id = this.getAttribute('data-profile-id');
-                        confirmDelete(post_id, comment_id, profile_id);
-                      });
-
-                      function confirmDelete(post_id, comment_id, profile_id) {
-                          const confirmation = confirm("Are you sure you want to delete this comment?");
-                          if (confirmation) {
-                              fetch(`/community/delete-comment/${post_id}/${comment_id}/${profile_id}/`, {
-                                  method: 'DELETE',
-                                  headers: {
-                                      'X-CSRFToken': '{{ csrf_token }}'  // Replace with the appropriate way to get the CSRF token in your template
-                                  }
-                              })
-                              .then(response => {
-                                  if (response.ok) {
-                                      // Reload the page or perform any necessary actions
-                                      window.location.reload();
-                                  } else {
-                                      console.error('Error deleting comment:', response.status);
-                                      // Handle the error or display an appropriate message to the user
-                                  }
-                              })
-                              .catch(error => {
-                                  console.error('Error deleting comment:', error);
-                                  // Handle the error or display an appropriate message to the user
-                              });
-                          }
-                      }
-                      </script>
+                      <h5><a class="deleteComment" id="deleteCommentButton{{ forloop.counter }}" data-comment-id="{{ comment.id }}" data-post-id="{{ post.id }}" data-profile-id="{{ user.profile.profile_id }}">🗑️</a></h5>
                       {% endif %}
               </div>
                   </div>
@@ -232,40 +158,6 @@
                   </div>
                 </form>
               </div>
-
-              <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-              <script>
-                $(document).ready(function() {
-                  $('#commentForm').submit(function(event) {
-                    event.preventDefault(); // Prevent the default form submission
-
-                    // Retrieve the comment content and post ID
-                    let commentContent = $('#commentInput').val();
-                    let postId = {{ post.id }}; // Replace with the actual post ID
-                    let profile_id = {{ user.profile.profile_id }};
-
-                    // Send an AJAX request to the comment creation URL
-                    $.ajax({
-                      url: 'create-comment/'
-                      method: 'POST',
-                      data: {
-                        'comment': commentContent,
-                        'post_id': postId
-                        'profile_id': profile_id
-                      },
-                      success: function(response) {
-                        // Handle the success response
-                        console.log('Comment created successfully!');
-                        // Optionally, you can perform additional actions like updating the comment section with the newly created comment
-                      },
-                      error: function(xhr, status, error) {
-                        // Handle the error response
-                        console.error('Error creating comment:', error);
-                      }
-                    });
-                  });
-                });
-              </script>
             </div><!-- End blog comments -->
           </div>
           <div class="col-lg-4">
