@@ -1,0 +1,26 @@
+{% extends 'nav_menu.html' %}
+{% load static %}
+
+<head>
+{% block head %}
+     {% block head2 %}
+    {% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href=" {% static 'css/profile.css' %}" rel="stylesheet">
+{% endblock %}
+</head>
+
+{% block content %}
+<body>
+<div class="container mt-4 content-area">
+      <nav class="nav nav-borders">
+            <a class="nav-link {% if request.path == '/profile/details/' %}active{% endif %}" href="{% url 'show_details' %}">Account Details</a>
+            <a class="nav-link {% if request.path == '/profile/edit/' %}active{% endif %}" href="{% url 'edit_profile' %}">Edit Details</a>
+            <a class="nav-link {% if request.path == '/password/' %}active{% endif %}" href="{% url 'change_password' %}">Security</a>
+        </nav>
+    {% block content2 %}
+    {% endblock %}
+        </div>
+</body>
+{% endblock %}

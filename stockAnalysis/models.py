@@ -11,9 +11,13 @@ class AnalyzedStocksManager(models.Manager):
         return self.filter(is_public=True)
 
 
-class AnalyzedStocks(models.Model):
+class AnalyzedStock(models.Model):
     analyst_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
     stock_image = models.JSONField()    # for now as json. maybe will change.
     description = models.TextField(blank=True)
     is_public = models.BooleanField(default=False)
     objects = AnalyzedStocksManager()
+
+
+class StockSymbol(models.Model):
+    symbol = models.CharField(max_length=7, primary_key=True)

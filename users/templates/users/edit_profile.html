@@ -1,43 +1,101 @@
-{% extends 'base.html' %}
-{% block content%}
+{% extends 'profile.html' %}
 {% load static %}
-<div class="container">
-	<div class="row gutters">
-		<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-			<div class="card h-100">
-				<div class="card-body">
-					<div class="account-settings">
-						<div class="user-profile">
-							<div class="user-avatar">
-{#								<div class="image">#}
-{#									{% if object.image %}#}
-{#										<img src="{{object.image.url}}" class="rounded-circle img-fluid" style="width: 200px;">#}
-{#									{% else %}#}
-{#										<img src="" alt="Profile Picture"#}
-{#										style="width: 250px;">#}
-{#									{% endif %}#}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<br>
-		<form method="POST" enctype="multipart/form-data">
-			{% csrf_token %}
-			<fieldset class="form-group">
-				<h2 class="text fw-bold border-bottom mb-4 mx-1 mx-md-4 mt-4">Edit Profile</h2>
-				<table>
-					{{ user_form.as_table}}
-					{{ profile_form.as_table}}
-				</table>
-			</fieldset>
-			<div class="form-group">
-				<br/>
-				<button class="btn btn-outline-info" type="submit">Update</button>
-			</div>
-		</form>
-	</div>
-</div>
+
+
+<head>
+     {% block head2 %}
+    <title>Edit Profile</title>
+    {% endblock %}
+</head>
+
+{% block content2 %}
+<body>
+        <form method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+        <hr class="mt-0 mb-4">
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="card mb-4 mb-xl-0">
+                    <div class="card-header">Profile Picture</div>
+                        <div class="card-body text-center">
+                            {% if profile.image %}
+                                <img id="profileImage" class="img-account-profile rounded-circle mb-2" src="{{ profile.image.url }}" alt="">
+                            {% else %}
+                                <img id="profileImage" class="img-account-profile rounded-circle mb-2" src="{% static 'images/blank_profile.png' %}" alt="">
+                            {% endif %}
+                        </div>
+                    <button class="btn btn-primary" type="button" id="uploadBtn">Upload new image</button>
+                    <input type="file" name="image" id="fileInput" style="display: none;">
+                    <input type="submit" value="Save" style="display: none;">
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <div class="card mb-4">
+                    <div class="card-header">Edit Details</div>
+                    <div class="card-body">
+                        <div class="row gx-3 mb-3">
+                            <div class="form-group">
+                                <label class="form-label" for="username">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" value="{{ user_form.username.value }}">
+                                {% if user_form.username.errors %}
+                                    <small class="error">{{ user_form.username.errors|striptags }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                           <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                <label class="form-label" for="first_name">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter your first name" value="{{ user_form.first_name.value }}">
+                                {% if user_form.first_name.errors %}
+                                    <small class="error">{{ user_form.first_name.errors|striptags }}</small>
+                                {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                <label class="form-label" for="last_name">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter your last name" value="{{ user_form.last_name.value }}">
+                                {% if user_form.last_name.errors %}
+                                    <small class="error">{{ user_form.last_name.errors|striptags }}</small>
+                                {% endif %}
+                                </div>
+                           </div>
+                            <div class="row gx-3 mb-3">
+                           <div class="form-group">
+                             <label class="form-label" for="country">Country</label>
+                                {{ profile_form.country }}
+                               {% if profile_form.country.errors %}
+                                <small class="error">{{ profile_form.country.errors|striptags }}</small>
+                                {% endif %}
+                            </div>
+                            </div>
+                            <div class="row gx-3 mb-3">
+                            <div class="form-group">
+                                <label class="form-label" for="email">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" value="{{ user_form.email.value }}">
+                                {% if user_form.email.errors %}
+                                    <small class="error">{{ user_form.email.errors|striptags }}</small>
+                                {% endif %}
+                            </div>
+                            </div>
+                            <div class="row gx-3 mb-3">
+                            <div class="form-group">
+                                <label class="form-label" for="phone_number">Phone Number</label>
+                                <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter your phone number" value="{{ profile_form.phone_number.value }}">
+                                {% if profile_form.phone_number.errors %}
+                                    <small class="error">{{ profile_form.phone_number.errors|striptags }}</small>
+                                {% endif %}
+                            </div>
+                            </div>
+                          <div class="form-group text-center mt-4">
+                                <button class="btn btn-outline-info" type="submit">Update</button>
+                          </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+         </form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src=" {% static 'js/profile.js' %}"></script>
+
+</body>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.db import migrations, transaction
 from users.models import Profile
-from stockAnalysis.models import AnalyzedStocks
+from stockAnalysis.models import AnalyzedStock
 from community.models import Post, Comment
 from django.utils import timezone
 from datetime import timedelta
@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
         with transaction.atomic():
             for analysis_id, likes, time in post_test_data:
                 Post(
-                    analysis_id=AnalyzedStocks.objects.get(pk=analysis_id),
+                    analysis_id=AnalyzedStock.objects.get(pk=analysis_id),
                     likes=likes,
                     time=time,
                 ).save()

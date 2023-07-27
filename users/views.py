@@ -76,13 +76,47 @@ class PasswordsChangeView(PasswordChangeView, LoginRequiredMixin):
 
 
 @login_required
+def delete_account(request):
+    if request.method == 'POST':
+        # Delete the user account
+        user = request.user
+        user.delete()
+
+        # Logout the user
+        logout(request)
+
+        # Redirect to a success page or homepage
+        return redirect('login')
+
+    # Render the delete account confirmation template
+    return render(request, 'users/change-password.html')
+
+
+@login_required
 def show_details(request):
     profile = Profile.objects.filter(user_id=request.user)[0]
-    return render(request, 'users/profile_details.html', {'profile': profile})
+    user_form = UserUpdateForm(instance=request.user)
+    profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    context = {
+        'profile': profile,
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request, 'users/profile_details.html', context)
 
 
 @login_required
 def edit_profile(request):
+    profile = Profile.objects.filter(user_id=request.user)[0]
+    user_form = UserUpdateForm(instance=request.user)
+    profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    context = {
+        'profile': profile,
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
@@ -90,14 +124,14 @@ def edit_profile(request):
             user_form.save()
             profile_form.save()
             return redirect('show_details')
-    else:
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
+        else:
+            context2 = {
+                'profile': profile,
+                'user_form': user_form,
+                'profile_form': profile_form
+            }
+            return render(request, 'users/edit_profile.html', context2)
 
-    context = {
-        'user_form': user_form,
-        'profile_form': profile_form
-    }
     return render(request, 'users/edit_profile.html', context)
 
 
