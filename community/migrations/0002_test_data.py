@@ -20,13 +20,21 @@ class Migration(migrations.Migration):
     ]
 
     def generate_data(apps, schema_editor):
-
         post_test_data = [
-            (1, 1, timezone.now() + DELTA),
-            (2, 2,  timezone.now() + DELTA + DELTA),
-            (3, 3,  timezone.now() + DELTA + DELTA + DELTA),
-            (4, 4,  timezone.now() + DELTA + DELTA + DELTA + DELTA),
-            (5, 5,  timezone.now() + DELTA + DELTA + DELTA + DELTA + DELTA)
+            (1, "my first post", "Google Stock Analysis: Key Trends & Performance", 1,
+             timezone.now() + DELTA),
+            (2, "my second post", "Microsoft: Comprehensive Stock Review", 2,
+             timezone.now() + DELTA + DELTA),
+            (3, "my third post", "Tesla Stock Analysis: Investment Potential", 3,
+             timezone.now() + DELTA + DELTA + DELTA),
+            (4, "my fourth post", "Apple: Unraveling Market Performance", 4,
+             timezone.now() + DELTA + DELTA + DELTA + DELTA),
+            (5, "my five post", "Amazon's Growth Trajectory: A Thorough Stock Analysis", 5,
+             timezone.now() + DELTA + DELTA + DELTA + DELTA + DELTA),
+            (6, "my six post", "Meta Stock: Investment Outlook", 6,
+             timezone.now() + DELTA + DELTA + DELTA + DELTA),
+            (7, "my seven post", "Diversify with FAANG Stocks: Comparative Analysis", 7,
+             timezone.now() + DELTA + DELTA + DELTA + DELTA + DELTA),
         ]
 
         comment_test_data = [
@@ -43,9 +51,11 @@ class Migration(migrations.Migration):
         ]
 
         with transaction.atomic():
-            for analysis_id, likes, time in post_test_data:
+            for analysis_id, description, title, likes, time in post_test_data:
                 Post(
                     analysis_id=AnalyzedStocks.objects.get(pk=analysis_id),
+                    description=description,
+                    title=title,
                     likes=likes,
                     time=time,
                 ).save()

@@ -38,7 +38,7 @@
               <img src="{% static 'assets/img/blog/blog-1.jpg' %}" alt="" class="img-fluid">
             </div>
             <h2 class="title">
-              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
+              <a href="blog-details.html">{{ post.title }}</a>
             </h2>
             <div class="d-flex align-items-center">
               {% if post.analysis_id.analyst_id.image %}
