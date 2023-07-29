@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from community.models import Post
+from community.models import Post, Comment
 from django.contrib.auth.decorators import login_required
-from community.forms import PostForm
+from community.forms import PostForm, CommentForm
 from stockAnalysis.models import AnalyzedStocks
 from django.utils import timezone
+from django.http import HttpResponse
+from users.models import Profile
 
 
 def community(request):
@@ -42,3 +44,27 @@ def create_post_view(request, pk):
     else:
         form = PostForm()
     return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
+
+
+def post_deatils(request, pk):
+    post = Post.objects.filter(id=pk).first()
+    comments = Comment.objects.get_all_comments_on_post(post.id)
+    return render(request, 'community/post-details.html', {'post': post, 'comments': comments})
+
+
+@login_required
+def comment(request, post_id):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            post = Post.objects.filter(id=post_id).first()
+            profile = Profile.objects.filter(user_id=request.user).first()
+            create_comment = Comment.objects.create(publisher_id=profile,
+                                                    content=form.cleaned_data['content'],
+                                                    post_id=post,
+                                                    likes=0,
+                                                    time=timezone.now())
+            create_comment.save()
+            return HttpResponse()
+
+    return HttpResponse()

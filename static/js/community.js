@@ -1,0 +1,18 @@
+  document.querySelector('#comment-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    var form = event.target;
+    var formData = new FormData(form);
+
+    var request = new XMLHttpRequest();
+    request.open(form.method, form.action);
+    request.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+    request.onload = function () {
+      if (request.status === 200) {
+         window.location.reload();
+      } else {
+        alert('An error occurred while sending the message. Please try again.');
+      }
+    };
+    request.send(formData);
+  });
