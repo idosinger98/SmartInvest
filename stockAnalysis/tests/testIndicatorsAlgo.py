@@ -2,7 +2,7 @@ import pytest
 import stockAnalysis.thirdPartUtils.IndicatorsAlgo as algos
 import pandas as pd
 import numpy as np
-
+from sklearn.linear_model import LinearRegression
 
 @pytest.fixture
 def sample_df():
@@ -91,16 +91,29 @@ def test_stochastic_algo(sample_df):
     stochastic = algos.stochastic_algo(sample_df)
     pd.testing.assert_frame_equal(stochastic, expected_result)
 
-def test_linear_reg(sample_df):
-    expected_result = np.array([160.62125092, 159.77160303, 158.92195515, 158.07230727,
-         157.22265939, 156.37301151, 155.52336363, 154.67371575,
-         153.82406787, 152.97441999])
-    dates = pd.to_datetime(sample_df.index,unit='ms')
-    sample_df.index = [date.strftime('%Y-%m-%d') for date in dates]
-    lin_reg = algos.linear_reg_algo(sample_df)
+def test_linear_reg_algo(sample_df):
+    # Call the function to get the predicted DataFrame
+    prediction_df = algos.linear_reg_algo(sample_df)
 
-    assert type(expected_result) == type(lin_reg)
-    assert np.allclose(expected_result,lin_reg)
+    # Assert the DataFrame contains the required columns
+    assert 'Predicted_Price' in prediction_df.columns
+
+    # Assert the length of the DataFrame is equal to the input DataFrame
+    assert len(prediction_df) == len(sample_df)
+
+    # Assert the predicted prices are of numeric type (float or int)
+    assert prediction_df['Predicted_Price'].dtype in (np.float64, np.int64)
+
+    # Check the predicted prices against a custom linear regression calculation
+    X = np.arange(len(sample_df['Close'])).reshape(-1, 1)
+    y = sample_df['Close'].values
+
+    lr_model = LinearRegression()
+    lr_model.fit(X, y)
+    y_pred_custom = lr_model.predict(X)
+
+    np.testing.assert_array_almost_equal(prediction_df['Predicted_Price'].values, y_pred_custom)
+
 
 
 def test_calculate_algos(sample_df):
@@ -110,6 +123,36 @@ def test_calculate_algos(sample_df):
     assert len(result.keys()) == 2
 
 def test_mad_algo(sample_df):
-    result = algos.mad_algo(sample_df)
-    expected_result = 3.7584834098742235  # Expected result based on the sample_df
-    assert result == expected_result
+    # Call the function to get the DataFrame with moving average deviation
+    result_df = algos.mad_algo(sample_df)
+
+    # Assert the DataFrame contains the required columns
+    assert 'Moving Average Deviation' in result_df.columns
+
+    # Assert the length of the DataFrame is less than or equal to the input DataFrame
+    assert len(result_df) <= len(sample_df)
+
+    # Assert the moving average deviation values are of numeric type (float or int)
+    assert result_df['Moving Average Deviation'].dtype in (np.float64, np.int64)
+
+    # Check the moving average deviation calculation against a custom calculation
+    moving_average = sample_df['Close'].rolling(window=10).mean()
+    moving_average_deviation_custom = sample_df['Close'] - moving_average
+
+    np.testing.assert_array_almost_equal(
+        result_df['Moving Average Deviation'].values,
+        moving_average_deviation_custom.dropna().values)
+
+
+def test_momentum_algo(sample_df):
+    # Call the function to get the DataFrame with momentum values
+    result_df = algos.momentum_algo(sample_df)
+
+    # Assert the DataFrame contains the required column
+    assert 'Momentum' in result_df.columns
+
+    # Assert the length of the DataFrame is less than or equal to the input DataFrame
+    assert len(result_df) <= len(sample_df)
+
+    # Assert the momentum values are of numeric type (float or int)
+    assert result_df['Momentum'].dtype in (np.float64, np.int64)

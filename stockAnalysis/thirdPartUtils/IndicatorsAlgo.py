@@ -63,7 +63,6 @@ def bollinger_algo(stock_df):
     return df_result
 
 
-
 def linear_reg_algo(stock_df):
     y = stock_df['Close'].values
     X = np.arange(len(y)).reshape(-1, 1)
@@ -81,7 +80,7 @@ def linear_reg_algo(stock_df):
 
     # Create a DataFrame containing the predicted prices and the corresponding dates
     prediction_dates = stock_df.index
-    prediction_df = pd.DataFrame({'Predicted_Price': y_pred},index=prediction_dates)
+    prediction_df = pd.DataFrame({'Predicted_Price': y_pred}, index=prediction_dates)
 
     return prediction_df
 
@@ -147,6 +146,6 @@ def momentum_algo(stock_df):
     result_df = daily_price_changes.rolling(RECOMMENDED_WINDOW).sum()
 
     # Create a DataFrame containing the Momentum values and the corresponding time index
-    result_df = pd.DataFrame({ 'Momentum': result_df})
+    result_df = pd.DataFrame({'Momentum': result_df})
 
     return result_df

@@ -102,6 +102,7 @@ def save_stock_analysis(request):
     # request_body['public']
 #     if is public add logic to get also the title and add it to the posts model
 
+
 def json_to_object(json_data):
     try:
         request_dict = json.loads(json_data)
