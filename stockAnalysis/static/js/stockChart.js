@@ -4,13 +4,19 @@ export class StockChart {
     constructor() {
         this.chart = anychart.stock();
         this.indicator_to_plot_map = {};
+        this.indicators_checkboxes = [];
+        this.data = {};
     }
 
-    createFromData(data, volumeData) {
-        const plot = this.chart.plot(0);
-        this.setupGraphSettings(plot, data);
-        this.setupStockVolumeSettings(plot, volumeData);
+    createFromData(data) {
+        let stockData;
+        let volumeData;
 
+        [stockData,volumeData] = this.formatDataToChartApi(data);
+        const plot = this.chart.plot(0);
+        this.setupGraphSettings(plot, stockData);
+        this.setupStockVolumeSettings(plot, volumeData);
+        this.data = data;
     }
 
     setupGraphSettings(plot,data){
@@ -57,11 +63,24 @@ export class StockChart {
     }
 
     saveChart(){
-        return this.chart.toJson();
+        const chartData = {
+            'data': this.data,
+            'indicators': [],
+            'Annotations': null
+        }
+
+        this.indicators_checkboxes
+            .filter(indicator => indicator.isChecked())
+            .forEach(indicator => chartData['indicators'].push(indicator.getElementData()))
+
+        return JSON.stringify(chartData);
     }
 
     loadChartFromJson(json){
+        const jsonData = JSON.parse(json);
 
+        this.createFromData(jsonData['data']);
+        jsonData['indicators'].forEach(data => this.addIndicatorToChart(data));
     }
 
     addIndicatorToChart(data) {
@@ -90,15 +109,6 @@ export class StockChart {
         lineSeries.id(name);
     }
 
-    // addIndicatorLineSeriesOnMainPlot(data, indicatorName, color) {
-    //     this.addIndicatorLineOnPlot(data,this.chart.plot(0),indicatorName, color);
-    // }
-    //
-    // addAreaToPlot(data){
-    //     const areaSeries = this.chart.plot(0).area(data);
-    //     areaSeries.fill('rgba(255, 0, 0, 0.3)');
-    // }
-
     removeIndicatorLine(name){
         const plot_index = this.indicator_to_plot_map[name];
 
@@ -110,4 +120,40 @@ export class StockChart {
             this.chart.plot(plot_index).removeSeries(name);
         }
     }
+
+    addIndicatorCheckBox(indicatorCheckBox, data){
+        this.indicators_checkboxes.push(indicatorCheckBox);
+        indicatorCheckBox.addStatusChangeEventListener(
+            (data)=> indicatorCheckBox.getIndicatorAsync(data, this),
+            (name)=> this.removeIndicatorLine(name),
+            data
+        );
+    }
+
+    formatDataToChartApi(data){
+        const volumeData = [];
+        const newData = [];
+
+        for (const timestamp of Object.keys(data.Open)) {
+            newData.push([
+                parseInt(timestamp),
+                data['Open'][timestamp],
+                data['High'][timestamp],
+                data['Low'][timestamp],
+                data['Close'][timestamp],
+            ]);
+            volumeData.push([parseInt(timestamp), data['Volume'][timestamp]]);
+        }
+
+        return [newData, volumeData];
+    }
+
+    // addIndicatorLineSeriesOnMainPlot(data, indicatorName, color) {
+    //     this.addIndicatorLineOnPlot(data,this.chart.plot(0),indicatorName, color);
+    // }
+    //
+    // addAreaToPlot(data){
+    //     const areaSeries = this.chart.plot(0).area(data);
+    //     areaSeries.fill('rgba(255, 0, 0, 0.3)');
+    // }
 }

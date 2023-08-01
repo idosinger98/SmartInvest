@@ -11,5 +11,6 @@ EXCEPTION_HANDLER = {
     StockNotFoundException: HTTPStatus.NOT_FOUND,
     UnsupportedMediaException: HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
     django.utils.datastructures.MultiValueDictKeyError: HTTPStatus.BAD_REQUEST,
-    ValueError: HTTPStatus.BAD_REQUEST
+    ValueError: HTTPStatus.BAD_REQUEST,
+    KeyError: HTTPStatus.BAD_REQUEST
 }

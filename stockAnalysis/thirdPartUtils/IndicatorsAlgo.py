@@ -63,17 +63,27 @@ def bollinger_algo(stock_df):
     return df_result
 
 
-def linear_reg_algo(stock_df):
-    stock_df.dropna(inplace=True)
-    stock_df.index = pd.to_datetime(stock_df.index, format='%Y-%m-%d')
-    x = np.array(range(1, len(stock_df) + 1)).reshape((-1, 1))
-    y = stock_df[Yf.CLOSE_PRICE].values
-    model = LinearRegression()
-    model.fit(x, y)
-    future_dates = np.array(range(len(stock_df) + 1, len(stock_df) + 11)).reshape((-1, 1))
-    future_prices = model.predict(future_dates)
 
-    return future_prices
+def linear_reg_algo(stock_df):
+    y = stock_df['Close'].values
+    X = np.arange(len(y)).reshape(-1, 1)
+
+    # Split the data into training and testing sets
+    X_train, y_train = X, y
+    X_test = X
+
+    # Create the LinearRegression model and fit it to the training data
+    lr_model = LinearRegression()
+    lr_model.fit(X_train, y_train)
+
+    # Make predictions for the future time steps
+    y_pred = lr_model.predict(X_test)
+
+    # Create a DataFrame containing the predicted prices and the corresponding dates
+    prediction_dates = stock_df.index
+    prediction_df = pd.DataFrame({'Predicted_Price': y_pred},index=prediction_dates)
+
+    return prediction_df
 
 
 def force_algo(stock_df):
@@ -107,19 +117,36 @@ def stochastic_algo(stock_df):
 
 
 def mad_algo(stock_df):
-    mean_price = np.mean(stock_df[Yf.CLOSE_PRICE])
-    abs_diff_from_mean = np.abs(mean_price - stock_df[Yf.CLOSE_PRICE])
+    stock_df['MovingAverage'] = stock_df['Close'].rolling(window=10).mean()
 
-    return np.mean(abs_diff_from_mean)
+    # Calculate the deviation from the moving average
+    stock_df['Moving Average Deviation'] = stock_df['Close'] - stock_df['MovingAverage']
+
+    # Create a DataFrame containing only the 'Date' and 'MovingAverageDeviation' columns
+    result_df = stock_df[['Moving Average Deviation']].dropna()
+
+    return result_df
 
 
 def ma_golden_death_cross(stock_df):
-    prices = stock_df[Yf.CLOSE_PRICE].values
+    prices = stock_df[Yf.CLOSE_PRICE]
     if len(prices) < 200:
         return None
 
     ma_21 = prices.rolling(window=21).mean()
     ma_200 = prices.rolling(window=200).mean()
     result_df = pd.concat([ma_21, ma_200], axis=1, keys=['moving average-21', 'moving average-200'])
+
+    return result_df
+
+
+def momentum_algo(stock_df):
+    # Calculate the daily price changes (price differences)
+    daily_price_changes = stock_df['Close'].diff()
+    # Calculate the Momentum indicator for each day
+    result_df = daily_price_changes.rolling(RECOMMENDED_WINDOW).sum()
+
+    # Create a DataFrame containing the Momentum values and the corresponding time index
+    result_df = pd.DataFrame({ 'Momentum': result_df})
 
     return result_df

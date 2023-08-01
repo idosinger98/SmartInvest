@@ -98,33 +98,8 @@ const data =
             },
         };
 
-const volumeData = [];
-const newData = [];
-
-for (const timestamp of Object.keys(data.Open)) {
-    newData.push([
-        parseInt(timestamp),
-        data['Open'][timestamp],
-        data['High'][timestamp],
-        data['Low'][timestamp],
-        data['Close'][timestamp],
-    ]);
-    volumeData.push([parseInt(timestamp), data['Volume'][timestamp]]);
-}
-
 const chart = new StockChart();
-chart.createFromData(newData,volumeData);
-
-// dummy data
-// const lineData = [];
-//
-// for (const timestamp of Object.keys(data.Open)) {
-//     lineData.push([
-//         parseInt(timestamp),
-//         data['Open'][timestamp],
-//     ]);
-// }
-
+chart.createFromData(data);
 chart.drawChart('chart_container');
 
 // indicators handle
@@ -136,16 +111,11 @@ const checkboxListDiv = document.getElementById('checkboxList');
 for (const key of Object.keys(items)) {
     const listItem = new IndicatorCheckBox(key,items[key]);
 
-    listItem.addEventListener(
-        (data)=> listItem.getIndicatorAsync(data, chart),
-        (name)=> chart.removeIndicatorLine(name),
-        data
-    );
     checkboxListDiv.appendChild(listItem.getElement());
+    chart.addIndicatorCheckBox(listItem, data);
 }
 
 document.getElementById('saveButton').addEventListener('click', function () {
     chart.saveChart();
     this.blur();
 });
-

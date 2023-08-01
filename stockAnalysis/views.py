@@ -12,7 +12,7 @@ from django.shortcuts import render
 from .exceptions.StockNotFoundException import StockNotFoundException
 from .thirdPartUtils.IndicatorsAlgo import get_indicators_dict
 from pandas import DataFrame
-
+from .models import StockSymbol
 
 INTERVAL = 'interval'
 FROM = 'from'
@@ -46,6 +46,7 @@ def search_stock_view(request):
         to_date = request.GET.get(TO, datetime.datetime.now().strftime('%Y-%m-%d'))
         stock_details = Yfinance.get_stock_by_date(symbol, from_date, to_date, interval)
         response_dict = {'stock': stock_details.to_json()}
+        StockSymbol.objects.aget_or_create(symbol=symbol)
         response = render(request,
                           'stockAnalysis/graph_page.html',
                           {'symbol': symbol, 'stock_data': response_dict,
@@ -62,7 +63,7 @@ def handle_exception(exception):
     status_code = eh.EXCEPTION_HANDLER.get(type(exception), HTTPStatus.INTERNAL_SERVER_ERROR)
     error_msg = exception.args[0]
     if isinstance(exception, KeyError):
-        error_msg = 'no symbol mentioned'
+        error_msg = 'JSON keys not compatible'
 
     if status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
         error_msg = "EXCEPTION NOT HANDLE " + exception.args[0]
@@ -77,19 +78,34 @@ def post_calculate_algorithms(request):
     try:
         if request.content_type != 'application/json':
             raise UnsupportedMediaException()
-        try:
-            request_dict = json.loads(request.body)
-            algos_array = request_dict['algorithms']
-            stock_df = DataFrame(request_dict['stock'])
-        except json.decoder.JSONDecodeError:
-            raise ValueError("post body not contain json str")
 
+        request_dict = json_to_object(request.body)
+        algos_array = request_dict['algorithms']
+        stock_df = DataFrame(request_dict['stock'])
         if type(algos_array) != list:
             raise ValueError("JSON content is not a list type")
+
+        dictionary.update(calculate_algorithms(algos_array, stock_df))
     except Exception as e:
         error_msg, status_code = handle_exception(e)
         return JsonResponse(error_msg, status=status_code, safe=False)
 
-    dictionary.update(calculate_algorithms(algos_array, stock_df))
-
     return JsonResponse(dictionary, status=HTTPStatus.OK, safe=False)
+
+
+@csrf_exempt
+@require_POST
+def save_stock_analysis(request):
+    request_body = json_to_object(request.body)
+    request_body['chart_data']
+    request_body['description']
+    # request_body['public']
+#     if is public add logic to get also the title and add it to the posts model
+
+def json_to_object(json_data):
+    try:
+        request_dict = json.loads(json_data)
+    except json.decoder.JSONDecodeError:
+        raise ValueError("post body not contain json str")
+
+    return request_dict

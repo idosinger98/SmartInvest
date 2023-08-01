@@ -35,7 +35,15 @@ export class IndicatorCheckBox {
         return this.listItem;
     }
 
-    addEventListener(activeFunc,deactivateFunc,data){
+    isChecked(){
+        return this.checkbox.checked;
+    }
+
+    getElementData(){
+        return this.data;
+    }
+
+    addStatusChangeEventListener(activeFunc, deactivateFunc, data){
         this.checkbox.addEventListener('change',()=> {
                 if (this.checkbox.checked) {
                     this.checkbox.disabled = true;
