@@ -31,10 +31,6 @@ class Migration(migrations.Migration):
              timezone.now() + DELTA + DELTA + DELTA + DELTA),
             (5, "my five post", "Amazon's Growth Trajectory: A Thorough Stock Analysis", 5,
              timezone.now() + DELTA + DELTA + DELTA + DELTA + DELTA),
-            (6, "my six post", "Meta Stock: Investment Outlook", 6,
-             timezone.now() + DELTA + DELTA + DELTA + DELTA),
-            (7, "my seven post", "Diversify with FAANG Stocks: Comparative Analysis", 7,
-             timezone.now() + DELTA + DELTA + DELTA + DELTA + DELTA),
         ]
 
         comment_test_data = [

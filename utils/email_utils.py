@@ -4,7 +4,7 @@ import os
 from django.contrib.auth.models import User
 
 
-def connectedApiAndSendEmail(subject_str, content, user=User.objects.filter(username='Manager')[0]):
+def connectedApiAndSendEmail(subject_str, content, user=None):
     # Configure API key authorization: api-key
     configuration = sib_api_v3_sdk.Configuration()
     configuration.api_key['api-key'] = os.environ.get('MAIL_KEY')
@@ -15,7 +15,10 @@ def connectedApiAndSendEmail(subject_str, content, user=User.objects.filter(user
     subject = subject_str
     html_content = content
     sender = {"name": 'Smart Invest', "email": 'smartinvest850@gmail.com'}
-    to = [{"email": user.email, "name": 'Daniell'}]
+    if user is not None:
+        to = [{"email": user.email, "name": 'Daniell'}]
+    else:
+        to = [{"email": 'smartinvest850@gmail.com', "name": 'Daniell'}]
     headers = {"Some-Custom-Name": "unique-id-1234"}
     send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, headers=headers, html_content=html_content,
                                                    sender=sender, subject=subject)
