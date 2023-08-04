@@ -1,5 +1,5 @@
 import pytest
-import stockAnalysis.thirdPartUtils.IndicatorsAlgo as algos
+import stockAnalysis.utils.IndicatorsAlgo as algos
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression

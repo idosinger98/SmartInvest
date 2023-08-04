@@ -1,3 +1,5 @@
+import {GET_ALGOS_URL} from "../../../static/js/urls.js";
+
 export class IndicatorCheckBox {
     constructor(name, info) {
         this.listItem = document.createElement('li');
@@ -61,12 +63,12 @@ export class IndicatorCheckBox {
             return;
         }
 
-        fetch('http://localhost:8000/algorithms', {
+        fetch(GET_ALGOS_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({'stock': data, 'algorithms': [this.checkbox.value]})
+            body: JSON.stringify({'stock': data, 'indicators': [this.checkbox.value]})
         }).then(response => {
                 if (!response.ok) {
                     throw new Error('Request failed with status: ' + response.status + response.body);

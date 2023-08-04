@@ -1,3 +1,6 @@
+import {IndicatorCheckBox} from "./indicatorCheckBox.js";
+import { STOCK_KEYS, COLORS, CHART_JSON_KEYS} from "./constants.js";
+
 
 export class StockChart {
 
@@ -23,11 +26,10 @@ export class StockChart {
         plot.yGrid(true).xGrid(true).yMinorGrid(true).xMinorGrid(true);
         const series = plot.candlestick(data);
         series.name('stock name');
-        series.legendItem().iconType('rising-falling');
-        series.risingFill('green');
-        series.fallingFill('red');
-        series.risingStroke('green');
-        series.fallingStroke('red');
+        series.risingFill(COLORS.GREEN);
+        series.fallingFill(COLORS.RED);
+        series.risingStroke(COLORS.GREEN);
+        series.fallingStroke(COLORS.RED);
         // make scroller and the details line invisible
         this.showScroller(false);
         plot.legend().enabled(false);
@@ -36,17 +38,16 @@ export class StockChart {
     setupStockVolumeSettings(plot, data){
         const volumeSeries = plot.column(data);
         // set series settings
-        volumeSeries.name('Volume').zIndex(100).maxHeight('15%').bottom(0); // maybe remove the zindex
+        volumeSeries.name(STOCK_KEYS.VOLUME).zIndex(100).maxHeight('15%').bottom(0); // maybe remove the zindex
 
         // create a logarithmic scale
         const customScale = anychart.scales.log();
         // sets y-scale
         volumeSeries.yScale(customScale);
-
-        volumeSeries.risingStroke('red');
-        volumeSeries.fallingStroke('green');
-        volumeSeries.risingFill('red 0.7');
-        volumeSeries.fallingFill('green 0.7');
+        volumeSeries.risingStroke(COLORS.RED);
+        volumeSeries.fallingStroke(COLORS.GREEN);
+        volumeSeries.risingFill(COLORS.RED + ' 0.7');
+        volumeSeries.fallingFill(COLORS.GREEN + ' 0.7');
     }
 
     showScroller(enable){
@@ -62,16 +63,15 @@ export class StockChart {
         });
     }
 
-    saveChart(){
-        const chartData = {
-            'data': this.data,
-            'indicators': [],
-            'Annotations': null
-        }
+    chartToJson(){
+        const chartData = {};
 
+        chartData[CHART_JSON_KEYS.DATA] = this.data;
+        chartData[CHART_JSON_KEYS.INDICATORS] = [];
+        chartData[CHART_JSON_KEYS.ANNOTATIONS] = null;
         this.indicators_checkboxes
             .filter(indicator => indicator.isChecked())
-            .forEach(indicator => chartData['indicators'].push(indicator.getElementData()))
+            .forEach(indicator => chartData[CHART_JSON_KEYS.INDICATORS].push(indicator.getElementData()));
 
         return JSON.stringify(chartData);
     }
@@ -79,8 +79,8 @@ export class StockChart {
     loadChartFromJson(json){
         const jsonData = JSON.parse(json);
 
-        this.createFromData(jsonData['data']);
-        jsonData['indicators'].forEach(data => this.addIndicatorToChart(data));
+        this.createFromData(jsonData[CHART_JSON_KEYS.DATA]);
+        jsonData[CHART_JSON_KEYS.INDICATORS].forEach(data => this.addIndicatorToChart(data));
     }
 
     addIndicatorToChart(data) {
@@ -137,12 +137,12 @@ export class StockChart {
         for (const timestamp of Object.keys(data.Open)) {
             newData.push([
                 parseInt(timestamp),
-                data['Open'][timestamp],
-                data['High'][timestamp],
-                data['Low'][timestamp],
-                data['Close'][timestamp],
+                data[STOCK_KEYS.OPEN][timestamp],
+                data[STOCK_KEYS.HIGH][timestamp],
+                data[STOCK_KEYS.LOW][timestamp],
+                data[STOCK_KEYS.CLOSE][timestamp],
             ]);
-            volumeData.push([parseInt(timestamp), data['Volume'][timestamp]]);
+            volumeData.push([parseInt(timestamp), data[STOCK_KEYS.VOLUME][timestamp]]);
         }
 
         return [newData, volumeData];

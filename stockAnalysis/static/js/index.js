@@ -1,6 +1,7 @@
 import {StockChart} from "./stockChart.js";
 import {IndicatorCheckBox} from "./indicatorCheckBox.js";
-
+import {SAVE_STOCK_URL} from "../../../static/js/urls.js";
+import {sendToastMessage, MESSAGE_TYPE} from '/static/js/toastinette.js'
 
 const data =
     typeof stockData !== 'undefined' ?
@@ -102,7 +103,6 @@ const chart = new StockChart();
 chart.createFromData(data);
 chart.drawChart('chart_container');
 
-// indicators handle
 const items = typeof indicators !== 'undefined' ?
     indicators :
     {'Item 1': 'description', 'Item 2': 'description', 'Item 3': 'description'};
@@ -115,7 +115,82 @@ for (const key of Object.keys(items)) {
     chart.addIndicatorCheckBox(listItem, data);
 }
 
+const overlay = document.getElementById('overlay');
+const windowElement = document.getElementById('window');
+const closeButton = document.getElementById('closeButton');
+const submitButton = document.getElementById('submitButton');
+const titleInput = document.getElementById('titleInput');
+const publicCheckBox = document.getElementById('publicCheckBox');
+
 document.getElementById('saveButton').addEventListener('click', function () {
-    chart.saveChart();
     this.blur();
+    if(!is_user_connected()){
+        sendToastMessage(
+            'you should be logged in to use this feature :)',
+            MESSAGE_TYPE.ERROR,
+            {title: "login required"}
+        );
+        return;
+    }
+    overlay.style.display = 'block';
+    windowElement.style.display = 'block';
 });
+
+overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) {
+        overlay.style.display = 'none';
+        windowElement.style.display = 'none';
+    }
+});
+
+closeButton.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    windowElement.style.display = 'none';
+});
+
+submitButton.addEventListener('click', () => {
+    if(!isTitleFilled(publicCheckBox.checked, titleInput.value)){
+        sendToastMessage(
+            'in case you want to publish your analysis you must fill the title.',
+            MESSAGE_TYPE.ERROR,
+            {title: "empty title", container: overlay}
+        );
+        return;
+    }
+    const description = document.getElementById('textArea').value;
+    const bodyData ={
+        'chart':chart.chartToJson(),
+        'description': description,
+        'is_public': publicCheckBox.value,
+        'title': titleInput.value,
+    }
+
+    fetch(SAVE_STOCK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodyData)
+        })
+        .then(response => [response.ok ? MESSAGE_TYPE.SUCCESS : MESSAGE_TYPE.ERROR, response.text()])
+        .then(message => sendToastMessage(message[1], message[0]))
+        .catch(error => console.log(error));
+    overlay.style.display = 'none';
+    windowElement.style.display = 'none';
+});
+
+publicCheckBox.addEventListener('change', () => {
+    if (publicCheckBox.checked) {
+        titleInput.style.display = 'block';
+    } else {
+        titleInput.style.display = 'none';
+    }
+});
+
+function isTitleFilled(is_public, title){
+    return !is_public ||  (title !== null && title.trim() !== "")
+}
+
+function is_user_connected(){
+    return false;
+}

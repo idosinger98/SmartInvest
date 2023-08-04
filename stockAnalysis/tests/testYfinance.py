@@ -1,6 +1,6 @@
 import numpy
 import pytest
-from stockAnalysis.thirdPartUtils.Yfinance import get_stock_by_date, get_last_price_stock
+from stockAnalysis.utils.Yfinance import get_stock_by_date, get_last_price_stock
 from stockAnalysis.exceptions import BadStockRequestException, StockNotFoundException
 from pandas import DataFrame
 
