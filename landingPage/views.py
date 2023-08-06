@@ -15,4 +15,5 @@ def home(request):
     posts = Post.objects.count()
     return render(request, 'landingPage/landing_page.html', {'list_review': list_review, 'form': form,
                                                              'from_contant': from_contant,
-                                                             'last_three_posts': last_three_posts, 'clients': clients, 'posts' :posts})
+                                                             'last_three_posts': last_three_posts, 'clients': clients,
+                                                             'posts': posts})
