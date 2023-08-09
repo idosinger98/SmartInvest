@@ -1,0 +1,723 @@
+{% extends 'nav_menu.html' %}
+{% load static %}
+
+{% block content %}
+<body class="index-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+ <div class="modal" id="researchModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>This site is a research site for studies, and the needs that are done on it are for research purposes only.</p>
+        <button type="button" id="okButton" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <main id="main">
+
+    <!-- Hero Section - Home Page -->
+    <section id="hero" class="hero">
+      <img src=" {% static 'assets/img/home.jpg' %}" alt="" data-aos="fade-in">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10">
+            <h2 data-aos="fade-up" data-aos-delay="100">Smart Invest, Think Different</h2>
+            <p data-aos="fade-up" data-aos-delay="200">Our goal is to teach, help and improve your thinking about finance and stocks</p>
+          </div>
+          <div class="col-lg-5">
+            <form action="#" class="sign-up-form d-flex" data-aos="fade-up" data-aos-delay="300">
+              <input type="text" class="form-control" placeholder="Enter stock symbol">
+              <input type="submit" class="btn btn-primary" value="Get graph">
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- End Hero Section -->
+
+
+    <!-- About Section - Home Page -->
+    <section id="about" class="about">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-xl-center gy-5">
+
+          <div class="col-xl-5 content">
+            <h3>About Us</h3>
+            <h2>What is SmartInvest?</h2>
+            <p>SmartInvest is a website that helps investors make informed decisions about buying and selling stocks. It provides financial data, charts, and machine learning algorithms for analyzing investment performance and planning withdrawal strategies. Users can track portfolios with the dashboard feature and make predictions using the stock analysis chart. Combining app analytics with their own expertise maximizes the benefits.</p>
+          </div>
+
+          <div class="col-xl-7">
+            <div class="row gy-4 icon-boxes">
+
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="icon-box">
+                  <i class="bi bi-buildings"></i>
+                  <h3>Eius provident</h3>
+                  <p>Magni repellendus vel ullam hic officia accusantium ipsa dolor omnis dolor voluptatem</p>
+                </div>
+              </div> <!-- End Icon Box -->
+
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="icon-box">
+                  <i class="bi bi-clipboard-pulse"></i>
+                  <h3>Rerum aperiam</h3>
+                  <p>Autem saepe animi et aut aspernatur culpa facere. Rerum saepe rerum voluptates quia</p>
+                </div>
+              </div> <!-- End Icon Box -->
+
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="icon-box">
+                  <i class="bi bi-command"></i>
+                  <h3>Veniam omnis</h3>
+                  <p>Omnis perferendis molestias culpa sed. Recusandae quas possimus. Quod consequatur corrupti</p>
+                </div>
+              </div> <!-- End Icon Box -->
+
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
+                <div class="icon-box">
+                  <i class="bi bi-graph-up-arrow"></i>
+                  <h3>Delares sapiente</h3>
+                  <p>Sint et dolor voluptas minus possimus nostrum. Reiciendis commodi eligendi omnis quideme lorenda</p>
+                </div>
+              </div> <!-- End Icon Box -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section><!-- End About Section -->
+
+    <!-- Stats Section - Home Page -->
+    <section id="stats" class="stats">
+
+      <img src="{% static 'assets/img/stats-bg.jpg' %}" alt="" data-aos="fade-in">
+
+      <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span data-purecounter-start="0" data-purecounter-end="{{ clients }}" data-purecounter-duration="1" class="purecounter"></span>
+              <p>Clients</p>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
+              <p>Projects</p>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span data-purecounter-start="0" data-purecounter-end={{ posts }} data-purecounter-duration="1" class="purecounter"></span>
+              <p>Number of posts</p>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span data-purecounter-start="0" data-purecounter-end="3" data-purecounter-duration="1" class="purecounter"></span>
+              <p>Workers</p>
+            </div>
+          </div><!-- End Stats Item -->
+
+        </div>
+
+      </div>
+
+    </section><!-- End Stats Section -->
+
+    <!-- Services Section - Home Page -->
+    <section id="services" class="services">
+
+      <!--  Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Services</h2>
+        <p>On this page you can see the various services that our website offers</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-6 " data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item d-flex">
+              <div class="icon flex-shrink-0"><i class="bi bi-bar-chart"></i></div>
+              <div>
+                <h4 class="title"><a  class="stretched-link">Data and Analytics</a></h4>
+                <p class="description">The website offers users access to key financial data and charts, empowering them to analyze market trends, stock performance, and historical data to make informed investment decisions.</p>
+              </div>
+            </div>
+          </div>
+          <!-- End Service Item -->
+
+          <div class="col-lg-6 " data-aos="fade-up" data-aos-delay="200">
+            <div class="service-item d-flex">
+              <div class="icon flex-shrink-0"><i class="bi bi-card-checklist"></i></div>
+              <div>
+                <h4 class="title"><a class="stretched-link">Community Interaction</a></h4>
+                <p class="description">The site fosters a community where users can share stock analysis and recommendations. This collaborative environment allows investors to engage, exchange insights and discuss possible investment opportunities, improving decision-making.</p>
+              </div>
+            </div>
+          </div><!-- End Service Item -->
+
+          <div class="col-lg-6 " data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item d-flex">
+              <div class="icon flex-shrink-0"><i class="bi bi-binoculars"></i></div>
+              <div>
+                <h4 class="title"><a  class="stretched-link">Identifying Undervalued Stocks</a></h4>
+                <p class="description">The website's basic analysis mode helps users identify undervalued stocks with growth potential. This feature allows investors to discover investment opportunities they might have missed otherwise.</p>
+              </div>
+            </div>
+          </div><!-- End Service Item -->
+
+          <div class="col-lg-6 " data-aos="fade-up" data-aos-delay="400">
+            <div class="service-item d-flex">
+              <div class="icon flex-shrink-0"><i class="bi bi-brightness-high"></i></div>
+              <div>
+                <h4 class="title"><a  class="stretched-link">Machine Learning Algorithms</a></h4>
+                <p class="description">By incorporating machine learning algorithms, the website helps users analyze their investment performance more effectively. These algorithms can identify patterns, trends, and potential opportunities in the stock market, assisting investors in making data-driven choices.</p>
+              </div>
+            </div>
+          </div><!-- End Service Item -->
+
+        </div>
+
+      </div>
+
+    </section><!-- End Services Section -->
+
+    <!-- Features Section - Home Page -->
+    <section id="features" class="features">
+
+      <!--  Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Features</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4 align-items-center features-item">
+          <div class="col-lg-5 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
+            <h3>Corporis temporibus maiores provident</h3>
+            <p>
+              Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+            </p>
+            <a href="#" class="btn btn-get-started">Get Started</a>
+          </div>
+          <div class="col-lg-7 order-1 order-lg-2 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="100">
+            <div class="image-stack">
+              <img src="" alt="" class="stack-front">
+              <img src="" alt="" class="stack-back">
+            </div>
+          </div>
+        </div><!-- Features Item -->
+
+        <div class="row gy-4 align-items-stretch justify-content-between features-item ">
+          <div class="col-lg-6 d-flex align-items-center features-img-bg" data-aos="zoom-out">
+            <img src="" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-5 d-flex justify-content-center flex-column" data-aos="fade-up">
+            <h3>Sunt consequatur ad ut est nulla</h3>
+            <p>Cupiditate placeat cupiditate placeat est ipsam culpa. Delectus quia minima quod. Sunt saepe odit aut quia voluptatem hic voluptas dolor doloremque.</p>
+            <ul>
+              <li><i class="bi bi-check"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></li>
+              <li><i class="bi bi-check"></i><span> Duis aute irure dolor in reprehenderit in voluptate velit.</span></li>
+              <li><i class="bi bi-check"></i> <span>Facilis ut et voluptatem aperiam. Autem soluta ad fugiat</span>.</li>
+            </ul>
+            <a href="#" class="btn btn-get-started align-self-start">Get Started</a>
+          </div>
+        </div><!-- Features Item -->
+
+      </div>
+
+    </section><!-- End Features Section -->
+
+    <!-- Faq Section - Home Page -->
+    <section id="faq" class="faq">
+
+      <div class="container">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="content px-xl-5">
+              <h3><span>Frequently Asked </span><strong>Questions</strong></h3>
+              <p>
+               On this page you can see the frequently asked questions users ask us and our answers
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+
+            <div class="faq-container">
+              <div class="faq-item faq-active">
+                <h3><span class="num">1.</span> <span>Does the website offer a community or forum where users can interact with each other? </span></h3>
+                <div class="faq-content">
+                  <p>Absolutely! Our website offers a community and interactive forums where users can engage with investors. By connecting with others, users can share knowledge, exchange insights, and learn from different perspectives, ultimately enriching their investment experiences. This sense of community encourages collaboration and collective learning, enhancing the overall investing journey for everyone involved.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3><span class="num">2.</span> <span>What kind of assistance does the website provide for stock analysis?</span></h3>
+                <div class="faq-content">
+                  <p>The website offers valuable assistance in stock analysis through a variety of tools and resources. Users can access data visualization, financial metrics, and real-time market updates, enabling them to conduct thorough stock analysis. By using these features, investors can make well-informed decisions and gain insights into market trends and company performance.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3><span class="num">3.</span> <span>Does the website provide customer support for users who need assistance or have specific inquiries?</span></h3>
+                <div class="faq-content">
+                  <p> Absolutely, we have a dedicated customer support team ready to assist users with any inquiries or issues they may encounter while using our platform. Users can reach out to our support team through various communication channels, such as email,  phone or leave a request on the website, to receive prompt and helpful assistance.</p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+              <div class="faq-item">
+                <h3><span class="num">4.</span> <span>Can you share some of the positive reviews from users who have profited from the website?</span></h3>
+                <div class="faq-content">
+                  <p> Absolutely! We have a dedicated section on our website that features positive reviews and testimonials from users who have experienced profitable outcomes through our platform. These reviews showcase how our educational resources, stock analysis tools, and data-driven approach have contributed to their investment success. We take pride in sharing these success stories to inspire and motivate other users on their investment journeys. </p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div><!-- End Faq item-->
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- End Faq Section -->
+
+    <!-- Team Section - Home Page -->
+    <section id="team" class="team">
+
+      <!--  Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Team</h2>
+        <p>On this page you can see the team members who built the site</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-5">
+
+          <div class="col-lg-4 col-md-6 member" data-aos="fade-up" data-aos-delay="100">
+            <div class="member-img">
+              <img src="{% static 'assets/img/team/ido.png' %}" class="img-fluid" alt="">
+              <div class="social">
+                <a href="#"><i class="bi bi-twitter"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+            <div class="member-info text-center">
+              <h4>Ido Singer</h4>
+              <span>Computer Science Student</span>
+              <p>Hi, my name is Ido, I am 25 years old from Rishon Lezion And my hobbies are meeting with friends, traveling, playing sports</p>
+            </div>
+          </div><!-- End Team Member -->
+
+          <div class="col-lg-4 col-md-6 member" data-aos="fade-up" data-aos-delay="200">
+            <div class="member-img">
+              <img src="{%  static "assets/img/team/daniel.png" %}" class="img-fluid" alt="">
+              <div class="social">
+                <a href="#"><i class="bi bi-twitter"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+            <div class="member-info text-center">
+              <h4>Daniel Bazis</h4>
+              <span>Computer Science Student</span>
+              <p>Hi, my name is Daniel, I am 25 years old from Holon And my hobbies are meeting with friends, traveling, playing sports</p>
+            </div>
+          </div><!-- End Team Member -->
+
+          <div class="col-lg-4 col-md-6 member" data-aos="fade-up" data-aos-delay="300">
+            <div class="member-img">
+              <img src="{% static 'assets/img/team/tal.png' %}" class="img-fluid" alt="">
+              <div class="social">
+                <a href="#"><i class="bi bi-twitter"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+            <div class="member-info text-center">
+              <h4>Tal Reinfeld</h4>
+              <span>Computer Science Student</span>
+              <p>Hi, I'm Tal, 28 years old from Tel Aviv, now finishing a degree in computer science
+                 likes to spend time at the beach, travel in Israel and the world, play volleyball and work out in the gym</p>
+            </div>
+          </div><!-- End Team Member -->
+        </div>
+
+      </div>
+
+    </section><!-- End Team Section -->
+
+    <!-- Call-to-action Section - Home Page -->
+    <section id="call-to-action" class="call-to-action">
+
+      <img src="{% static "assets/img/cta-bg.jpg" %}" alt="">
+
+      <div class="container">
+        <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+          <div class="col-xl-10">
+            <div class="text-center">
+              <h3>Call To Action</h3>
+              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <a class="cta-btn" href="#">Call To Action</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- End Call-to-action Section -->
+
+    <!-- Testimonials Section - Home Page -->
+    <section id="testimonials" class="testimonials">
+
+      <div class="container">
+
+        <div class="row align-items-center">
+
+          <div class="col-lg-5 info" data-aos="fade-up" data-aos-delay="100">
+            <h3>What do customers think about us?</h3>
+            <p>
+             On this page you can see all the reviews that the customers have written about us
+            </p>
+              {% if request.user.is_authenticated %}
+                <div id="reviewButton" class="col-md-12 text-left">
+                    <button type="button" class="btn btn-primary btn-rounded btn-lg" onclick="toggleReviewForm()" style="color: white">Add Review</button>
+                </div>
+              {% else %}
+                 <div class="col-md-12 text-left">
+                   <a href="{% url 'login' %}" class="btn btn-primary btn-rounded btn-lg" style="color: white">Add Review</a>
+                </div>
+              {% endif %}
+         <div id="reviewFormContainer" class="col-30" style="display: none;">
+  <div class="col-5">
+    <form id="reviewForm" action="{% url 'create_review' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="id_rating">Rating:</label>
+        <div class="star-rating">
+          {% for i in "54321" %}
+            <input type="radio" name="{{ form.rating.name }}" id="rating-{{ i }}" value="{{ i }}">
+            <label for="rating-{{ i }}">&#9733;</label>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="id_content" class="col-md-1.5 col-form-label">Content:</label>
+        <div class="col-md-15">
+          {{ form.content }}
+        </div>
+      </div>
+      <div class="form-group" style="margin-top: 30px;">
+        <div class="row">
+          <div class="col-md-4">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+          <div class="col-md-4 text-right">
+            <a class="btn" style="background-color: black; color: white;" onclick="toggleCancel()">Cancel</a>
+          </div>
+        </div>
+      </div>
+            </form>
+        </div>
+      </div>
+
+</div>
+
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+
+            <div class="swiper">
+              <template class="swiper-config">
+                {
+                "loop": true,
+                "speed" : 600,
+                "autoplay": {
+                "delay": 5000
+                },
+                "slidesPerView": "auto",
+                "pagination": {
+                "el": ".swiper-pagination",
+                "type": "bullets",
+                "clickable": true
+                }
+                }
+              </template>
+                <div class="swiper-wrapper">
+                    {% for review in list_review %}
+                    <div class="swiper-slide">
+                        <div class="testimonial-item">
+                            <div class="d-flex">
+                                {% if review.publisher_id.image %}
+                                      <img src="{{ review.publisher_id.image.url }}" class="testimonial-img flex-shrink-0" alt="">
+                                 {% else %}
+                                    <img  src="{% static 'images/blank_profile.png' %}" class="testimonial-img flex-shrink-0" alt="">
+                                {% endif %}
+                                <div>
+                                    <h3>{{ review.publisher_id.user_id.username }}</h3>
+                                    <h4>{{ review.date }}</h4>
+                                    <div class="stars">
+                                           {% with ''|center:review.rating as range %}
+                                      {% for i in range %}
+                                            <i class="bi bi-star-fill"></i>
+                                      {% endfor %}
+                                    {% endwith %}
+                                    </div>
+                                </div>
+                            </div>
+                             <p>
+                                 <i class="bi bi-quote quote-icon-left"></i>
+                                 <span>{{ review.content }}</span>
+                                 <i class="bi bi-quote quote-icon-right"></i>
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section><!-- End Testimonials Section -->
+
+    <!-- Recent-posts Section - Home Page -->
+    <section id="recent-posts" class="recent-posts">
+
+      <!--  Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Recent Posts</h2>
+        <p>Here are displayed the latest posts written regarding analysis for a specific stock</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+           {% for post in last_three_posts %}
+          <div class="col-xl-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <article>
+
+              <div class="post-img">
+                <img src="{% static  "assets/img/blog/blog-1.jpg"%}" alt="" class="img-fluid">
+              </div>
+
+              <h2 class="title">
+                <a href="{% url 'post_details' post.id %}">{{ post.title }}</a>
+              </h2>
+
+              <div class="d-flex align-items-center">
+                  {% if post.analysis_id.analyst_id.image %}
+                      <img src="{{ post.analysis_id.analyst_id.image.url }}" class="img-fluid post-author-img flex-shrink-0" alt="">
+                  {% else %}
+                      <img  src="{% static 'images/blank_profile.png' %}" class="img-fluid post-author-img flex-shrink-0" alt="">
+                  {% endif %}
+                <div class="post-meta">
+                  <p class="post-author">{{ post.analysis_id.analyst_id.user_id.username }}</p>
+                  <p class="post-date">
+                    <time datetime="2022-01-01">{{ post.time }}</time>
+                  </p>
+                </div>
+              </div>
+
+            </article>
+          </div>
+           {% endfor %}
+
+        </div><!-- End recent posts list -->
+
+      </div>
+
+    </section><!-- End Recent-posts Section -->
+
+    <!-- Contact Section - Home Page -->
+    <section id="contact" class="contact">
+
+      <!--  Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Contact</h2>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-6">
+
+            <div class="row gy-4">
+              <div class="col-md-6">
+                <div class="info-item" data-aos="fade" data-aos-delay="200">
+                  <i class="bi bi-geo-alt"></i>
+                  <h3>Location</h3>
+                  <p>The Academic College of Tel Aviv–Yaffo</p>
+                </div>
+              </div><!-- End Info Item -->
+
+              <div class="col-md-6">
+                <div class="info-item" data-aos="fade" data-aos-delay="300">
+                  <i class="bi bi-telephone"></i>
+                  <h3>Call Us</h3>
+                  <p>+972 503337131</p>
+                  <p>+972 525286663</p>
+                </div>
+              </div><!-- End Info Item -->
+
+              <div class="col-md-6">
+                <div class="info-item" data-aos="fade" data-aos-delay="400">
+                  <i class="bi bi-envelope"></i>
+                  <h3>Email Us</h3>
+                  <p>smartinvest850@gmail.com</p>
+                </div>
+              </div><!-- End Info Item -->
+
+              <div class="col-md-6">
+                <div class="info-item" data-aos="fade" data-aos-delay="500">
+                  <i class="bi bi-clock"></i>
+                  <h3>Open Hours</h3>
+                  <p>Sunday - Thursday</p>
+                  <p>9:00AM - 05:00PM</p>
+                </div>
+              </div><!-- End Info Item -->
+
+            </div>
+
+          </div>
+
+          <div class="col-lg-6">
+           <form id="contact-form" action="{% url 'contact' %}" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                {% csrf_token %}
+              <div class="row gy-4">
+                <div class="col-md-6">
+                  <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                </div>
+
+                <div class="col-md-12">
+                  <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                </div>
+
+                <div class="col-md-12">
+                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                    <button type="submit">Send Message</button>
+                </div>
+
+              </div>
+            </form>
+
+          </div><!-- End Contact Form -->
+
+        </div>
+
+      </div>
+
+    </section><!-- End Contact Section -->
+
+  </main>
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-5 col-md-12 footer-about">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <span>SmartInvest</span>
+          </a>
+          <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Product Management</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+          <h4>Contact Us</h4>
+          <p>The Academic College of Tel Aviv–Yaffo</p>
+          <p>Israel</p>
+          <p class="mt-4"><strong>Phone:</strong> <span>+972 503337131</span></p>
+          <p><strong>Email:</strong> <span>smartinvest850@gmail.com</span></p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>&copy; <span>Copyright</span> <strong class="px-1">SmartInvest</strong> <span>All Rights Reserved</span></p>
+    </div>
+
+  </footer><!-- End Footer -->
+
+  <!-- Scroll Top Button -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+ <script src=" {% static 'js/landing_page.js' %}"></script>
+</body>
+
+</body>
+{% endblock content %}
