@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 from community.models import Post, Comment
-from stockAnalysis.models import AnalyzedStocks
+from stockAnalysis.models import AnalyzedStock
 from users.models import Profile
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 def create_user_and_analyzed_stock():
     user = User.objects.create_user(username='testuser', password='testpassword')
     profile = Profile.objects.create(user_id=user)
-    analyzed_stock = AnalyzedStocks.objects.create(analyst_id=profile, stock_image={}, description='Test stock',
+    analyzed_stock = AnalyzedStock.objects.create(analyst_id=profile, stock_image={}, description='Test stock',
                                                    is_public=True)
     return user, analyzed_stock
 
