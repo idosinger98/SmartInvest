@@ -11,8 +11,13 @@ from django.contrib.auth.models import User
 def create_user_and_analyzed_stock():
     user = User.objects.create_user(username='testuser', password='testpassword')
     profile = Profile.objects.create(user_id=user)
-    analyzed_stock = AnalyzedStock.objects.create(analyst_id=profile, stock_image={}, description='Test stock',
-                                                   is_public=True)
+    analyzed_stock = AnalyzedStock.objects.create(
+        analyst_id=profile,
+        stock_image={},
+        description='Test stock',
+        is_public=True
+    )
+
     return user, analyzed_stock
 
 
