@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('community', '0002_test_data'),
+        ('community', '0001_initial'),
     ]
 
     operations = [

@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('users', '0002_test_data'),
         ('stockAnalysis', '0002_test_data'),
-        ('community', '0001_initial'),
+        ('community', '0003_post_description_post_title'),
     ]
 
     def generate_data(apps, schema_editor):
