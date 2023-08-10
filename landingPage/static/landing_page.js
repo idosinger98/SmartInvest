@@ -1,10 +1,10 @@
      document.querySelector('#contact-form').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission behavior
 
-    var form = event.target;
-    var formData = new FormData(form);
+    let form = event.target;
+    let formData = new FormData(form);
 
-    var request = new XMLHttpRequest();
+    let request = new XMLHttpRequest();
     request.open(form.method, form.action);
     request.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
     request.onload = function () {
@@ -18,12 +18,12 @@
   });
 
   function showSuccessMessage() {
-    var successMessage = document.querySelector('.sent-message');
-    var formFields = document.querySelectorAll('#contact-form input, #contact-form textarea');
-    var isValid = true;
+    let successMessage = document.querySelector('.sent-message');
+    let formFields = document.querySelectorAll('#contact-form input, #contact-form textarea');
+    let isValid = true;
 
     // Check if all required fields are filled
-    for (var i = 0; i < formFields.length; i++) {
+    for (let i = 0; i < formFields.length; i++) {
       if (formFields[i].hasAttribute('required') && formFields[i].value === '') {
         isValid = false;
         break;
@@ -37,7 +37,7 @@
         successMessage.style.display = 'none';
 
         // Reset form fields after 3 seconds
-        for (var i = 0; i < formFields.length; i++) {
+        for (let i = 0; i < formFields.length; i++) {
           formFields[i].value = '';
         }
       }, 3000);
@@ -45,8 +45,8 @@
   }
 
     function toggleReviewForm() {
-         var reviewFormContainer = document.getElementById("reviewFormContainer");
-         var reviewButton = document.getElementById("reviewButton");
+         let reviewFormContainer = document.getElementById("reviewFormContainer");
+         let reviewButton = document.getElementById("reviewButton");
         if (reviewFormContainer.style.display === "none") {
             reviewFormContainer.style.display = "block";
             reviewButton.style.display = "none";
@@ -56,8 +56,8 @@
         }
     }
     function toggleCancel() {
-         var reviewFormContainer = document.getElementById("reviewFormContainer");
-         var reviewButton = document.getElementById("reviewButton");
+         let reviewFormContainer = document.getElementById("reviewFormContainer");
+         let reviewButton = document.getElementById("reviewButton");
          reviewFormContainer.style.display = "none";
          reviewButton.style.display = "block";
     }
