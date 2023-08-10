@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from users.models import Profile
 from django.core.exceptions import ValidationError
-from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
 from django.contrib.auth.forms import PasswordResetForm
 
@@ -27,7 +26,8 @@ class RegisterForm(UserCreationForm):
 
 class ProfileForm(forms.ModelForm):
     country = CountryField(blank_label='(Select country)').formfield(
-        widget=CountrySelectWidget(attrs={'class': 'form-control'}))
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = Profile
@@ -64,7 +64,8 @@ class UserUpdateForm(forms.ModelForm):
 
 class UpdateProfileForm(forms.ModelForm):
     country = CountryField(blank_label='(Select country)').formfield(
-        widget=CountrySelectWidget(attrs={'class': 'form-control'}))
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = Profile
