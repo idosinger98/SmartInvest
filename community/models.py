@@ -21,6 +21,8 @@ class PostManager(models.Manager):
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)
     analysis_id = models.OneToOneField(AnalyzedStock, on_delete=models.CASCADE)
+    description = models.TextField(blank=False, default="NO DESCRIPTION")
+    title = models.CharField(max_length=50, blank=False, default=str(id))
     likes = models.IntegerField(default=0)
     time = models.DateTimeField(default=timezone.now)
     objects = PostManager()
