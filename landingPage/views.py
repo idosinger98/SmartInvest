@@ -5,6 +5,7 @@ from contact.forms import ContactForm
 from community.models import Post
 from stockAnalysis.views import get_biggest_indices
 import json
+from users.models import Profile
 
 
 def home(request, return_after_wrong_symbol=False):
@@ -39,3 +40,17 @@ def get_symbols():
         symbols.append(symbol.get('symbol'))
 
     return symbols
+
+
+# def home(request):
+#     list_review = Review.objects.get_all_reviews()
+#     last_three_posts = Post.objects.sort_posts_by_time()[:3]
+#     form = ReviewForm()
+#     from_contant = ContactForm()
+#     clients = Profile.objects.count()
+#     posts = Post.objects.count()
+#     return render(request, 'landingPage/landing_page.html', {'list_review': list_review, 'form': form,
+#                                                              'from_contant': from_contant,
+#                                                              'last_three_posts': last_three_posts, 'clients': clients,
+#                                                              'posts': posts})
+# >>>>>>> PR_38

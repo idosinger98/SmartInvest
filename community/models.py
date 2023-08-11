@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.db.models import Count
 from users.models import Profile
-from stockAnalysis.models import AnalyzedStocks
+from stockAnalysis.models import AnalyzedStock
 
 
 class PostManager(models.Manager):
@@ -21,7 +21,7 @@ class PostManager(models.Manager):
         return self.get_queryset().annotate(popularity=Count('comment')).order_by('-popularity')
 
     def get_posts_by_publisher_id(self, publisher_id: int):
-        analyzed_stocks_list = AnalyzedStocks.objects.get_user_stocks(analyst_id=publisher_id)
+        analyzed_stocks_list = AnalyzedStock.objects.get_user_stocks(analyst_id=publisher_id)
         return self.filter(analysis_id__in=analyzed_stocks_list)
 
     def like_post(self, post_id, profile_id):
@@ -68,8 +68,9 @@ class PostManager(models.Manager):
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)
     analysis_id = models.OneToOneField(AnalyzedStocks, on_delete=models.CASCADE)
-    title = models.CharField(max_length=50, default='No Title')
     likes = models.ManyToManyField(Profile, blank=True)
+    description = models.TextField(blank=False, default="NO DESCRIPTION")
+    title = models.CharField(max_length=50, blank=False, default=str(id))
     time = models.DateTimeField(default=timezone.now)
     objects = PostManager()
 

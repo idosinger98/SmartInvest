@@ -9,9 +9,23 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('stockAnalysis', '0001_initial'),
+        ('users', '0001_initial'),
     ]
 
     operations = [
+        migrations.CreateModel(
+            name='Post',
+            fields=[
+                ('id', models.BigAutoField(primary_key=True, serialize=False)),
+                ('likes', models.IntegerField(default=0)),
+                ('time', models.DateTimeField(default=django.utils.timezone.now)),
+                ('analysis_id', models.OneToOneField(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='stockAnalysis.analyzedstock'
+                 )),
+            ],
+        ),
         migrations.CreateModel(
             name='Comment',
             fields=[

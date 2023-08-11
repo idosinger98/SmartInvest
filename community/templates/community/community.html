@@ -59,7 +59,27 @@
                 </div>
               </article>
             </div>
-          {% endfor %}
+<!--<<<<<<< HEAD-->
+<!--          {% endfor %}-->
+<!--=======-->
+<!--            <h2 class="title">-->
+<!--              <a href="{% url 'post_details' post.id %}">{{ post.title }}</a>-->
+<!--            </h2>-->
+<!--            <div class="d-flex align-items-center">-->
+<!--              {% if post.analysis_id.analyst_id.image %}-->
+<!--                <img src="{{ post.analysis_id.analyst_id.image.url }}" class="img-fluid post-author-img flex-shrink-0" alt="">-->
+<!--              {% else %}-->
+<!--                <img  src="{% static 'images/blank_profile.png' %}" class="img-fluid post-author-img flex-shrink-0" alt="">-->
+<!--              {% endif %}-->
+<!--              <div class="post-meta">-->
+<!--                <p class="post-author">{{ post.analysis_id.analyst_id.user_id.username }}</p>-->
+<!--                <p class="post-date">-->
+<!--                  <time datetime="2022-01-01">{{ post.time }}</time>-->
+<!--                </p>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </article>-->
+<!--&gt;>>>>>> PR_38-->
         </div>
         <div class="pagination d-flex justify-content-center">
           <ul>
