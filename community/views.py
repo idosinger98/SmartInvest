@@ -27,15 +27,15 @@ def community(request):
 
 
 @csrf_exempt
-def show_post(request, post_id, profile_id):
+def show_post(request, post_id):
     form = CommentForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
             content = form.cleaned_data['content']
-            publisher = Profile.objects.get(pk=profile_id)
+            publisher = Profile.objects.filter(user_id=request.user).first()
             post = Post.objects.get(pk=post_id)
             Comment.objects.comment_post(post_id=post, content=content, publisher_id=publisher)
-            return redirect('post-details', post_id=post_id, profile_id=profile_id)
+            return redirect('post-details', post_id=post_id)
 
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
@@ -43,25 +43,27 @@ def show_post(request, post_id, profile_id):
     return render(request, 'community/post-details.html', context)
 
 
-def like_post(request, post_id, profile_id):
+def like_post(request, post_id):
     post = Post.objects.get(pk=post_id)
-    is_liked = post.likes.filter(pk=profile_id).exists()
+    profile = Profile.objects.filter(user_id=request.user).first()
+    is_liked = post.likes.filter(pk=profile.profile_id).exists()
     if is_liked:
-        Post.objects.unlike_post(post_id=post_id, profile_id=profile_id)
+        Post.objects.unlike_post(post_id=post_id, profile_id=profile.profile_id)
     else:
-        Post.objects.like_post(post_id=post_id, profile_id=profile_id)
+        Post.objects.like_post(post_id=post_id, profile_id=profile.profile_id)
 
     return JsonResponse({'likes': post.likes.count(), 'is_liked': is_liked})
 
 
 @login_required
-def like_comment(request, comment_id, profile_id):
+def like_comment(request, comment_id):
     comment = Comment.objects.get(pk=comment_id)
-    is_liked = comment.likes.filter(pk=profile_id).exists()
+    profile = Profile.objects.filter(user_id=request.user).first()
+    is_liked = comment.likes.filter(pk=profile.profile_id).exists()
     if is_liked:
-        Comment.objects.unlike_comment(comment_id=comment_id, profile_id=profile_id)
+        Comment.objects.unlike_comment(comment_id=comment_id, profile_id=profile.profile_id)
     else:
-        Comment.objects.like_comment(comment_id=comment_id, profile_id=profile_id)
+        Comment.objects.like_comment(comment_id=comment_id, profile_id=profile.profile_id)
 
     return JsonResponse({'likes': comment.likes.count(), 'is_liked': is_liked})
 
@@ -91,8 +93,9 @@ def check_comment_like(request, commentId):
 
 
 @login_required
-def delete_comment(request, post_id, comment_id, profile_id):
-    Comment.objects.delete_comment(comment_id=comment_id, profile_id=profile_id)
+def delete_comment(request, post_id, comment_id):
+    profile = Profile.objects.filter(user_id=request.user).first()
+    Comment.objects.delete_comment(comment_id=comment_id, profile_id=profile.profile_id)
 
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
@@ -102,8 +105,9 @@ def delete_comment(request, post_id, comment_id, profile_id):
 
 
 @login_required
-def delete_post(request, post_id, profile_id):
-    Post.objects.delete_post(post_id=post_id, profile_id=profile_id)
+def delete_post(request, post_id):
+    profile = Profile.objects.filter(user_id=request.user).first()
+    Post.objects.delete_post(post_id=post_id, profile_id=profile.profile_id)
 
     return community(request=request)
 
@@ -131,10 +135,10 @@ def create_post_view(request, pk):
     return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
 
 
-def post_deatils(request, pk):
-    post = Post.objects.filter(id=pk).first()
-    comments = Comment.objects.get_all_comments_on_post(post.id)
-    return render(request, 'community/post-details.html', {'post': post, 'comments': comments})
+# def post_deatils(request, pk):
+#     post = Post.objects.filter(id=pk).first()
+#     comments = Comment.objects.get_all_comments_on_post(post.id)
+#     return render(request, 'community/post-details.html', {'post': post, 'comments': comments})
 
 
 @login_required
@@ -147,7 +151,6 @@ def comment(request, post_id):
             create_comment = Comment.objects.create(publisher_id=profile,
                                                     content=form.cleaned_data['content'],
                                                     post_id=post,
-                                                    likes=0,
                                                     time=timezone.now())
             create_comment.save()
             return HttpResponse()

@@ -26,7 +26,7 @@ $(document).ready(function() {
     let profileId = this.getAttribute('data-profile-id');
     let postId = this.getAttribute('data-post-id');
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/community/like_post/' + postId + '/' + profileId + '/');
+    xhr.open('POST', '/community/like_post/' + postId + '/');
     xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
 
     xhr.onload = function() {
@@ -76,7 +76,7 @@ $(document).ready(function() {
       let profileId = this.getAttribute('data-profile-id');
       let commentId = this.getAttribute('data-comment-id');
       let xhr = new XMLHttpRequest();
-      xhr.open('POST', '/community/like_comment/' + commentId + '/' + profileId + '/');
+      xhr.open('POST', '/community/like_comment/' + commentId + '/');
 
       // Get the CSRF token from the cookie and set it in the request header
       let csrfToken = getCommentCookie('csrftoken');
@@ -122,7 +122,7 @@ function confirmDelete(post_id, comment_id, profile_id) {
     const csrfToken = getCookie('csrftoken');
     const confirmation = confirm("Are you sure you want to delete this comment?");
     if (confirmation) {
-        fetch(`/community/delete-comment/${post_id}/${comment_id}/${profile_id}/`, {
+        fetch(`/community/delete-comment/${post_id}/${comment_id}/`, {
             method: 'DELETE',
             headers: {
                 'X-CSRFToken': csrfToken
@@ -167,7 +167,7 @@ $(document).ready(function() {
 
     // Send an AJAX request to the comment creation URL
     $.ajax({
-      url: profile_id,
+
       method: 'POST',
       data: {
         'content': commentContent,

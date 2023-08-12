@@ -67,10 +67,10 @@ class PostManager(models.Manager):
 
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)
-    analysis_id = models.OneToOneField(AnalyzedStocks, on_delete=models.CASCADE)
+    analysis_id = models.OneToOneField(AnalyzedStock, on_delete=models.CASCADE)
     likes = models.ManyToManyField(Profile, blank=True)
     description = models.TextField(blank=False, default="NO DESCRIPTION")
-    title = models.CharField(max_length=50, blank=False, default=str(id))
+    title = models.CharField(max_length=50, blank=False, default=id)
     time = models.DateTimeField(default=timezone.now)
     objects = PostManager()
 

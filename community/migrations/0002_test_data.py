@@ -1,6 +1,6 @@
 from django.db import migrations, transaction
 from users.models import Profile
-from stockAnalysis.models import AnalyzedStocks
+from stockAnalysis.models import AnalyzedStock
 from community.models import Post, Comment
 from django.utils import timezone
 from datetime import timedelta
@@ -17,7 +17,6 @@ class Migration(migrations.Migration):
         ('users', '0002_test_data'),
         ('stockAnalysis', '0002_test_data'),
         ('community', '0001_initial'),
-        ('community', '0002_initial'),
     ]
 
     def generate_data(apps, schema_editor):
@@ -70,7 +69,7 @@ class Migration(migrations.Migration):
         with transaction.atomic():
             for analysis_id, title, profiles, time in post_test_data:
                 post = Post.objects.create(
-                    analysis_id=AnalyzedStocks.objects.get(pk=analysis_id),
+                    analysis_id=AnalyzedStock.objects.get(pk=analysis_id),
                     title=title,
                     time=time,
                 )
