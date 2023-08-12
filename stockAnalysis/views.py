@@ -35,24 +35,9 @@ def get_biggest_indices(request):
     return JsonResponse(dictionary)
 
 
-def get_biggest_indices(request):
-    # stocks = ['^IXIC', '^DJI', '^GSPC']
-    stocks = ['AAPL', 'TSLA', 'META']
-    dictionary = {}
-
-    for stock in stocks:
-        try:
-            price = Yfinance.get_last_price_stock(stock)
-            dictionary[stock] = str(price)
-        except StockNotFoundException:
-            dictionary[stock] = '-'
-
-    return JsonResponse(dictionary)
-
-
 @login_required
 def my_analysis_page(request, analyst_id):
-    my_analysis = AnalyzedStocks.objects.get_user_stocks(analyst_id=analyst_id)
+    my_analysis = AnalyzedStock.objects.get_user_stocks(analyst_id=analyst_id)
     context = {'analysis': my_analysis}
     return render(request, 'stockAnalysis/my-analysis.html', context)
 
@@ -100,8 +85,6 @@ def handle_exception(exception):
 
     return error_msg, status_code
 
-
-# def handle_post_search_stock(request, stock_df):
 
 @csrf_exempt
 @require_POST

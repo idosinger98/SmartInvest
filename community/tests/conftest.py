@@ -95,7 +95,7 @@ def test_analyzed_stock3(db, test_user):
 @pytest.mark.django_db
 def make_post(db, test_analyzed_stock):
     def make(
-        analysis_id: AnalyzedStocks = test_analyzed_stock,
+        analysis_id: AnalyzedStock = test_analyzed_stock,
         title: str = 'test title',
         likes: list = [],
         time: timezone = timezone.now(),
