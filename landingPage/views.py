@@ -28,18 +28,9 @@ def home(request, return_after_wrong_symbol=False):
 
 
 def get_symbols():
-    from stocksymbol import StockSymbol
+    from stockAnalysis.models import StockSymbol
 
-    api_key = 'f9c2802b-2dc4-407e-bf3c-846012d359ca'
-    ss = StockSymbol(api_key)
-    symbol_list_us = ss.get_symbol_list(market="US")
-
-    symbols = []
-
-    for symbol in symbol_list_us:
-        symbols.append(symbol.get('symbol'))
-
-    return symbols
+    return StockSymbol.objects.values_list('symbol', flat=True)
 
 
 # def home(request):
