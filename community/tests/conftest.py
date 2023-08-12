@@ -4,7 +4,7 @@ from community.models import Post
 from community.models import Comment
 from django.contrib.auth.models import User
 from users.models import Profile
-from stockAnalysis.models import AnalyzedStocks
+from stockAnalysis.models import AnalyzedStock
 
 
 @pytest.fixture
@@ -38,7 +38,7 @@ def test_user3(db):
 @pytest.mark.django_db
 def test_analyzed_stock(db, test_user):
     # Create a test AnalyzedStocks object for testing
-    analyzed_stock = AnalyzedStocks.objects.create(
+    analyzed_stock = AnalyzedStock.objects.create(
         analyst_id=test_user,
         stock_image={'symbol': 'AAPL', 'price': 150.0},
         description='Test description',
@@ -51,7 +51,7 @@ def test_analyzed_stock(db, test_user):
 @pytest.mark.django_db
 def test_analyzed_stock2(db, test_user):
     # Create a test AnalyzedStocks object for testing
-    analyzed_stock = AnalyzedStocks.objects.create(
+    analyzed_stock = AnalyzedStock.objects.create(
         analyst_id=test_user,
         stock_image={'symbol': 'AAPL', 'price': 150.0},
         description='Test description',
@@ -64,7 +64,7 @@ def test_analyzed_stock2(db, test_user):
 @pytest.mark.django_db
 def test_analyzed_stock3(db, test_user):
     # Create a test AnalyzedStocks object for testing
-    analyzed_stock = AnalyzedStocks.objects.create(
+    analyzed_stock = AnalyzedStock.objects.create(
         analyst_id=test_user,
         stock_image={'symbol': 'AAPL', 'price': 150.0},
         description='Test description',
@@ -77,7 +77,7 @@ def test_analyzed_stock3(db, test_user):
 @pytest.mark.django_db
 def make_post(db, test_analyzed_stock):
     def make(
-        analysis_id: AnalyzedStocks = test_analyzed_stock,
+        analysis_id: AnalyzedStock = test_analyzed_stock,
         likes: int = 0,
         time: timezone = timezone.now(),
     ):

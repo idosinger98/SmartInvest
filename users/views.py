@@ -8,18 +8,14 @@ from users.models import Profile
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-import sib_api_v3_sdk
-from sib_api_v3_sdk.rest import ApiException
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
-from django.http import HttpResponse
-import os
 from dotenv import load_dotenv
-
+from utils.email_utils import connectedApiAndSendEmail
 
 load_dotenv()
 
@@ -167,27 +163,7 @@ def send_email(request, email, subject_str, email_template_html, message, flag, 
             }
             email = render_to_string(email_template_name, c)
 
-            # Configure API key authorization: api-key
-            configuration = sib_api_v3_sdk.Configuration()
-            configuration.api_key[
-                'api-key'] = os.environ.get('MAIL_KEY')
-
-            # create an instance of the API class
-            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-
-            subject = subject_str
-            html_content = email
-            sender = {"name": 'Smart Invest', "email": 'smartinvest850@gmail.com'}
-            to = [{"email": user.email, "name": 'Daniell'}]
-            headers = {"Some-Custom-Name": "unique-id-1234"}
-            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, headers=headers, html_content=html_content,
-                                                           sender=sender, subject=subject)
-            try:
-                api_instance.send_transac_email(send_smtp_email)
-                messages.success(request, "Email send successfully")
-            except ApiException:
-                return HttpResponse('Invalid header found.')
-
+            connectedApiAndSendEmail(subject_str, email, user)
             return render(request, message)
 
         else:
