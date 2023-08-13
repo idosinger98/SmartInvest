@@ -54,18 +54,13 @@ def search_stock_view(request):
         to_date = request.GET.get(StockViewParams.TO, datetime.datetime.now().strftime('%Y-%m-%d'))
         stock_details = Yfinance.get_stock_by_date(symbol, from_date, to_date, interval)
         response_dict = {StockViewParams.STOCK.value: stock_details.to_json()}
-
-        print('====================before====================')
-        print(symbol)
         fundamentals = Yfinance.get_stock_fundamentals(symbol)
-        print('====================after====================')
-
         StockSymbol.objects.aget_or_create(symbol=symbol)
 
         return render(request,
                       'stockAnalysis/graph_page.html',
                       {StockViewParams.STOCK_SYMBOL.value: symbol, StockViewParams.STOCK_DATA.value: response_dict,
-                       StockViewParams.INDICATORS.value: get_indicators_dict()})
+                       StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals})
     # , 'fundamentals': fundamentals
     except Exception as e:
         error_msg, status_code = handle_exception(e)

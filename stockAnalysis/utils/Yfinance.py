@@ -53,18 +53,8 @@ def __check_start_date_before_end(start, end):
         raise BadStockRequestException('Invalid input - start date cannot be after end date.')
 
 
-# def get_stock(stock_name):
-#     try:
-#         response = yf.Ticker(stock_name)
-#         return handle_response(response)
-#     except ValueError:
-#         raise StockNotFoundException()
-
-
 def get_stock_fundamentals(stock_name):
     response = yf.Ticker(stock_name).get_info()
-
-    print('====================after (inside get_stock_fundamentals)====================')
 
     built_in_ratios = {'Current Ratio': 'currentRatio',
                        'Quick Ratio': 'quickRatio',
@@ -78,18 +68,3 @@ def get_stock_fundamentals(stock_name):
     total_ratios.update(dict(map(lambda item: (item[0], response[item[1][0]] * response[item[1][1]]),
                                  not_built_in_ratios.items())))
     return total_ratios
-    # built_in_ratios = {'Current Ratio': 'currentRatio',
-    #                    'Quick Ratio': 'quickRatio',
-    #                    'Gross Profit Margin': 'grossMargins',
-    #                    'Short Ratio': 'shortRatio',
-    #                    'Price/Earning to Growth': 'pegRatio',
-    #                    }
-    # not_built_in_ratios = {'Price-to-Earning (P/E) ratio': ['pegRatio', 'earningsGrowth']}
-    # try:
-    #     response = yf.Ticker(stock_name).get_info()
-    #     total_ratios = dict(map(lambda item: (item[0], response[item[1]]), built_in_ratios.items()))
-    #     total_ratios.update(dict(map(lambda item: (item[0], response[item[1][0]] * response[item[1][1]]),
-    #                                  not_built_in_ratios.items())))
-    #     return handle_response(response)
-    # except ValueError:
-    #     raise StockNotFoundException()
