@@ -118,8 +118,9 @@ ul.ks-cboxtags li input[type="checkbox"]:hover + label {
 }
 
 #container {
-    display: flex;
-     align-items: baseline;
+    display: block;
+    align-items: baseline;
+    margin-top: 100px;
 }
 .saveButton {
 
@@ -300,4 +301,8 @@ ul.ks-cboxtags li input[type="checkbox"]:hover + label {
 
 .checkbox-container label {
     margin-left: 5px;
+}
+
+#fundamentals-container {
+    margin-top: 50px;
 }
