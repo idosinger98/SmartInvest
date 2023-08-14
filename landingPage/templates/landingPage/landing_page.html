@@ -2,8 +2,9 @@
 {% load static %}
 <head>
   {% block head %}
-  <link href="{% static 'css/landingPage.css' %}" rel="stylesheet">
-  <link href="{% static 'css/style_review.css' %}" rel="stylesheet">
+      <link href="{% static 'css/landingPage.css' %}" rel="stylesheet">
+      <link href="{% static 'css/style_review.css' %}" rel="stylesheet">
+      <title>Smart Invest</title>
   {% endblock head %}
 </head>
 {% block content %}
@@ -68,43 +69,6 @@
 
     </section><!-- End Hero Section -->
 
-    <!-- Clients Section - Home Page -->
-    <section id="clients" class="clients">
-
-      <div class="container-fluid" data-aos="fade-up">
-
-        <div class="row gy-4">
-
-          <div class="col-xl-2 col-md-3 col-6 client-logo">
-            <img src="assets/img/clients/client-1.png" class="img-fluid" alt="">
-          </div><!-- End Client Item -->
-
-          <div class="col-xl-2 col-md-3 col-6 client-logo">
-            <img src="assets/img/clients/client-2.png" class="img-fluid" alt="">
-          </div><!-- End Client Item -->
-
-          <div class="col-xl-2 col-md-3 col-6 client-logo">
-            <img src="assets/img/clients/client-3.png" class="img-fluid" alt="">
-          </div><!-- End Client Item -->
-
-          <div class="col-xl-2 col-md-3 col-6 client-logo">
-            <img src="assets/img/clients/client-4.png" class="img-fluid" alt="">
-          </div><!-- End Client Item -->
-
-          <div class="col-xl-2 col-md-3 col-6 client-logo">
-            <img src="assets/img/clients/client-5.png" class="img-fluid" alt="">
-          </div><!-- End Client Item -->
-
-          <div class="col-xl-2 col-md-3 col-6 client-logo">
-            <img src="assets/img/clients/client-6.png" class="img-fluid" alt="">
-          </div><!-- End Client Item -->
-
-        </div>
-
-      </div>
-
-    </section><!-- End Clients Section -->
-
     <!-- About Section - Home Page -->
     <section id="about" class="about">
 
@@ -163,7 +127,7 @@
     <!-- Stats Section - Home Page -->
     <section id="stats" class="stats">
 
-      <img src="assets/img/stats-bg.jpg" alt="" data-aos="fade-in">
+      <img src="{% static 'assets/img/team/ido.png'%}" alt="" data-aos="fade-in">
 
       <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
 
@@ -355,7 +319,7 @@
               </div><!-- End Faq item-->
 
               <div class="faq-item">
-                <h3><span class="num">4.</span> <span>Can you share some of the positive reviews from users who have profited from the website?</span></h3>
+                <h3><span class="num">4.</span> <span>Can you share some positive reviews from users who have profited from the website?</span></h3>
                 <div class="faq-content">
                   <p> Absolutely! We have a dedicated section on our website that features positive reviews and testimonials from users who have experienced profitable outcomes through our platform. These reviews showcase how our educational resources, stock analysis tools, and data-driven approach have contributed to their investment success. We take pride in sharing these success stories to inspire and motivate other users on their investment journeys. </p>
                 </div>
@@ -593,7 +557,7 @@
             <article>
 
               <div class="post-img">
-                <img src="{% static  "assets/img/blog/blog-1.jpg"%}" alt="" class="img-fluid">
+                <img src="{% static  "assets/img/team/ido.png"%}" alt="" class="img-fluid">
               </div>
 
               <h2 class="title">
