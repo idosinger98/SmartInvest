@@ -78,7 +78,7 @@ def post_calculate_algorithms(request):
         request_dict = json_to_object(request.body)
         algos_array = request_dict[IndicatorViewsParams.INDICATORS.value]
         stock_df = DataFrame(request_dict[IndicatorViewsParams.STOCK.value])
-        if type(algos_array) != list:
+        if type(algos_array) is not list:
             raise ValueError("JSON content is not a list type")
 
         dictionary.update(calculate_algorithms(algos_array, stock_df))
