@@ -17,8 +17,6 @@ from django.db.models.query_utils import Q
 from dotenv import load_dotenv
 from utils.email_utils import connectedApiAndSendEmail
 
-load_dotenv()
-
 
 def sign_up_view(request):
     if request.method == 'GET':
