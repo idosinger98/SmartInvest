@@ -14,7 +14,6 @@ from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
-from dotenv import load_dotenv
 from utils.email_utils import connectedApiAndSendEmail
 
 

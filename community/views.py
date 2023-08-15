@@ -1,6 +1,5 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect, get_object_or_404
-from community.models import Post, Comment
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from community.models import Post, Comment
@@ -110,6 +109,7 @@ def delete_post(request, post_id):
     Post.objects.delete_post(post_id=post_id, profile_id=profile.profile_id)
 
     return community(request=request)
+
 
 @login_required
 def create_post_view(request, pk):

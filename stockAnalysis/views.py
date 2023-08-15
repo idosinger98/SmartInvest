@@ -67,27 +67,6 @@ def search_stock_view(request):
         return JsonResponse(error_msg, status=status_code, safe=False)
 
 
-# def search_stock_wrapper(request):
-#     from landingPage.views import home
-#     response = search_stock_view(request=request)
-#     if response.status_code != 200:
-#         return home(request=request, return_after_wrong_symbol=True)
-#     else:
-#         return response
-
-
-def handle_exception(exception):
-    status_code = eh.EXCEPTION_HANDLER.get(type(exception), HTTPStatus.INTERNAL_SERVER_ERROR)
-    error_msg = exception.args[0]
-    if isinstance(exception, KeyError):
-        error_msg = 'no symbol mentioned'
-
-    if status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
-        error_msg = "EXCEPTION NOT HANDLE " + exception.args[0]
-
-    return error_msg, status_code
-
-
 @csrf_exempt
 @require_POST
 def post_calculate_algorithms(request):

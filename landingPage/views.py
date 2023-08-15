@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from utils.email_utils import connectedApiAndSendEmail
 from django.contrib import messages
 
+
 def home(request, return_after_wrong_symbol=False):
     list_review = Review.objects.get_all_reviews()
     last_three_posts = Post.objects.sort_posts_by_time()[:3]
