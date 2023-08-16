@@ -22,6 +22,7 @@ from .utils.ViewsParametersEnums import ChartDetails
 from utils.Constants import RequestContentType as ReqType
 from community.views import create_post
 
+
 def get_biggest_indices(request):
     stocks = ['^IXIC', '^DJI', '^GSPC']
     dictionary = {}

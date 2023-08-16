@@ -128,8 +128,8 @@ def create_post_view(request, pk):
     return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
 
 
-def create_post(analyzed_stock, description,title):
-    (post,created) = Post.objects.get_or_create(
+def create_post(analyzed_stock, description, title):
+    (post, created) = Post.objects.get_or_create(
         analysis_id=analyzed_stock,
         description=description,
         title=title,
