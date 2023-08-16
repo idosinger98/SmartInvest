@@ -113,27 +113,31 @@ def delete_post(request, post_id):
 
 @login_required
 def create_post_view(request, pk):
-    analyzedStock = AnalyzedStock.objects.filter(id=pk).first()
-    post = Post.objects.filter(analysis_id=analyzedStock).first()
+    analyzed_stock = AnalyzedStock.objects.filter(id=pk).first()
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            if post:
-                post.description = form.cleaned_data['description']
-                post.title = form.cleaned_data['title']
-                post.likes = 0
-                post.time = timezone.now()
-                post.save()
-            else:
-                post = Post.objects.create(analysis_id=analyzedStock, description=form.cleaned_data['description'],
-                                           title=form.cleaned_data['title'], likes=0, time=timezone.now())
-                post.save()
+            if create_post(analyzed_stock, form.cleaned_data['description'], title=form.cleaned_data['title']):
+                analyzed_stock.is_public = True
+                analyzed_stock.save(update_fields=['is_public'])
         else:
             return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
     else:
         form = PostForm()
+
     return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
 
+
+def create_post(analyzed_stock, description,title):
+    (post,created) = Post.objects.get_or_create(
+        analysis_id=analyzed_stock,
+        description=description,
+        title=title,
+        likes=0,
+        time=timezone.now()
+    )
+
+    return created
 
 # def post_deatils(request, pk):
 #     post = Post.objects.filter(id=pk).first()

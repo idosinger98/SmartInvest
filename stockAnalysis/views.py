@@ -20,7 +20,7 @@ from .utils.ViewsParametersEnums import IndicatorsViewParameters as IndicatorVie
 from .utils.ViewsParametersEnums import SaveStockViewParameters as SaveViewParams
 from .utils.ViewsParametersEnums import ChartDetails
 from utils.Constants import RequestContentType as ReqType
-
+from community.views import create_post
 
 def get_biggest_indices(request):
     stocks = ['^IXIC', '^DJI', '^GSPC']
@@ -55,13 +55,12 @@ def search_stock_view(request):
         stock_details = Yfinance.get_stock_by_date(symbol, from_date, to_date, interval)
         response_dict = {StockViewParams.STOCK.value: stock_details.to_json()}
         fundamentals = Yfinance.get_stock_fundamentals(symbol)
-        StockSymbol.objects.aget_or_create(symbol=symbol)
+        StockSymbol.objects.get_or_create(symbol=symbol.upper())
 
         return render(request,
                       'stockAnalysis/graph_page.html',
                       {StockViewParams.STOCK_SYMBOL.value: symbol, StockViewParams.STOCK_DATA.value: response_dict,
                        StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals})
-    # , 'fundamentals': fundamentals
     except Exception as e:
         error_msg, status_code = handle_exception(e)
         return JsonResponse(error_msg, status=status_code, safe=False)
@@ -108,11 +107,11 @@ def save_stock_analysis(request):
             description=request_body[SaveViewParams.DESCRIPTION.value],
             is_public=False)
         stock_analyzed.save()
-        # if request_body[SaveViewParams.PUBLISH]:
-        #     chart_title = request_body[SaveViewParams.TITLE.value]
-        # # call community view of post
-        #     stock_analyzed.is_public = True
-        #     stock_analyzed.save()
+        if request_body[SaveViewParams.PUBLISH]:
+            chart_title = request_body[SaveViewParams.TITLE.value]
+            if create_post(stock_analyzed, request_body[SaveViewParams.DESCRIPTION.value], chart_title):
+                stock_analyzed.is_public = True
+                stock_analyzed.save()
     except Exception as e:
         error_msg, status_code = handle_exception(e)
         return HttpResponse(

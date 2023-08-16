@@ -21,53 +21,56 @@
   </div>
   <main id="main">
 
-    <!-- Hero Section - Home Page -->
-    <section id="hero" class="hero">
-      <img src=" {% static 'assets/img/home.jpg' %}" alt="" data-aos="fade-in">
+      <!-- Hero Section - Home Page -->
+      <section id="hero" class="hero">
+          <img src=" {% static 'assets/img/home.jpg' %}" alt="" data-aos="fade-in">
+          <div class="container">
+              <div class="row">
+                  <div class="col-lg-10">
+                      <h2 data-aos="fade-up" data-aos-delay="100">Smart Invest, Think Different</h2>
+                      <p data-aos="fade-up" data-aos-delay="200">Our goal is to teach, help and improve your thinking
+                          about finance and stocks</p>
+                  </div>
+                  <div class="col-lg-5">
+                      <form action="/stockgraph" method="GET" class="sign-up-form d-flex" data-aos="fade-up"
+                            data-aos-delay="300">
+                          <input type="text" class="form-control" name="sy" id="stockInput"
+                                 placeholder="Enter stock symbol">
+                          <input type="submit" class="btn btn-primary" value="Get graph">
+                      </form>
+                      {% if wrong_symbol %}
+                          <small class="text-danger">The symbol does not exist!</small>
+                      {% endif %}
+                      <div id="stock_list_container" style="height: 200px; overflow-x: auto;">
+                          <ul id="stock_list">
+                              {% for stock in stocks_names %}
+                                  <li class="stock-item">{{ stock }}</li>
+                              {% endfor %}
+                          </ul>
+                      </div>
+                  </div>
+              </div>
 
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-10">
-            <h2 data-aos="fade-up" data-aos-delay="100">Smart Invest, Think Different</h2>
-            <p data-aos="fade-up" data-aos-delay="200">Our goal is to teach, help and improve your thinking about finance and stocks</p>
+              <!--            TOP 3 STOCKS                  -->
+              <div class="top-3-stocks">
+                  {% for stock in best_stocks %}
+                      <a class="circular-component" id="stock-{{ forloop.counter }}"
+                         href="/stockgraph?sy={{ stock.name }}">
+                          <div class="icon" id="icon-{{ forloop.counter }}">
+                              <!--                  <img class="icon-picture" src="{% static 'assets/img/icons/apple-icon.png' %}">-->
+                              <!--                  optional to add an icon-->
+                          </div>
+                          <h1 class="title" id="title-{{ forloop.counter }}">
+                              {{ stock.name }}
+                          </h1>
+                          <p class="stock-value" id="value-{{ forloop.counter }}">
+                              {{ stock.price }}
+                          </p>
+                      </a>
+                  {% endfor %}
+              </div>
           </div>
-          <div class="col-lg-5">
-            <form action="/stockgraph" method="GET" class="sign-up-form d-flex" data-aos="fade-up" data-aos-delay="300">
-              <input type="text" class="form-control" name="sy" id="stockInput" placeholder="Enter stock symbol">
-              <input type="submit" class="btn btn-primary" value="Get graph">
-            </form>
-            {% if wrong_symbol %}
-              <small class="text-danger">The symbol does not exist!</small>
-            {% endif %}
-            <div id="stock_list_container" style="height: 200px; overflow-x: auto;">
-              <ul id="stock_list">
-                {% for stock in stocks_names %}
-                <li class="stock-item">{{ stock }}</li>
-                {% endfor %}
-              </ul>
-            </div>
-<!--            TOP 3 STOCKS                  -->
-            <div class="top-3-stocks">
-              {% for stock in best_stocks %}
-              <a class="circular-component" id="stock-{{ forloop.counter }}" href="/stockgraph?sy={{ stock.name }}">
-                <div class="icon" id="icon-{{ forloop.counter }}">
-<!--                  <img class="icon-picture" src="{% static 'assets/img/icons/apple-icon.png' %}">-->
-<!--                  optional to add an icon-->
-                </div>
-                <h1 class="title" id="title-{{ forloop.counter }}">
-                  {{ stock.name }}
-                </h1>
-                <p class="stock-value" id="value-{{ forloop.counter }}">
-                  {{ stock.price }}
-                </p>
-              </a>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </section><!-- End Hero Section -->
+      </section><!-- End Hero Section -->
 
     <!-- About Section - Home Page -->
     <section id="about" class="about">
