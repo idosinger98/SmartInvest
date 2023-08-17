@@ -23,6 +23,7 @@
             </div>
             <div id="container">
                 <div id="chart_container"></div>
+                {% if fundamentals %}
                 <div id="fundamentals-container">
                     <h1>Fundamental Analysis</h1>
                     <ul>
@@ -31,6 +32,9 @@
                         {% endfor %}
                     </ul>
                 </div>
+                {% else %}
+
+                {% endif %}
                 <button id="saveButton" class="button-17" role="button">KEEP CHART</button>
             </div>
             <div id="checkboxesContainer">

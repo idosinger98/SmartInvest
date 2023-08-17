@@ -54,17 +54,28 @@ def __check_start_date_before_end(start, end):
 
 
 def get_stock_fundamentals(stock_name):
-    response = yf.Ticker(stock_name).get_info()
+    response = yf.Ticker(stock_name).info
 
-    built_in_ratios = {'Current Ratio': 'currentRatio',
-                       'Quick Ratio': 'quickRatio',
-                       'Gross Profit Margin': 'grossMargins',
-                       'Short Ratio': 'shortRatio',
-                       'Price/Earning to Growth': 'pegRatio',
-                       }
-    not_built_in_ratios = {'Price-to-Earning (P/E) ratio': ['pegRatio', 'earningsGrowth']}
+    if stock_name[0] == '^':
+        built_in_ratios = {'Open': 'regularMarketOpen',
+                           'Previous Close': 'regularMarketPreviousClose',
+                           'Volume': 'volume',
+                           'Avg. Volume': 'averageVolume',
+                           }
 
-    total_ratios = dict(map(lambda item: (item[0], response[item[1]]), built_in_ratios.items()))
-    total_ratios.update(dict(map(lambda item: (item[0], response[item[1][0]] * response[item[1][1]]),
-                                 not_built_in_ratios.items())))
+        total_ratios = dict(map(lambda item: (item[0], response[item[1]]), built_in_ratios.items()))
+
+    else:
+        built_in_ratios = {'Current Ratio': ['currentRatio', "The current ratio is a financial metric used to evaluate a company's short-term liquidity and ability to cover its short-term liabilities with its short-term assets."],  # 15%
+                           'Quick Ratio': ['quickRatio', "The quick ratio, also known as the acid-test ratio, is a financial metric used to assess a company's short-term liquidity and its ability to cover immediate liabilities without relying on the sale of inventory."],  # 10%
+                           'Gross Profit Margin': ['grossMargins', "Gross Profit Margin is a financial metric used to evaluate a company's profitability and efficiency in generating profit from its core business operations."],  # 20%
+                           'Short Ratio': ['shortRatio', "The short ratio, also known as the short interest ratio or days to cover ratio, is a financial metric used to assess the level of short interest in a particular stock."],  # 5%
+                           'Price/Earning to Growth': ['pegRatio', "The Price/Earnings to Growth ratio, often abbreviated as PEG ratio, is a valuation metric used in finance to assess the relationship between a company's stock price, its earnings per share (EPS), and its expected growth rate."],  # 25%
+                           }
+        not_built_in_ratios = {'Price-to-Earning (P/E) ratio': ['pegRatio', 'earningsGrowth', ""]}  # 25%
+
+        total_ratios = dict(map(lambda item: (item[0], response[item[1][0]]), built_in_ratios.items()))
+        total_ratios.update(dict(map(lambda item: (item[0], response[item[1][0]] * response[item[1][1]]),
+                                     not_built_in_ratios.items())))
+
     return total_ratios
