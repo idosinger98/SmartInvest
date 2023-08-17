@@ -1,0 +1,72 @@
+{% extends "nav_menu.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ sy }} Stock</title>
+        <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="../../static/css/styles.css">
+        <link rel="stylesheet" href="/static/css/toastinette.min.css">
+
+        <!--  {% load static %}-->
+    </head>
+{% endblock %}
+    {% block content %}
+    <body>
+        <div>
+            <div>
+                <p id="statusBar"></p>
+            </div>
+            <div id="container">
+                <div id="chart_container"></div>
+                <div id="fundamentals-container">
+                    <h1>Fundamental Analysis</h1>
+                    <ul>
+                        {% for key, value in fundamentals.items %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <button id="saveButton" class="button-17" role="button">KEEP CHART</button>
+            </div>
+            <div id="checkboxesContainer">
+                <ul id="checkboxList" class="ks-cboxtags"></ul>
+            </div>
+            <div id="overlay"></div>
+            <div id="window">
+                <button id="closeButton" class="button-17">X</button>
+                <div id="title">Your Analyze</div>
+                <div class="centered">
+                    <input type="text" placeholder="Title" id="titleInput">
+                    <textarea placeholder="Description" id="textArea"></textarea>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="publicCheckBox">
+                        <label for="publicCheckBox">Share it with the world</label>
+                    </div>
+                    <button id="submitButton" class="button-17">Submit</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            const indicators = {{ indicators | safe }};
+            const stockData = {{ stock_data | safe }};
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+        <!--<script src="{% static 'js/stockChart.js' %}"></script>
+                <script src="{% static 'js/indicatorCheckBox.js' %}"></script> for production environment-->
+        <script type="module" src="../../static/js/index.js"></script>
+
+
+    </body>
+{% endblock %}
+</html>

@@ -1,5 +1,6 @@
+import numpy
 import pytest
-from stockAnalysis.thirdPartUtils.Yfinance import get_stock_by_date
+from stockAnalysis.utils.Yfinance import get_stock_by_date, get_last_price_stock
 from stockAnalysis.exceptions import BadStockRequestException, StockNotFoundException
 from pandas import DataFrame
 
@@ -40,3 +41,11 @@ def test_get_stock_by_date_stock_symbol_not_found():
     interval = '1d'
     with pytest.raises(StockNotFoundException.StockNotFoundException):
         get_stock_by_date('INVALID', start_date, end_date, interval)
+
+
+def test_get_last_price_stock():
+    with pytest.raises(StockNotFoundException.StockNotFoundException):
+        get_last_price_stock('adadada')
+
+    price = get_last_price_stock('^IXIC')
+    assert type(price) is numpy.float64

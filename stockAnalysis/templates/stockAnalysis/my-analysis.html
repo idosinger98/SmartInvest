@@ -1,0 +1,53 @@
+{% extends 'nav_menu.html' %}
+{% load static %}
+<head>
+  {% block head %}
+  <link href="{% static 'css/my-analysis.css' %}" rel="stylesheet">
+  {% endblock head %}
+</head>
+{% block content %}
+<body class="my-analysis-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+  <main id="main">
+    <!-- Services Section - Home Page -->
+    <section id="my-analysis" class="services">
+
+      <!--  Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>My Analysis</h2>
+        <p>On this page you can see all of your previous analysis</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+
+        <div class="row gy-4">
+          {% if analysis %}
+          {% for analyze in analysis %}
+          <div class="col-lg-6 " data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item d-flex">
+              <div class="icon flex-shrink-0"><i class="bi bi-bar-chart"></i></div>
+              <div>
+                <h4 class="title"><a href="#" class="stretched-link">Analyze #{{forloop.counter}}</a></h4>
+                <p class="description">{{analyze.description}}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          <div>There are no analysis yet...</div>
+          {% endif %}
+        </div>
+      </div>
+    </section><!-- End Services Section -->
+
+  </main>
+
+  <!-- Scroll Top Button -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <script>
+    const researchModal = new bootstrap.Modal(document.getElementById('researchModal'));
+    researchModal.show();
+  </script>
+
+</body>
+{% endblock content %}

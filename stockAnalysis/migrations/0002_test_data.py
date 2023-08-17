@@ -1,6 +1,6 @@
 from django.db import migrations, transaction
 from users.models import Profile
-from stockAnalysis.models import AnalyzedStocks
+from stockAnalysis.models import AnalyzedStock
 
 
 class Migration(migrations.Migration):
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         # Create review
         with transaction.atomic():
             for publisher_id, stock_json, content, public in analyzed_stock_test_data:
-                AnalyzedStocks(
+                AnalyzedStock(
                     analyst_id=Profile.objects.get(pk=publisher_id),
                     stock_image=stock_json,
                     description=content,
