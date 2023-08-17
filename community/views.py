@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from community.models import Post, Comment
 from django.contrib.auth.decorators import login_required
 from community.forms import PostForm, CommentForm
@@ -16,40 +18,131 @@ def community(request):
     paginated_posts = paginator.get_page(page_number)
 
     context = {
-        'paginated_posts': paginated_posts
+        'paginated_posts': paginated_posts,
+        'posts': posts
     }
 
     return render(request, 'community/community.html', context)
 
 
+@csrf_exempt
+def show_post(request, post_id):
+    form = CommentForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            content = form.cleaned_data['content']
+            publisher = Profile.objects.filter(user_id=request.user).first()
+            post = Post.objects.get(pk=post_id)
+            Comment.objects.comment_post(post_id=post, content=content, publisher_id=publisher)
+            return redirect('post-details', post_id=post_id)
+
+    post = get_object_or_404(Post, pk=post_id)
+    comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
+    context = {'posts': Post.objects.all().values, 'post': post, 'comments': comments}
+    return render(request, 'community/post-details.html', context)
+
+
+def like_post(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    profile = Profile.objects.filter(user_id=request.user).first()
+    is_liked = post.likes.filter(pk=profile.profile_id).exists()
+    if is_liked:
+        Post.objects.unlike_post(post_id=post_id, profile_id=profile.profile_id)
+    else:
+        Post.objects.like_post(post_id=post_id, profile_id=profile.profile_id)
+
+    return JsonResponse({'likes': post.likes.count(), 'is_liked': is_liked})
+
+
+@login_required
+def like_comment(request, comment_id):
+    comment = Comment.objects.get(pk=comment_id)
+    profile = Profile.objects.filter(user_id=request.user).first()
+    is_liked = comment.likes.filter(pk=profile.profile_id).exists()
+    if is_liked:
+        Comment.objects.unlike_comment(comment_id=comment_id, profile_id=profile.profile_id)
+    else:
+        Comment.objects.like_comment(comment_id=comment_id, profile_id=profile.profile_id)
+
+    return JsonResponse({'likes': comment.likes.count(), 'is_liked': is_liked})
+
+
+@login_required
+def check_like(request, postId):
+    post_id = request.GET.get('post_id')
+    profile_id = request.GET.get('profile_id')
+
+    post = Post.objects.get(pk=post_id)
+
+    liked = post.likes.filter(pk=profile_id).exists()
+
+    return JsonResponse({'liked': liked})
+
+
+@login_required
+def check_comment_like(request, commentId):
+    comment_id = request.GET.get('comment_id')
+    profile_id = request.GET.get('profile_id')
+
+    comment = Comment.objects.get(pk=comment_id)
+
+    liked = comment.likes.filter(pk=profile_id).exists()
+
+    return JsonResponse({'liked': liked})
+
+
+@login_required
+def delete_comment(request, post_id, comment_id):
+    profile = Profile.objects.filter(user_id=request.user).first()
+    Comment.objects.delete_comment(comment_id=comment_id, profile_id=profile.profile_id)
+
+    post = get_object_or_404(Post, pk=post_id)
+    comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
+    context = {'posts': Post.objects.all().values, 'post': post, 'comments': comments}
+
+    return render(request, 'community/post-details.html', context)
+
+
+@login_required
+def delete_post(request, post_id):
+    profile = Profile.objects.filter(user_id=request.user).first()
+    Post.objects.delete_post(post_id=post_id, profile_id=profile.profile_id)
+
+    return community(request=request)
+
+
 @login_required
 def create_post_view(request, pk):
-    analyzedStock = AnalyzedStock.objects.filter(id=pk).first()
-    post = Post.objects.filter(analysis_id=analyzedStock).first()
+    analyzed_stock = AnalyzedStock.objects.filter(id=pk).first()
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            if post:
-                post.description = form.cleaned_data['description']
-                post.title = form.cleaned_data['title']
-                post.likes = 0
-                post.time = timezone.now()
-                post.save()
-            else:
-                post = Post.objects.create(analysis_id=analyzedStock, description=form.cleaned_data['description'],
-                                           title=form.cleaned_data['title'], likes=0, time=timezone.now())
-                post.save()
+            if create_post(analyzed_stock, form.cleaned_data['description'], title=form.cleaned_data['title']):
+                analyzed_stock.is_public = True
+                analyzed_stock.save(update_fields=['is_public'])
         else:
             return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
     else:
         form = PostForm()
+
     return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
 
 
-def post_deatils(request, pk):
-    post = Post.objects.filter(id=pk).first()
-    comments = Comment.objects.get_all_comments_on_post(post.id)
-    return render(request, 'community/post-details.html', {'post': post, 'comments': comments})
+def create_post(analyzed_stock, description, title):
+    (post, created) = Post.objects.get_or_create(
+        analysis_id=analyzed_stock,
+        description=description,
+        title=title,
+        likes=0,
+        time=timezone.now()
+    )
+
+    return created
+
+# def post_deatils(request, pk):
+#     post = Post.objects.filter(id=pk).first()
+#     comments = Comment.objects.get_all_comments_on_post(post.id)
+#     return render(request, 'community/post-details.html', {'post': post, 'comments': comments})
 
 
 @login_required
@@ -62,7 +155,6 @@ def comment(request, post_id):
             create_comment = Comment.objects.create(publisher_id=profile,
                                                     content=form.cleaned_data['content'],
                                                     post_id=post,
-                                                    likes=0,
                                                     time=timezone.now())
             create_comment.save()
             return HttpResponse()

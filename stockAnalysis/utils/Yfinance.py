@@ -51,3 +51,20 @@ def __check_date_in_correct_format(date):
 def __check_start_date_before_end(start, end):
     if datetime.datetime.strptime(start, '%Y-%m-%d') >= datetime.datetime.strptime(end, '%Y-%m-%d'):
         raise BadStockRequestException('Invalid input - start date cannot be after end date.')
+
+
+def get_stock_fundamentals(stock_name):
+    response = yf.Ticker(stock_name).get_info()
+
+    built_in_ratios = {'Current Ratio': 'currentRatio',
+                       'Quick Ratio': 'quickRatio',
+                       'Gross Profit Margin': 'grossMargins',
+                       'Short Ratio': 'shortRatio',
+                       'Price/Earning to Growth': 'pegRatio',
+                       }
+    not_built_in_ratios = {'Price-to-Earning (P/E) ratio': ['pegRatio', 'earningsGrowth']}
+
+    total_ratios = dict(map(lambda item: (item[0], response[item[1]]), built_in_ratios.items()))
+    total_ratios.update(dict(map(lambda item: (item[0], response[item[1][0]] * response[item[1][1]]),
+                                 not_built_in_ratios.items())))
+    return total_ratios

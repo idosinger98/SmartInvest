@@ -12,6 +12,7 @@
 #chart_container{
     width: 900px;
     height: 500px;
+    display: inline-block;
 }
 
 .ul.ks-cboxtags {
@@ -118,8 +119,9 @@ ul.ks-cboxtags li input[type="checkbox"]:hover + label {
 }
 
 #container {
-    display: flex;
-     align-items: baseline;
+    display: block;
+    align-items: baseline;
+    margin-top: 100px;
 }
 .saveButton {
 
@@ -300,4 +302,21 @@ ul.ks-cboxtags li input[type="checkbox"]:hover + label {
 
 .checkbox-container label {
     margin-left: 5px;
+}
+
+#fundamentals-container {
+    display: inline-block;
+    position: absolute;
+}
+
+#fundamentals-container li {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#fundamentals-container h1 {
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 10px;
+    text-decoration: underline;
 }

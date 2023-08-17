@@ -1,41 +1,76 @@
-{% extends 'nav_menu.html' %}
+{% extends 'base.html' %}
 {% load static %}
-
+<head>
+  {% block head %}
+      <link href="{% static 'css/landingPage.css' %}" rel="stylesheet">
+      <link href="{% static 'css/style_review.css' %}" rel="stylesheet">
+      <title>Smart Invest</title>
+  {% endblock head %}
+</head>
 {% block content %}
 <body class="index-page" data-bs-spy="scroll" data-bs-target="#navmenu">
- <div class="modal" id="researchModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-body">
-        <p>This site is a research site for studies, and the needs that are done on it are for research purposes only.</p>
-        <button type="button" id="okButton" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+  <div class="modal" id="researchModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <p>This site is a research site for studies, and the needs that are done on it are for research purposes only.</p>
+          <button type="button" class="btn btn-primary" id="okButton" data-bs-dismiss="modal">OK</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
   <main id="main">
 
-    <!-- Hero Section - Home Page -->
-    <section id="hero" class="hero">
-      <img src=" {% static 'assets/img/home.jpg' %}" alt="" data-aos="fade-in">
+      <!-- Hero Section - Home Page -->
+      <section id="hero" class="hero">
+          <img src=" {% static 'assets/img/home.jpg' %}" alt="" data-aos="fade-in">
+          <div class="container">
+              <div class="row">
+                  <div class="col-lg-10">
+                      <h2 data-aos="fade-up" data-aos-delay="100">Smart Invest, Think Different</h2>
+                      <p data-aos="fade-up" data-aos-delay="200">Our goal is to teach, help and improve your thinking
+                          about finance and stocks</p>
+                  </div>
+                  <div class="col-lg-5">
+                      <form action="/stockgraph" method="GET" class="sign-up-form d-flex" data-aos="fade-up"
+                            data-aos-delay="300">
+                          <input type="text" class="form-control" name="sy" id="stockInput"
+                                 placeholder="Enter stock symbol">
+                          <input type="submit" class="btn btn-primary" value="Get graph">
+                      </form>
+                      {% if wrong_symbol %}
+                          <small class="text-danger">The symbol does not exist!</small>
+                      {% endif %}
+                      <div id="stock_list_container" style="height: 200px; overflow-x: auto;">
+                          <ul id="stock_list">
+                              {% for stock in stocks_names %}
+                                  <li class="stock-item">{{ stock }}</li>
+                              {% endfor %}
+                          </ul>
+                      </div>
+                  </div>
+              </div>
 
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-10">
-            <h2 data-aos="fade-up" data-aos-delay="100">Smart Invest, Think Different</h2>
-            <p data-aos="fade-up" data-aos-delay="200">Our goal is to teach, help and improve your thinking about finance and stocks</p>
+              <!--            TOP 3 STOCKS                  -->
+              <div class="top-3-stocks">
+                  {% for stock in best_stocks %}
+                      <a class="circular-component" id="stock-{{ forloop.counter }}"
+                         href="/stockgraph?sy={{ stock.name }}">
+                          <div class="icon" id="icon-{{ forloop.counter }}">
+                              <!--                  <img class="icon-picture" src="{% static 'assets/img/icons/apple-icon.png' %}">-->
+                              <!--                  optional to add an icon-->
+                          </div>
+                          <h1 class="title" id="title-{{ forloop.counter }}">
+                              {{ stock.name }}
+                          </h1>
+                          <p class="stock-value" id="value-{{ forloop.counter }}">
+                              {{ stock.price }}
+                          </p>
+                      </a>
+                  {% endfor %}
+              </div>
           </div>
-          <div class="col-lg-5">
-            <form action="#" class="sign-up-form d-flex" data-aos="fade-up" data-aos-delay="300">
-              <input type="text" class="form-control" placeholder="Enter stock symbol">
-              <input type="submit" class="btn btn-primary" value="Get graph">
-            </form>
-          </div>
-        </div>
-      </div>
-
-    </section><!-- End Hero Section -->
-
+      </section><!-- End Hero Section -->
 
     <!-- About Section - Home Page -->
     <section id="about" class="about">
@@ -95,7 +130,7 @@
     <!-- Stats Section - Home Page -->
     <section id="stats" class="stats">
 
-      <img src="{% static 'assets/img/stats-bg.jpg' %}" alt="" data-aos="fade-in">
+      <img src="{% static 'assets/img/team/ido.png'%}" alt="" data-aos="fade-in">
 
       <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
 
@@ -287,7 +322,7 @@
               </div><!-- End Faq item-->
 
               <div class="faq-item">
-                <h3><span class="num">4.</span> <span>Can you share some of the positive reviews from users who have profited from the website?</span></h3>
+                <h3><span class="num">4.</span> <span>Can you share some positive reviews from users who have profited from the website?</span></h3>
                 <div class="faq-content">
                   <p> Absolutely! We have a dedicated section on our website that features positive reviews and testimonials from users who have experienced profitable outcomes through our platform. These reviews showcase how our educational resources, stock analysis tools, and data-driven approach have contributed to their investment success. We take pride in sharing these success stories to inspire and motivate other users on their investment journeys. </p>
                 </div>
@@ -525,11 +560,11 @@
             <article>
 
               <div class="post-img">
-                <img src="{% static  "assets/img/blog/blog-1.jpg"%}" alt="" class="img-fluid">
+                <img src="{% static  "assets/img/team/ido.png"%}" alt="" class="img-fluid">
               </div>
 
               <h2 class="title">
-                <a href="{% url 'post_details' post.id %}">{{ post.title }}</a>
+                <a href="{% url 'post-details' post.id %}">{{ post.title }}</a>
               </h2>
 
               <div class="d-flex align-items-center">
@@ -716,8 +751,7 @@
     <div></div>
   </div>
 
- <script src=" {% static 'js/../../static/landing_page.js' %}"></script>
-</body>
+ <script src=" {% static 'js/landing_page.js' %}"></script>
 
 </body>
 {% endblock content %}

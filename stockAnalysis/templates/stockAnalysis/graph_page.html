@@ -23,6 +23,14 @@
             </div>
             <div id="container">
                 <div id="chart_container"></div>
+                <div id="fundamentals-container">
+                    <h1>Fundamental Analysis</h1>
+                    <ul>
+                        {% for key, value in fundamentals.items %}
+                            <li>{{ key }}: {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 <button id="saveButton" class="button-17" role="button">KEEP CHART</button>
             </div>
             <div id="checkboxesContainer">

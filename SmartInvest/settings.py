@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'stockAnalysis.apps.StockanalysisConfig',
     'review.apps.ReviewConfig',
-    'contact.apps.ContactConfig',
     'community.apps.CommunityConfig',
     'landingPage.apps.LandingpageConfig',
 ]

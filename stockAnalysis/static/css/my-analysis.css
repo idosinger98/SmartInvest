@@ -1,0 +1,9 @@
+.my-analysis-page {
+    padding: 100px;
+}
+
+.separator {
+  border-top: 2px solid #ccc; /* Set the style and color of the separator */
+  margin: 25px 0; /* Adjust the margin as needed to control spacing around the separator */
+  padding: 10px;
+}

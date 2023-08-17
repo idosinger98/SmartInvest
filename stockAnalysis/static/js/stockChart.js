@@ -83,6 +83,16 @@ export class StockChart {
         jsonData[CHART_JSON_KEYS.INDICATORS].forEach(data => this.addIndicatorToChart(data));
     }
 
+    chartToPng(img_container_id) {
+        anychart.onDocumentReady(() => {
+            this.chart.getPngBase64String(function (response) {
+                const imageElement = document.getElementById(img_container_id);
+                const dataURL = `data:image/png;base64, ${response}`;
+                imageElement.src = dataURL;
+            });
+        });
+    }
+
     addIndicatorToChart(data) {
         for (const key of Object.keys(data)) {
             this.addIndicatorLineSeriesOnNewPlot(data[key], key);

@@ -20,6 +20,7 @@ from .utils.ViewsParametersEnums import IndicatorsViewParameters as IndicatorVie
 from .utils.ViewsParametersEnums import SaveStockViewParameters as SaveViewParams
 from .utils.ViewsParametersEnums import ChartDetails
 from utils.Constants import RequestContentType as ReqType
+from community.views import create_post
 
 
 def get_biggest_indices(request):
@@ -35,6 +36,13 @@ def get_biggest_indices(request):
     return JsonResponse(dictionary)
 
 
+@login_required
+def my_analysis_page(request, analyst_id):
+    my_analysis = AnalyzedStock.objects.get_user_stocks(analyst_id=analyst_id)
+    context = {'analysis': my_analysis}
+    return render(request, 'stockAnalysis/my-analysis.html', context)
+
+
 @csrf_exempt
 def search_stock_view(request):
     try:
@@ -47,12 +55,13 @@ def search_stock_view(request):
         to_date = request.GET.get(StockViewParams.TO, datetime.datetime.now().strftime('%Y-%m-%d'))
         stock_details = Yfinance.get_stock_by_date(symbol, from_date, to_date, interval)
         response_dict = {StockViewParams.STOCK.value: stock_details.to_json()}
-        StockSymbol.objects.aget_or_create(symbol=symbol)
+        fundamentals = Yfinance.get_stock_fundamentals(symbol)
+        StockSymbol.objects.get_or_create(symbol=symbol.upper())
 
         return render(request,
                       'stockAnalysis/graph_page.html',
                       {StockViewParams.STOCK_SYMBOL.value: symbol, StockViewParams.STOCK_DATA.value: response_dict,
-                       StockViewParams.INDICATORS.value: get_indicators_dict()})
+                       StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals})
     except Exception as e:
         error_msg, status_code = handle_exception(e)
         return JsonResponse(error_msg, status=status_code, safe=False)
@@ -69,7 +78,7 @@ def post_calculate_algorithms(request):
         request_dict = json_to_object(request.body)
         algos_array = request_dict[IndicatorViewsParams.INDICATORS.value]
         stock_df = DataFrame(request_dict[IndicatorViewsParams.STOCK.value])
-        if type(algos_array) != list:
+        if type(algos_array) is not list:
             raise ValueError("JSON content is not a list type")
 
         dictionary.update(calculate_algorithms(algos_array, stock_df))
@@ -99,11 +108,11 @@ def save_stock_analysis(request):
             description=request_body[SaveViewParams.DESCRIPTION.value],
             is_public=False)
         stock_analyzed.save()
-        # if request_body[SaveViewParams.PUBLISH]:
-        #     chart_title = request_body[SaveViewParams.TITLE.value]
-        # # call community view of post
-        #     stock_analyzed.is_public = True
-        #     stock_analyzed.save()
+        if request_body[SaveViewParams.PUBLISH]:
+            chart_title = request_body[SaveViewParams.TITLE.value]
+            if create_post(stock_analyzed, request_body[SaveViewParams.DESCRIPTION.value], chart_title):
+                stock_analyzed.is_public = True
+                stock_analyzed.save()
     except Exception as e:
         error_msg, status_code = handle_exception(e)
         return HttpResponse(
