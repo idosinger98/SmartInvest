@@ -67,6 +67,36 @@ def search_stock_view(request):
         return JsonResponse(error_msg, status=status_code, safe=False)
 
 
+def compare_stocks(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        symbol = data.get('symbol')
+        fundamentals_items = data.get('fundamentalsItems')
+
+        if symbol:
+            fundamentals = Yfinance.get_stock_fundamentals(symbol)
+            is_better = new_stock_is_better(fundamentals, fundamentals_items)
+
+            return JsonResponse({'fundamentals': fundamentals, 'is_better': is_better})
+
+    return JsonResponse({'error': 'Invalid request'})
+
+
+def get_stock_fundamentals_score(fundamentals):
+    score = float(fundamentals['Current Ratio']) * 0.25 +\
+            float(fundamentals['Quick Ratio']) * 0.1 +\
+            float(fundamentals['Gross Profit Margin']) * 0.2 +\
+            float(fundamentals['Short Ratio']) * 0.05 +\
+            float(fundamentals['Price/Earning to Growth']) * 0.25 +\
+            float(fundamentals['Price-to-Earning (P/E) ratio']) * 0.25
+
+    return score
+
+
+def new_stock_is_better(fundamentals, fundamentals_items):
+    return get_stock_fundamentals_score(fundamentals) > get_stock_fundamentals_score(fundamentals_items)
+
+
 @csrf_exempt
 @require_POST
 def post_calculate_algorithms(request):

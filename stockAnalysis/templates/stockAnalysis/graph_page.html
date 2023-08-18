@@ -30,6 +30,11 @@
                             <li>{{ key }}: {{ value }}</li>
                         {% endfor %}
                     </ul>
+                    <div id="compareStocksContainer">
+                        <input type="text" class="search-input" id="stockSymbolInput" placeholder="Enter a stock's symbol">
+                        <button class="search-button" id="compareButton">Compare</button>
+                        <div id="comparisonResult"></div>
+                    </div>
                 </div>
                 <button id="saveButton" class="button-17" role="button">KEEP CHART</button>
             </div>

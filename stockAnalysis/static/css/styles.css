@@ -320,3 +320,21 @@ ul.ks-cboxtags li input[type="checkbox"]:hover + label {
     margin-top: 10px;
     text-decoration: underline;
 }
+
+.search-button {
+  border-radius: 4px;
+  padding: 6px 10px;
+  border: 0;
+  background-color: #e84545;
+  color: white;
+  margin-left: 20px;
+}
+
+.search-input {
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+#compareStocksContainer {
+   margin: 20px;
+}

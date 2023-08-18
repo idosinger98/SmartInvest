@@ -186,6 +186,76 @@ publicCheckBox.addEventListener('change', () => {
         titleInput.style.display = 'none';
     }
 });
+//
+//document.addEventListener('DOMContentLoaded', function () {
+//    const stockSymbolInput = document.getElementById('stockSymbolInput');
+//    const compareButton = document.getElementById('compareButton');
+//
+//    compareButton.addEventListener('click', function () {
+//        const symbol = stockSymbolInput.value;
+//
+//        if (symbol) {
+//            window.location.href = 'https://example.com/compare?symbol=' + encodeURIComponent(symbol);
+//        }
+//    });
+//});
+
+document.addEventListener('DOMContentLoaded', function () {
+            // Get references to the input, button, and result container
+            const stockSymbolInput = document.getElementById('stockSymbolInput');
+            const compareButton = document.getElementById('compareButton');
+            const comparisonResult = document.getElementById('comparisonResult');
+
+  document.getElementById('compareButton').addEventListener('click', function() {
+    console.log('compareButton was clicked!')
+    const symbol = stockSymbolInput.value.toLowerCase();
+
+                    const fundamentalsItems = {}; // Create an empty object for the fundamentals items
+
+                // Loop through the ul list and populate the fundamentalsItems object
+                const fundamentalsList = document.querySelectorAll('#fundamentals-container ul li');
+                for (const listItem of fundamentalsList) {
+                    const [key, value] = listItem.textContent.split(': ');
+                    fundamentalsItems[key] = value;
+                }
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/compareStocks/');
+    xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        let response = JSON.parse(xhr.responseText);
+        comparisonResult.innerHTML = ''; // Clear previous content
+        const fundamentals = response.fundamentals;
+        const message = response.is_better ? "This stock is better" : "This stock is worse";
+        const messageElement = document.createElement('p');
+        messageElement.textContent = message;
+        comparisonResult.appendChild(messageElement);
+        for (const key in fundamentals) {
+            if (fundamentals.hasOwnProperty(key)) {
+                const value = fundamentals[key];
+                const listItem = document.createElement('li');
+                listItem.textContent = `${key}: ${value}`;
+                comparisonResult.appendChild(listItem);
+            }
+        }
+      }
+    };
+                    const payload = {
+                    symbol: symbol,
+                    fundamentalsItems: fundamentalsItems
+                };
+
+                xhr.send(JSON.stringify(payload));
+  });
+});
+
+function getCookie(name) {
+  let value = "; " + document.cookie;
+  let parts = value.split("; " + name + "=");
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
 
 function isTitleFilled(is_public, title){
     return !is_public ||  (title !== null && title.trim() !== "")
