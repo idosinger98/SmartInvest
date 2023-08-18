@@ -9,3 +9,11 @@
   background-color: #e84545;
   color: white;
 }
+
+.likeComment {
+    cursor: pointer;
+}
+
+.deleteComment {
+    cursor: pointer;
+}
