@@ -68,18 +68,23 @@ def search_stock_view(request):
 
 
 def compare_stocks(request):
-    if request.method == 'POST':
-        data = json.loads(request.body.decode('utf-8'))
-        symbol = data.get('symbol')
-        fundamentals_items = data.get('fundamentalsItems')
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body.decode('utf-8'))
+            symbol = data.get('symbol')
+            fundamentals_items = data.get('fundamentalsItems')
 
-        if symbol:
-            fundamentals = Yfinance.get_stock_fundamentals(symbol)
-            is_better = new_stock_is_better(fundamentals, fundamentals_items)
+            if symbol:
+                fundamentals = Yfinance.get_stock_fundamentals(symbol)
 
-            return JsonResponse({'fundamentals': fundamentals, 'is_better': is_better})
+                is_better = new_stock_is_better(fundamentals, fundamentals_items)
 
-    return JsonResponse({'error': 'Invalid request'})
+                return JsonResponse({'fundamentals': fundamentals, 'is_better': is_better})
+
+        return JsonResponse({'error': 'Invalid request'})
+    except Exception as e:
+        error_msg, status_code = handle_exception(e)
+        return JsonResponse(error_msg, status=status_code, safe=False)
 
 
 def get_stock_fundamentals_score(fundamentals):
