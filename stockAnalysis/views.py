@@ -37,8 +37,9 @@ def get_biggest_indices(request):
 
 
 @login_required
-def my_analysis_page(request, analyst_id):
-    my_analysis = AnalyzedStock.objects.get_user_stocks(analyst_id=analyst_id)
+def my_analysis_page(request):
+    profile = Profile.objects.filter(user_id=request.user).first()
+    my_analysis = AnalyzedStock.objects.get_user_stocks(analyst_id=profile.user_id)
     context = {'analysis': my_analysis}
     return render(request, 'stockAnalysis/my-analysis.html', context)
 
