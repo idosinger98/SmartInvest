@@ -224,6 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
       } else {
+        comparisonResult.innerHTML = '';
         const message = 'Invalid input!';
         const messageElement = document.createElement('p');
         messageElement.textContent = message;
