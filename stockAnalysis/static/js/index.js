@@ -1,7 +1,7 @@
-import {StockChart} from "./stockChart.js";
-import {IndicatorCheckBox} from "./indicatorCheckBox.js";
-import {SAVE_STOCK_URL} from "../../../static/js/urls.js";
-import {sendToastMessage, MESSAGE_TYPE} from '/static/js/toastinette.js'
+import {StockChart} from "../../../static/js/stockChart.js";
+import {IndicatorCheckBox} from "../../../static/js/indicatorCheckBox.js";
+import {SAVE_STOCK_URL, CHECK_CONNECTED_URL} from "../../../static/js/urls.js";
+import {sendToastMessage, MESSAGE_TYPE} from '../../../static/js/toastinette.js';
 
 const data =
     typeof stockData !== 'undefined' ?
@@ -262,5 +262,11 @@ function isTitleFilled(is_public, title){
 }
 
 function is_user_connected(){
-    return false;
+    let result;
+
+    fetch(CHECK_CONNECTED_URL, {
+        method: 'GET',
+    }).then(response => result = response.ok).catch(response => result = false)
+
+    return result;
 }

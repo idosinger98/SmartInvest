@@ -2,8 +2,9 @@
 {% load static %}
 <head>
   {% block head %}
-  <link href="{% static 'css/community.css' %}" rel="stylesheet">
-  <script src="{% static 'assets/js/main.js' %}"></script>
+      <link href="{% static 'css/community.css' %}" rel="stylesheet">
+      <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+      <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
   {% endblock head %}
 </head>
 {% block content %}
@@ -39,7 +40,7 @@
             <div class="col-xl-4 col-lg-6">
               <article>
                 <div class="post-img">
-                  <img src="{% static 'assets/img/my-stocks.jpg' %}" alt="" class="img-fluid">
+                  <img id="post-{{ post.id }}-img" src="{% static 'assets/img/my-stocks.jpg' %}" alt="" class="img-fluid">
                 </div>
                 <h2 class="title">
                   <a href="{% url 'post-details' post.id %}">{{post.title}}</a>
@@ -89,7 +90,18 @@
     <div></div>
     <div></div>
   </div>
-
+  <script>
+      const posts_images = {{ serialized_posts | safe }};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  <script type="module" src="{% static 'js/community.js' %}"></script>
 </body>
 {% endblock content %}
 
