@@ -40,7 +40,7 @@
             <div class="col-xl-4 col-lg-6">
               <article>
                 <div class="post-img">
-                  <img id="post-{{ post.id }}-img" src="{% static 'assets/img/my-stocks.jpg' %}" alt="" class="img-fluid">
+                  <img id="post-{{ post.id }}-img" src="{% static 'assets/img/team/ido.png' %}" alt="" class="img-fluid">
                 </div>
                 <h2 class="title">
                   <a href="{% url 'post-details' post.id %}">{{post.title}}</a>
@@ -76,6 +76,10 @@
             {% endif %}
           </ul>
         </div><!-- End pagination -->
+                <div id="chart_container"></div>
+          <div>
+                    <img id="123" src="" alt="">
+          </div>
       </div>
     </section><!-- End -->
   </main>

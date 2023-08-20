@@ -17,3 +17,9 @@
 .deleteComment {
     cursor: pointer;
 }
+
+#chart_container{
+    padding-top: 20px;
+    height: 500px;
+    display: inherit;
+}

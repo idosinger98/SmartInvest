@@ -52,7 +52,8 @@ def show_post(request, post_id):
 
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
-    context = {'posts': Post.objects.all().values, 'post': post, 'comments': comments}
+
+    context = {'posts': Post.objects.all().values, 'post': post, 'comments': comments, 'post_chart':post.analysis_id.stock_image}
     return render(request, 'community/post-details.html', context)
 
 
@@ -147,7 +148,6 @@ def create_post(analyzed_stock, description, title):
         analysis_id=analyzed_stock,
         description=description,
         title=title,
-        likes=0,
         time=timezone.now()
     )
 

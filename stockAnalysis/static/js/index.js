@@ -149,11 +149,12 @@ closeButton.addEventListener('click', () => {
 });
 
 submitButton.addEventListener('click', () => {
+    submitButton.blur();
     if(!isTitleFilled(publicCheckBox.checked, titleInput.value)){
         sendToastMessage(
             'in case you want to publish your analysis you must fill the title.',
             MESSAGE_TYPE.ERROR,
-            {title: "empty title", container: overlay}
+            {title: "empty title"}
         );
         return;
     }
@@ -161,9 +162,10 @@ submitButton.addEventListener('click', () => {
     const bodyData ={
         'chart':chart.chartToJson(),
         'description': description,
-        'is_public': publicCheckBox.value,
+        'is_public': publicCheckBox.checked,
         'title': titleInput.value,
     }
+    console.log(publicCheckBox.checked);
 
     fetch(SAVE_STOCK_URL, {
             method: 'POST',
@@ -172,9 +174,9 @@ submitButton.addEventListener('click', () => {
             },
             body: JSON.stringify(bodyData)
         })
-        .then(response => [response.ok ? MESSAGE_TYPE.SUCCESS : MESSAGE_TYPE.ERROR, response.text()])
+        .then(async response => [response.ok ? MESSAGE_TYPE.SUCCESS : MESSAGE_TYPE.ERROR, await response.text()])
         .then(message => sendToastMessage(message[1], message[0]))
-        .catch(error => console.log(error));
+        .catch(error => sendToastMessage(error, MESSAGE_TYPE.ERROR));
     overlay.style.display = 'none';
     windowElement.style.display = 'none';
 });
@@ -261,12 +263,13 @@ function isTitleFilled(is_public, title){
     return !is_public ||  (title !== null && title.trim() !== "")
 }
 
-function is_user_connected(){
-    let result;
-
-    fetch(CHECK_CONNECTED_URL, {
-        method: 'GET',
-    }).then(response => result = response.ok).catch(response => result = false)
-
-    return result;
+async function is_user_connected(){
+    try {
+        return (await fetch(CHECK_CONNECTED_URL, {
+            method: 'GET',
+        })).ok;
+    }
+    catch(e) {
+        return false;
+    }
 }

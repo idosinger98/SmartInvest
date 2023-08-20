@@ -84,6 +84,7 @@ export class StockChart {
     }
 
     chartToPng(img_container_id) {
+
         anychart.onDocumentReady(() => {
             this.chart.getPngBase64String(function (response) {
                 const imageElement = document.getElementById(img_container_id);

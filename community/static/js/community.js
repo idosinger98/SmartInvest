@@ -1,11 +1,15 @@
-import {StockChart} from "../../../static/js/stockChart.js";
 
 
-for(const post in posts_images){
-    const postHtml = document.getElementById("post-" + post.id + "-img");
-    const chart = new StockChart();
-    chart.loadChartFromJson(post.stock_image);
-    chart.chartToPng(postHtml);
+for(const post of posts_images){
+    console.log("post-" + post['id'] + "-img")
+    const postHtml = document.getElementById("post-" + post['id'] + "-img");
+
+    if(Object.keys(post['stock_image']).length !== 0){
+        postHtml.src = post['stock_image']['image'];
+    }
+    else{
+        postHtml.src = "/static/assets/img/defaultStockImg.jpg";
+    }
 }
 
   //   document.querySelector('#comment-form').addEventListener('submit', function (event) {
