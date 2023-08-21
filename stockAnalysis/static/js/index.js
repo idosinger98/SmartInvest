@@ -122,9 +122,9 @@ const submitButton = document.getElementById('submitButton');
 const titleInput = document.getElementById('titleInput');
 const publicCheckBox = document.getElementById('publicCheckBox');
 
-document.getElementById('saveButton').addEventListener('click', function () {
+document.getElementById('saveButton').addEventListener('click', async function () {
     this.blur();
-    if(!is_user_connected()){
+    if(!await is_user_connected()){
         sendToastMessage(
             'you should be logged in to use this feature :)',
             MESSAGE_TYPE.ERROR,
@@ -148,7 +148,7 @@ closeButton.addEventListener('click', () => {
     windowElement.style.display = 'none';
 });
 
-submitButton.addEventListener('click', () => {
+submitButton.addEventListener('click', async () => {
     submitButton.blur();
     if(!isTitleFilled(publicCheckBox.checked, titleInput.value)){
         sendToastMessage(
@@ -160,12 +160,12 @@ submitButton.addEventListener('click', () => {
     }
     const description = document.getElementById('textArea').value;
     const bodyData ={
-        'chart':chart.chartToJson(),
+        'chart':await chart.chartToJson(),
         'description': description,
         'is_public': publicCheckBox.checked,
         'title': titleInput.value,
     }
-    console.log(publicCheckBox.checked);
+    console.log(bodyData);
 
     fetch(SAVE_STOCK_URL, {
             method: 'POST',

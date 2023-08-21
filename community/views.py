@@ -12,6 +12,7 @@ from users.models import Profile
 import json
 from django.db.models import F
 
+
 def community(request):
     posts = Post.objects.sort_posts_by_time()
     paginator = Paginator(posts, 6)  # 6 posts per page
@@ -25,6 +26,7 @@ def community(request):
 
     posts_with_image = []
     for post in target_posts_with_stock_image:
+        print(post.stock_image)
         posts_with_image.append({
             'id': post.id,
             'stock_image': post.stock_image,
@@ -32,7 +34,7 @@ def community(request):
 
     context = {
         'paginated_posts': paginated_posts,
-        'serialized_posts' : json.dumps(posts_with_image),
+        'serialized_posts': json.dumps(posts_with_image),
         'posts': posts
     }
 
@@ -53,7 +55,12 @@ def show_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
 
-    context = {'posts': Post.objects.all().values, 'post': post, 'comments': comments, 'post_chart':post.analysis_id.stock_image}
+    context = {
+        'posts': Post.objects.all().values,
+        'post': post,
+        'comments': comments,
+        'post_chart': post.analysis_id.stock_image
+    }
     return render(request, 'community/post-details.html', context)
 
 

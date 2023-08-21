@@ -63,12 +63,13 @@ export class StockChart {
         });
     }
 
-    chartToJson(){
+    async chartToJson(){
         const chartData = {};
 
         chartData[CHART_JSON_KEYS.DATA] = this.data;
         chartData[CHART_JSON_KEYS.INDICATORS] = [];
         chartData[CHART_JSON_KEYS.ANNOTATIONS] = null;
+        chartData['image'] = (await this.chartToPng());
         this.indicators_checkboxes
             .filter(indicator => indicator.isChecked())
             .forEach(indicator => chartData[CHART_JSON_KEYS.INDICATORS].push(indicator.getElementData()));
@@ -83,13 +84,13 @@ export class StockChart {
         jsonData[CHART_JSON_KEYS.INDICATORS].forEach(data => this.addIndicatorToChart(data));
     }
 
-    chartToPng(img_container_id) {
-
-        anychart.onDocumentReady(() => {
-            this.chart.getPngBase64String(function (response) {
-                const imageElement = document.getElementById(img_container_id);
-                const dataURL = `data:image/png;base64, ${response}`;
-                imageElement.src = dataURL;
+    chartToPng() {
+        return new Promise((resolve, reject) => {
+            anychart.onDocumentReady(() => {
+                this.chart.getPngBase64String(response => {
+                    const dataURL = `data:image/png;base64, ${response}`;
+                    resolve(dataURL); // Resolve the Promise with the dataURL
+                });
             });
         });
     }
