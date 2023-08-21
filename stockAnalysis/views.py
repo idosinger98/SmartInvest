@@ -133,18 +133,17 @@ def save_stock_analysis(request):
         user = Profile.objects.get(user_id=request.user)
         request_body = json_to_object(request.body)
         chart_json = request_body[SaveViewParams.CHART.value]
-        if not isinstance(request_body[SaveViewParams.DESCRIPTION.value], bool) or \
+        if not isinstance(request_body[SaveViewParams.DESCRIPTION.value], str) or \
                 not isinstance(request_body[SaveViewParams.PUBLISH.value], bool) or \
                 not is_valid_json_chart(chart_json):
             raise ValueError('error occur, chart did not saved')
-
         stock_analyzed = AnalyzedStock(
             analyst_id=user,
             stock_image=chart_json,
             description=request_body[SaveViewParams.DESCRIPTION.value],
             is_public=False)
         stock_analyzed.save()
-        if request_body[SaveViewParams.PUBLISH]:
+        if request_body[SaveViewParams.PUBLISH.value]:
             chart_title = request_body[SaveViewParams.TITLE.value]
             if create_post(stock_analyzed, request_body[SaveViewParams.DESCRIPTION.value], chart_title):
                 stock_analyzed.is_public = True

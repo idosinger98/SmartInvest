@@ -15,6 +15,14 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from utils.email_utils import connectedApiAndSendEmail
+from django.http import HttpResponse, HttpResponseBadRequest
+
+
+def check_login(request):
+    if not request.user.is_authenticated:
+        return HttpResponseBadRequest("You must be logged in.")
+    else:
+        return HttpResponse('user logged in')
 
 
 def sign_up_view(request):

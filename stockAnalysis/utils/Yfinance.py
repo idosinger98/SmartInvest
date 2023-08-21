@@ -45,7 +45,7 @@ STOCK_FORMULAS = {'Price-to-Earning (P/E) ratio': ['pegRatio',
                                                    'earningsGrowth',
                                                    "The Price-to-Earnings (P/E) ratio is a financial metric used to"
                                                    " assess the relative valuation of a company's stock by comparing"
-                                                   " its market price per share to its earnings per share (EPS)."]}  # 25%
+                                                   " its market price per share to its earnings per share (EPS)."]}
 
 
 def get_last_price_stock(stock_name):
