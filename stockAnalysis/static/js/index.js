@@ -122,6 +122,7 @@ const submitButton = document.getElementById('submitButton');
 const titleInput = document.getElementById('titleInput');
 const publicCheckBox = document.getElementById('publicCheckBox');
 
+
 document.getElementById('saveButton').addEventListener('click', async function () {
     this.blur();
     if(!await is_user_connected()){
@@ -188,43 +189,25 @@ publicCheckBox.addEventListener('change', () => {
         titleInput.style.display = 'none';
     }
 });
-//
-//document.addEventListener('DOMContentLoaded', function () {
-//    const stockSymbolInput = document.getElementById('stockSymbolInput');
-//    const compareButton = document.getElementById('compareButton');
-//
-//    compareButton.addEventListener('click', function () {
-//        const symbol = stockSymbolInput.value;
-//
-//        if (symbol) {
-//            window.location.href = 'https://example.com/compare?symbol=' + encodeURIComponent(symbol);
-//        }
-//    });
-//});
 
 document.addEventListener('DOMContentLoaded', function () {
-            // Get references to the input, button, and result container
-            const stockSymbolInput = document.getElementById('stockSymbolInput');
-            const compareButton = document.getElementById('compareButton');
-            const comparisonResult = document.getElementById('comparisonResult');
+    const stockSymbolInput = document.getElementById('stockSymbolInput');
+    const compareButton = document.getElementById('compareButton');
+    const comparisonResult = document.getElementById('comparisonResult');
 
   document.getElementById('compareButton').addEventListener('click', function() {
-    console.log('compareButton was clicked!')
+    console.log('compareButton was clicked!');
     const symbol = stockSymbolInput.value.toLowerCase();
-
-                    const fundamentalsItems = {}; // Create an empty object for the fundamentals items
-
-                // Loop through the ul list and populate the fundamentalsItems object
-                const fundamentalsList = document.querySelectorAll('#fundamentals-container ul li');
-                for (const listItem of fundamentalsList) {
-                    const [key, value] = listItem.textContent.split(': ');
-                    fundamentalsItems[key] = value;
-                }
+    const fundamentalsItems = {}; // Create an empty object for the fundamentals items
+    const fundamentalsList = document.querySelectorAll('#fundamentals-container ul li');
+    for (const listItem of fundamentalsList) {
+        const [key, value] = listItem.textContent.split(': ');
+        fundamentalsItems[key] = value;
+    }
 
     let xhr = new XMLHttpRequest();
     xhr.open('POST', '/compareStocks/');
     xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-
     xhr.onload = function() {
       if (xhr.status === 200) {
         let response = JSON.parse(xhr.responseText);
@@ -242,14 +225,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 comparisonResult.appendChild(listItem);
             }
         }
+      } else {
+        comparisonResult.innerHTML = '';
+        const message = 'Invalid input!';
+        const messageElement = document.createElement('p');
+        messageElement.textContent = message;
+        comparisonResult.appendChild(messageElement);
       }
     };
-                    const payload = {
-                    symbol: symbol,
-                    fundamentalsItems: fundamentalsItems
-                };
-
-                xhr.send(JSON.stringify(payload));
+    const payload = {
+        symbol: symbol,
+        fundamentalsItems: fundamentalsItems
+    };
+    xhr.send(JSON.stringify(payload));
   });
 });
 

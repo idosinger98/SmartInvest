@@ -87,13 +87,18 @@ def __check_start_date_before_end(start, end):
 
 
 def get_stock_fundamentals(stock_name):
-    response = yf.Ticker(stock_name).info
+    try:
+        response = yf.Ticker(stock_name).info
+        handle_response(response)
+        if stock_name[0] == '^':
+            total_ratios = dict(map(lambda item: (item[0], response[item[1]]), INDICES.items()))
+        else:
+            total_ratios = dict(map(lambda item: (item[0], response[item[1][0]]), STOCK_RATIOS.items()))
+            total_ratios.update(dict(map(lambda item: (item[0], response[item[1][0]] * response[item[1][1]]),
+                                         STOCK_FORMULAS.items())))
+        return total_ratios
 
-    if stock_name[0] == '^':
-        total_ratios = dict(map(lambda item: (item[0], response[item[1]]), INDICES.items()))
-    else:
-        total_ratios = dict(map(lambda item: (item[0], response[item[1][0]]), STOCK_RATIOS.items()))
-        total_ratios.update(dict(map(lambda item: (item[0], response[item[1][0]] * response[item[1][1]]),
-                                     STOCK_FORMULAS.items())))
+    except ValueError:
+        raise StockNotFoundException()
 
-    return total_ratios
+
