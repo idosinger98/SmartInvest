@@ -1,28 +1,114 @@
-     document.querySelector('#contact-form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent the default form submission behavior
+function submitForm(event, successCallback) {
+  event.preventDefault();
 
-    let form = event.target;
-    let formData = new FormData(form);
+  var form = event.target;
+  var formData = new FormData(form);
 
-    let request = new XMLHttpRequest();
-    request.open(form.method, form.action);
+  var request = new XMLHttpRequest();
+  request.open(form.method, form.action);
+  request.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+  request.onload = function () {
+    if (request.status === 200) {
+      successCallback();
+    } else {
+      alert('An error occurred while sending the message. Please try again.');
+    }
+  };
+  request.send(formData);
+}
+
+document.querySelector('#reviewForm').addEventListener('submit', function (event) {
+  submitForm(event, function () {
+    showMessage();
+    setTimeout(function () {
+      window.location.reload();
+    }, 3000);
+  });
+});
+
+document.querySelector('#contact-form').addEventListener('submit', function (event) {
+      submitForm(event, function () {
+    showSuccessMessage();
+    setTimeout(function () {
+      window.location.reload();
+    }, 3000);
+  });
+});
+
+ function showMessage() {
+     const successMessage = document.querySelector('.sent-message1');
+     const errorMessage = document.querySelector('.error-message1');
+     const formFields = document.querySelectorAll('#reviewForm input, #reviewForm textarea');
+     let isValid = false;
+     // Check if all required fields are filled
+    for (let i = 1; i < formFields.length -1; i++) {
+      if (formFields[i].checked !== false) {
+        isValid = true;
+        break;
+      }
+    }
+
+    if (isValid) {
+      successMessage.style.display = 'block';
+
+      setTimeout(function () {
+        successMessage.style.display = 'none';
+
+        // Reset form fields after 3 seconds
+        for (let i = 1; i < formFields.length; i++) {
+          if(i === 6){
+              formFields[i].value = '';
+          }
+          else{
+                formFields[i].checked = false;
+          }
+        }
+      }, 3000);
+    }
+    else{
+          errorMessage.style.display = 'block';
+
+      setTimeout(function () {
+        errorMessage.style.display = 'none';
+
+          formFields[6].value = '';
+      }, 3000);
+    }
+  }
+
+
+document.querySelector('#DeleteReviewForm').addEventListener('submit', function (event) {
+  event.preventDefault(); // Prevent the default form submission behavior
+
+  // Ask the user to confirm before proceeding
+    const confirmed = window.confirm("Are you sure you want to delete this review?");
+
+    if (confirmed) {
+        const form = event.target;
+        const formData = new FormData(form);
+
+        const request = new XMLHttpRequest();
+        request.open(form.method, form.action);
     request.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
     request.onload = function () {
       if (request.status === 200) {
-        showSuccessMessage();
+        window.location.reload();
       } else {
         alert('An error occurred while sending the message. Please try again.');
       }
     };
     request.send(formData);
-  });
+  }
+});
+
+
 
   function showSuccessMessage() {
-    let successMessage = document.querySelector('.sent-message');
-    let formFields = document.querySelectorAll('#contact-form input, #contact-form textarea');
-    let isValid = true;
+      const successMessage = document.querySelector('.sent-message');
+      const formFields = document.querySelectorAll('#contact-form input, #contact-form textarea');
+      let isValid = true;
 
-    // Check if all required fields are filled
+      // Check if all required fields are filled
     for (let i = 0; i < formFields.length; i++) {
       if (formFields[i].hasAttribute('required') && formFields[i].value === '') {
         isValid = false;
@@ -37,7 +123,7 @@
         successMessage.style.display = 'none';
 
         // Reset form fields after 3 seconds
-        for (let i = 0; i < formFields.length; i++) {
+        for (var i = 0; i < formFields.length; i++) {
           formFields[i].value = '';
         }
       }, 3000);
@@ -45,8 +131,8 @@
   }
 
     function toggleReviewForm() {
-         let reviewFormContainer = document.getElementById("reviewFormContainer");
-         let reviewButton = document.getElementById("reviewButton");
+        const reviewFormContainer = document.getElementById("reviewFormContainer");
+        const reviewButton = document.getElementById("reviewButton");
         if (reviewFormContainer.style.display === "none") {
             reviewFormContainer.style.display = "block";
             reviewButton.style.display = "none";
@@ -56,11 +142,12 @@
         }
     }
     function toggleCancel() {
-         let reviewFormContainer = document.getElementById("reviewFormContainer");
-         let reviewButton = document.getElementById("reviewButton");
-         reviewFormContainer.style.display = "none";
+        const reviewFormContainer = document.getElementById("reviewFormContainer");
+        const reviewButton = document.getElementById("reviewButton");
+        reviewFormContainer.style.display = "none";
          reviewButton.style.display = "block";
     }
+
 
 
     // Function to check if the modal should be shown
