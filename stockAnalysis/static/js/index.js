@@ -1,7 +1,7 @@
-import {StockChart} from "./stockChart.js";
-import {IndicatorCheckBox} from "./indicatorCheckBox.js";
-import {SAVE_STOCK_URL} from "../../../static/js/urls.js";
-import {sendToastMessage, MESSAGE_TYPE} from '/static/js/toastinette.js'
+import {StockChart} from "../../../static/js/stockChart.js";
+import {IndicatorCheckBox} from "../../../static/js/indicatorCheckBox.js";
+import {SAVE_STOCK_URL, CHECK_CONNECTED_URL} from "../../../static/js/urls.js";
+import {sendToastMessage, MESSAGE_TYPE} from '../../../static/js/toastinette.js';
 
 const data =
     typeof stockData !== 'undefined' ?
@@ -122,10 +122,10 @@ const submitButton = document.getElementById('submitButton');
 const titleInput = document.getElementById('titleInput');
 const publicCheckBox = document.getElementById('publicCheckBox');
 
-document.getElementById('saveButton').addEventListener('click', function () {
-    console.log('KEEP CHART was clicked!')
+
+document.getElementById('saveButton').addEventListener('click', async function () {
     this.blur();
-    if(!is_user_connected()){
+    if(!await is_user_connected()){
         sendToastMessage(
             'you should be logged in to use this feature :)',
             MESSAGE_TYPE.ERROR,
@@ -149,22 +149,24 @@ closeButton.addEventListener('click', () => {
     windowElement.style.display = 'none';
 });
 
-submitButton.addEventListener('click', () => {
+submitButton.addEventListener('click', async () => {
+    submitButton.blur();
     if(!isTitleFilled(publicCheckBox.checked, titleInput.value)){
         sendToastMessage(
             'in case you want to publish your analysis you must fill the title.',
             MESSAGE_TYPE.ERROR,
-            {title: "empty title", container: overlay}
+            {title: "empty title"}
         );
         return;
     }
     const description = document.getElementById('textArea').value;
     const bodyData ={
-        'chart':chart.chartToJson(),
+        'chart':await chart.chartToJson(),
         'description': description,
-        'is_public': publicCheckBox.value,
+        'is_public': publicCheckBox.checked,
         'title': titleInput.value,
     }
+    console.log(bodyData);
 
     fetch(SAVE_STOCK_URL, {
             method: 'POST',
@@ -173,9 +175,9 @@ submitButton.addEventListener('click', () => {
             },
             body: JSON.stringify(bodyData)
         })
-        .then(response => [response.ok ? MESSAGE_TYPE.SUCCESS : MESSAGE_TYPE.ERROR, response.text()])
+        .then(async response => [response.ok ? MESSAGE_TYPE.SUCCESS : MESSAGE_TYPE.ERROR, await response.text()])
         .then(message => sendToastMessage(message[1], message[0]))
-        .catch(error => console.log(error));
+        .catch(error => sendToastMessage(error, MESSAGE_TYPE.ERROR));
     overlay.style.display = 'none';
     windowElement.style.display = 'none';
 });
@@ -249,6 +251,13 @@ function isTitleFilled(is_public, title){
     return !is_public ||  (title !== null && title.trim() !== "")
 }
 
-function is_user_connected(){
-    return false;
+async function is_user_connected(){
+    try {
+        return (await fetch(CHECK_CONNECTED_URL, {
+            method: 'GET',
+        })).ok;
+    }
+    catch(e) {
+        return false;
+    }
 }

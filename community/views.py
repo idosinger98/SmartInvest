@@ -9,16 +9,32 @@ from stockAnalysis.models import AnalyzedStock
 from django.utils import timezone
 from django.http import HttpResponse
 from users.models import Profile
+import json
+from django.db.models import F
 
 
 def community(request):
-    posts = Post.objects.order_by('-time')
+    posts = Post.objects.sort_posts_by_time()
     paginator = Paginator(posts, 6)  # 6 posts per page
     page_number = request.GET.get('page')
     paginated_posts = paginator.get_page(page_number)
 
+    target_post_ids = [post.id for post in paginated_posts]
+    target_posts_with_stock_image = Post.objects.filter(
+        id__in=target_post_ids).annotate(
+        stock_image=F('analysis_id__stock_image'))
+
+    posts_with_image = []
+    for post in target_posts_with_stock_image:
+        print(post.stock_image)
+        posts_with_image.append({
+            'id': post.id,
+            'stock_image': post.stock_image,
+        })
+
     context = {
         'paginated_posts': paginated_posts,
+        'serialized_posts': json.dumps(posts_with_image),
         'posts': posts
     }
 
@@ -38,7 +54,13 @@ def show_post(request, post_id):
 
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
-    context = {'posts': Post.objects.all().values, 'post': post, 'comments': comments}
+
+    context = {
+        'posts': Post.objects.all().values,
+        'post': post,
+        'comments': comments,
+        'post_chart': post.analysis_id.stock_image
+    }
     return render(request, 'community/post-details.html', context)
 
 
@@ -133,7 +155,6 @@ def create_post(analyzed_stock, description, title):
         analysis_id=analyzed_stock,
         description=description,
         title=title,
-        likes=0,
         time=timezone.now()
     )
 
