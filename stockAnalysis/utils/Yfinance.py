@@ -100,5 +100,3 @@ def get_stock_fundamentals(stock_name):
 
     except ValueError:
         raise StockNotFoundException()
-
-
