@@ -26,7 +26,6 @@ def community(request):
 
     posts_with_image = []
     for post in target_posts_with_stock_image:
-        print(post.stock_image)
         posts_with_image.append({
             'id': post.id,
             'stock_image': post.stock_image,
@@ -104,7 +103,7 @@ def check_like(request, postId):
 @login_required
 def check_comment_like(request, commentId):
     comment_id = request.GET.get('comment_id')
-    profile_id = request.GET.get('profile_id')
+    profile_id = Profile.objects.get(user_id=request.user).profile_id
 
     comment = Comment.objects.get(pk=comment_id)
 
@@ -159,11 +158,6 @@ def create_post(analyzed_stock, description, title):
     )
 
     return created
-
-# def post_deatils(request, pk):
-#     post = Post.objects.filter(id=pk).first()
-#     comments = Comment.objects.get_all_comments_on_post(post.id)
-#     return render(request, 'community/post-details.html', {'post': post, 'comments': comments})
 
 
 @login_required
