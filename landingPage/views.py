@@ -7,7 +7,10 @@ import json
 from landingPage.forms import ContactForm
 from django.http import HttpResponse
 from utils.email_utils import connectedApiAndSendEmail
-from django.contrib import messages
+from dotenv import load_dotenv
+from users.models import Profile
+
+load_dotenv()
 
 
 def home(request, return_after_wrong_symbol=False):
@@ -23,9 +26,20 @@ def home(request, return_after_wrong_symbol=False):
     stocks_names = get_symbols()
 
     sorted_stocks_names = sorted(stocks_names)
+
+    clients = Profile.objects.count()
+    posts = Post.objects.count()
+
+    # Check if the user is authenticated before filtering by user ID
+    if request.user.is_authenticated:
+        review_by_user = Review.objects.filter(publisher_id__user_id=request.user.id)
+    else:
+        review_by_user = None
+
     context = {'list_review': list_review, 'form': form, 'from_contant': from_contant,
                'last_three_posts': last_three_posts, 'best_stocks': best_stocks,
-               'wrong_symbol': return_after_wrong_symbol, 'stocks_names': sorted_stocks_names}
+               'wrong_symbol': return_after_wrong_symbol, 'stocks_names': sorted_stocks_names, 'clients': clients,
+               'posts': posts,  'review_by_user': review_by_user}
     return render(request, 'landingPage/landing_page.html', context)
 
 
@@ -46,21 +60,6 @@ def contact(request):
             }
             message = f"Name: {body['name']}<br><br>Email: {body['email']}<br><br>Message: {body['message']}"
             connectedApiAndSendEmail(subject_str=form.cleaned_data['subject'], content=message)
-            messages.success(request, 'Email sent successfully')  # Add success message
             return HttpResponse()
 
     return HttpResponse()
-
-
-# def home(request):
-#     list_review = Review.objects.get_all_reviews()
-#     last_three_posts = Post.objects.sort_posts_by_time()[:3]
-#     form = ReviewForm()
-#     from_contant = ContactForm()
-#     clients = Profile.objects.count()
-#     posts = Post.objects.count()
-#     return render(request, 'landingPage/landing_page.html', {'list_review': list_review, 'form': form,
-#                                                              'from_contant': from_contant,
-#                                                              'last_three_posts': last_three_posts, 'clients': clients,
-#                                                              'posts': posts})
-# >>>>>>> PR_38

@@ -50,8 +50,7 @@ def sign_in_view(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                messages.success(request, f'Hi {username.title()}, welcome back!')
-                return redirect('show_details')
+                return redirect('landing_page')
 
         messages.error(request, 'Invalid username or password')
         return render(request, 'users/login.html', {'form': form})
@@ -59,8 +58,7 @@ def sign_in_view(request):
 
 def sign_out(request):
     logout(request)
-    messages.success(request, 'You have been logged out.')
-    return redirect('login')
+    return redirect('landing_page')
 
 
 class PasswordsChangeView(PasswordChangeView, LoginRequiredMixin):
