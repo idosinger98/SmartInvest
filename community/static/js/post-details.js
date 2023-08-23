@@ -1,5 +1,12 @@
+import {StockChart} from "../../../static/js/stockChart.js";
 
-// script.js
+
+const chart = new StockChart();
+console.log(postData);
+chart.loadChartFromJson(JSON.stringify(postData));
+chart.drawChart('chart_container');
+
+
 $(document).ready(function() {
   // Function for post likes
   let likeButton = $('#likeButton');

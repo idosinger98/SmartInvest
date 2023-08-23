@@ -37,8 +37,9 @@ def get_biggest_indices(request):
 
 
 @login_required
-def my_analysis_page(request, analyst_id):
-    my_analysis = AnalyzedStock.objects.get_user_stocks(analyst_id=analyst_id)
+def my_analysis_page(request):
+    profile = Profile.objects.filter(user_id=request.user).first()
+    my_analysis = AnalyzedStock.objects.get_user_stocks(analyst_id=profile.user_id)
     context = {'analysis': my_analysis}
     return render(request, 'stockAnalysis/my-analysis.html', context)
 
@@ -65,6 +66,41 @@ def search_stock_view(request):
     except Exception as e:
         error_msg, status_code = handle_exception(e)
         return JsonResponse(error_msg, status=status_code, safe=False)
+
+
+def compare_stocks(request):
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body.decode('utf-8'))
+            symbol = data.get('symbol')
+            fundamentals_items = data.get('fundamentalsItems')
+
+            if symbol:
+                fundamentals = Yfinance.get_stock_fundamentals(symbol)
+
+                is_better = new_stock_is_better(fundamentals, fundamentals_items)
+
+                return JsonResponse({'fundamentals': fundamentals, 'is_better': is_better})
+
+        return JsonResponse({'error': 'Invalid request'})
+    except Exception as e:
+        error_msg, status_code = handle_exception(e)
+        return JsonResponse(error_msg, status=status_code, safe=False)
+
+
+def get_stock_fundamentals_score(fundamentals):
+    score = float(fundamentals['Current Ratio']) * 0.25 +\
+            float(fundamentals['Quick Ratio']) * 0.1 +\
+            float(fundamentals['Gross Profit Margin']) * 0.2 +\
+            float(fundamentals['Short Ratio']) * 0.05 +\
+            float(fundamentals['Price/Earning to Growth']) * 0.25 +\
+            float(fundamentals['Price-to-Earning (P/E) ratio']) * 0.25
+
+    return score
+
+
+def new_stock_is_better(fundamentals, fundamentals_items):
+    return get_stock_fundamentals_score(fundamentals) > get_stock_fundamentals_score(fundamentals_items)
 
 
 @csrf_exempt
@@ -97,18 +133,17 @@ def save_stock_analysis(request):
         user = Profile.objects.get(user_id=request.user)
         request_body = json_to_object(request.body)
         chart_json = request_body[SaveViewParams.CHART.value]
-        if not isinstance(request_body[SaveViewParams.DESCRIPTION.value], bool) or \
+        if not isinstance(request_body[SaveViewParams.DESCRIPTION.value], str) or \
                 not isinstance(request_body[SaveViewParams.PUBLISH.value], bool) or \
                 not is_valid_json_chart(chart_json):
             raise ValueError('error occur, chart did not saved')
-
         stock_analyzed = AnalyzedStock(
             analyst_id=user,
             stock_image=chart_json,
             description=request_body[SaveViewParams.DESCRIPTION.value],
             is_public=False)
         stock_analyzed.save()
-        if request_body[SaveViewParams.PUBLISH]:
+        if request_body[SaveViewParams.PUBLISH.value]:
             chart_title = request_body[SaveViewParams.TITLE.value]
             if create_post(stock_analyzed, request_body[SaveViewParams.DESCRIPTION.value], chart_title):
                 stock_analyzed.is_public = True
