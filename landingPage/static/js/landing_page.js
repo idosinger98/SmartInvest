@@ -1,11 +1,11 @@
 function submitForm(event, successCallback) {
   event.preventDefault();
 
-  var form = event.target;
-  var formData = new FormData(form);
+    const form = event.target;
+    var formData = new FormData(form);
 
-  var request = new XMLHttpRequest();
-  request.open(form.method, form.action);
+    const request = new XMLHttpRequest();
+    request.open(form.method, form.action);
   request.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
   request.onload = function () {
     if (request.status === 200) {
@@ -20,18 +20,12 @@ function submitForm(event, successCallback) {
 document.querySelector('#reviewForm').addEventListener('submit', function (event) {
   submitForm(event, function () {
     showMessage();
-    setTimeout(function () {
-      window.location.reload();
-    }, 3000);
   });
 });
 
 document.querySelector('#contact-form').addEventListener('submit', function (event) {
       submitForm(event, function () {
     showSuccessMessage();
-    setTimeout(function () {
-      window.location.reload();
-    }, 3000);
   });
 });
 
@@ -63,6 +57,7 @@ document.querySelector('#contact-form').addEventListener('submit', function (eve
                 formFields[i].checked = false;
           }
         }
+         window.location.reload();
       }, 3000);
     }
     else{
@@ -126,6 +121,7 @@ document.querySelector('#DeleteReviewForm').addEventListener('submit', function 
         for (var i = 0; i < formFields.length; i++) {
           formFields[i].value = '';
         }
+         window.location.reload();
       }, 3000);
     }
   }
