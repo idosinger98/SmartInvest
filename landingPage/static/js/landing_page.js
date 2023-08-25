@@ -2,7 +2,7 @@ function submitForm(event, successCallback) {
   event.preventDefault();
 
     const form = event.target;
-    var formData = new FormData(form);
+    const formData = new FormData(form);
 
     const request = new XMLHttpRequest();
     request.open(form.method, form.action);
