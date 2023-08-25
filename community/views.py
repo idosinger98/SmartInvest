@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from community.forms import PostForm, CommentForm
 from stockAnalysis.models import AnalyzedStock
 from django.utils import timezone
-from django.http import HttpResponse
 from users.models import Profile
 import json
 from django.db.models import F
@@ -158,20 +157,3 @@ def create_post(analyzed_stock, description, title):
     )
 
     return created
-
-
-@login_required
-def comment(request, post_id):
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            post = Post.objects.filter(id=post_id).first()
-            profile = Profile.objects.filter(user_id=request.user).first()
-            create_comment = Comment.objects.create(publisher_id=profile,
-                                                    content=form.cleaned_data['content'],
-                                                    post_id=post,
-                                                    time=timezone.now())
-            create_comment.save()
-            return HttpResponse()
-
-    return HttpResponse()

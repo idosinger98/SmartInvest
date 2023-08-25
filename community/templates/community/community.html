@@ -1,12 +1,6 @@
 {% extends 'nav_menu.html' %}
 {% load static %}
-<head>
-  {% block head %}
-      <link href="{% static 'css/community.css' %}" rel="stylesheet">
-      <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
-      <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
-  {% endblock head %}
-</head>
+
 {% block content %}
 <body class="blog-page" data-bs-spy="scroll" data-bs-target="#navmenu">
   <main id="main">
@@ -76,36 +70,21 @@
             {% endif %}
           </ul>
         </div><!-- End pagination -->
-                <div id="chart_container"></div>
-          <div>
-                    <img id="123" src="" alt="">
-          </div>
       </div>
     </section><!-- End -->
   </main>
 
-  <!-- Scroll Top Button -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
-  <div id="preloader">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
   <script>
       const posts_images = {{ serialized_posts | safe }};
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
-  <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+  <script src=https://cdn.jsdelivr.net/npm/chart.js></script>
+  <script src=https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js></script>
+  <script src=https://cdn.anychart.com/releases/v8/js/anychart-base.min.js></script>
+  <script src=https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js></script>
+  <script src=https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js></script>
+  <script src=https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js></script>
+  <script src=https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js></script>
   <script src="{% static 'assets/js/main.js' %}"></script>
   <script type="module" src="{% static 'js/community.js' %}"></script>
 </body>
 {% endblock content %}
-

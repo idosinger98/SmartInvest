@@ -3,70 +3,64 @@
 <head>
     {% block head %}
         <link href="{% static 'css/post-details.css' %}" rel="stylesheet">
-        <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
-        <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css"
+        <link href=https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css type="text/css" rel="stylesheet">
+        <link href=https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css type="text/css"
               rel="stylesheet">
     {% endblock head %}
 </head>
 
 {% block content %}
-    <body class="blog-details-page" data-bs-spy="scroll" data-bs-target="#navmenu">
-    <main id="main">
-        <!-- Blog Details Page Title & Breadcrumbs -->
-        <div data-aos="fade" class="page-title" style="padding-top: 50px;">
-            <div class="heading">
-                <div class="container">
-                    <div class="row d-flex justify-content-center text-center">
-                        <div class="col-lg-8">
-                            <h1>Post Details</h1>
-                            <p class="mb-0"></p>
-                        </div>
-                    </div>
-                </div>
+<body class="blog-details-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+  <main id="main">
+
+    <!-- Blog Details Page Title & Breadcrumbs -->
+    <div data-aos="fade" class="page-title">
+      <div class="heading">
+        <div class="container">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1>Post Details</h1>
             </div>
-            <nav class="breadcrumbs">
-                <div class="container">
-                    <ol>
-                        <li><a href="index.html">Home</a></li>
-                        <li class="current">Post Details</li>
-                    </ol>
-                </div>
-            </nav>
-        </div><!-- End Page Title -->
+          </div>
+        </div>
+      </div>
+      <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Blog Details</li>
+          </ol>
+        </div>
+      </nav>
+    </div><!-- End Page Title -->
 
-        <!-- Blog-details Section - Blog Details Page -->
-        <section id="blog-details" class="blog-details">
+    <!-- Blog-details Section - Blog Details Page -->
+    <section id="blog-details" class="blog-details">
 
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-                <div class="row g-5">
+        <div class="row g-5">
 
-                    <div class="col-lg-8">
+          <div class="col-lg-12">
 
-                        <article class="article">
+            <article class="article">
 
-                            <h2 class="title">{{ post.title }}</h2>
+    <div id='chart_container' class="post-img"></div>
 
-                            <div class="meta-top">
-                                <ul>
-                                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a
-                                            href="blog-details.html">{{ post.analysis_id.analyst_id.user_id.get_full_name }}</a>
-                                    </li>
-                                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a
-                                            href="blog-details.html">
-                                        <time datetime="{{ post.time }}">{{ post.time }}</time>
-                                    </a></li>
-                                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a
-                                            href="blog-details.html">{{ comments|length }} comments</a></li>
-                                </ul>
-                            </div><!-- End meta top -->
+              <h2 class="title">{{ post.title }}</h2>
+
+              <div class="meta-top">
+                <ul>
+                  <li class="d-flex align-items-center"><i class="bi bi-person"></i>{{ post.analysis_id.analyst_id.user_id.username }}</li>
+                  <li class="d-flex align-items-center"><i class="bi bi-clock"></i> {{ post.time }}</li>
+                  <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> {{ comments.count }} Comments</li>
+                </ul>
+              </div><!-- End meta top -->
 
                             <div class="content">
-                                <h3>Analysis Information</h3>
-                                <p>
+                                 <p>
                                     {{ post.description }}
                                 </p>
-                                <div id='chart_container' class="post-img"></div>
                             </div><!-- End post content -->
 
                             <div class="meta-bottom">
@@ -78,31 +72,28 @@
 
                             </div>
                         </article><!-- End post article -->
+             <div class="blog-author d-flex align-items-center">
+              {% if post.analysis_id.analyst_id.image %}
+              <img src="{{ post.analysis_id.analyst_id.image.url }}" class="rounded-circle flex-shrink-0" alt="">
+              {% else %}
+              <img  src="{% static 'images/blank_profile.png' %}" class="rounded-circle flex-shrink-0" alt="">
+              {% endif %}
+              <div>
+                <h4>{{ post.analysis_id.analyst_id.user_id.username }}</h4>
+                <div class="social-links">
+                  <a href=https://twitters.com/#><i class="bi bi-twitter"></i></a>
+                  <a href=https://facebook.com/#><i class="bi bi-facebook"></i></a>
+                  <a href=https://instagram.com/#><i class="biu bi-instagram"></i></a>
+                </div>
+                <p>
+                    Hi my name is {{ post.analysis_id.analyst_id.user_id.first_name }} {{ post.analysis_id.analyst_id.user_id.last_name }}.
+                      </p>
+                  <p>
+                    I am from {{ post.analysis_id.analyst_id.country }}.
 
-                        <div class="blog-author d-flex align-items-center">
-                            {% if post.analysis_id.analyst_id.image %}
-                                <img src="{{ post.analysis_id.analyst_id.image.url }}"
-                                     class="img-fluid post-author-img flex-shrink-0" alt="">
-                            {% else %}
-                                <img src="{% static 'images/blank_profile.png' %}"
-                                     class="img-fluid post-author-img flex-shrink-0" alt="">
-                            {% endif %}
-                            <div>
-                                <h4>{{ post.analysis_id.analyst_id.user_id.get_full_name }}</h4>
-                                <div class="social-links">
-                                    <a href="https://twitters.com/#"><i class="bi bi-twitter"></i></a>
-                                    <a href="https://facebook.com/#"><i class="bi bi-facebook"></i></a>
-                                    <a href="https://instagram.com/#"><i class="biu bi-instagram"></i></a>
-                                </div>
-                                <p>
-                                    Hi my name
-                                    is {{ post.analysis_id.analyst_id.user_id.first_name }} {{ post.analysis_id.analyst_id.user_id.last_name }}.
-                                </p>
-                                <p>
-                                    I am from {{ post.analysis_id.analyst_id.country }}.
-                                </p>
-                            </div>
-                        </div><!-- End post author -->
+                </p>
+              </div>
+            </div><!-- End post author -->
 
                         <div class="comments">
 
@@ -120,8 +111,7 @@
                                             {% endif %}
                                         </div>
                                         <div>
-                                            <h5><a href="">{{ comment.publisher_id.user_id.get_full_name }}</a> <a
-                                                    href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a>
+                                            <h5><a href="">{{ comment.publisher_id.user_id.get_full_name }}</a>
                                             </h5>
                                             <time datetime="{{ comment.time }}">{{ comment.time }}</time>
                                             <h5><label
@@ -169,35 +159,6 @@
                         </div><!-- End blog comments -->
                     </div>
 
-                    <div class="col-lg-4">
-
-                        <div class="sidebar">
-
-                            <div class="sidebar-item search-form">
-                                <h3 class="sidebar-title">Search</h3>
-                                <form action="" class="mt-3">
-                                    <input type="text" id="search" data-posts="{{ posts }}">
-                                    <button type="submit"><i class="bi bi-search"></i></button>
-                                </form>
-                            </div><!-- End sidebar search formn-->
-                            <div class="sidebar-item recent-posts">
-                                <h3 class="sidebar-title">Recent Posts</h3>
-                                <div class="post-item" data-posts-container></div>
-                                {% for post in posts %}
-                                    <div class="post-item">
-                                        <div>
-                                            <h4><a href="{% url 'post-details' post.id %}">{{ post.title }}</a></h4>
-                                            <time datetime="2020-01-01">{{ post.time }}</time>
-                                        </div>
-                                    </div><!-- End recent post item-->
-                                {% endfor %}
-
-                            </div><!-- End sidebar recent posts-->
-
-                        </div><!-- End Sidebar -->
-
-                    </div>
-
                 </div>
 
             </div>
@@ -206,20 +167,17 @@
 
     </main>
 
-    <!-- Scroll Top Button -->
-    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
     <script>
         const postData = {{post_chart | safe}};
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src=https://cdn.jsdelivr.net/npm/chart.js></script>
+    <script src=https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js></script>
+    <script src=https://cdn.anychart.com/releases/v8/js/anychart-base.min.js></script>
+    <script src=https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js></script>
+    <script src=https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js></script>
+    <script src=https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js></script>
+    <script src=https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js></script>
+    <script src=https://code.jquery.com/jquery-3.6.0.min.js></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
     <script type="module" src="{% static 'js/post-details.js' %}"></script>
     </body>
