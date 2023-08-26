@@ -79,7 +79,7 @@ def compare_stocks(request):
                 fundamentals = Yfinance.get_stock_fundamentals(symbol)
 
                 is_better = new_stock_is_better(fundamentals, fundamentals_items)
-
+                print(f'DEBUG: is_better - {is_better}')
                 return JsonResponse({'fundamentals': fundamentals, 'is_better': is_better})
 
         return JsonResponse({'error': 'Invalid request'})
@@ -89,14 +89,9 @@ def compare_stocks(request):
 
 
 def get_stock_fundamentals_score(fundamentals):
-    score = float(fundamentals['Current Ratio']) * 0.25 +\
-            float(fundamentals['Quick Ratio']) * 0.1 +\
-            float(fundamentals['Gross Profit Margin']) * 0.2 +\
-            float(fundamentals['Short Ratio']) * 0.05 +\
-            float(fundamentals['Price/Earning to Growth']) * 0.25 +\
-            float(fundamentals['Price-to-Earning (P/E) ratio']) * 0.25
+    scaled_data = {key: float(value) * (1 / len(fundamentals)) for key, value in fundamentals.items()}
 
-    return score
+    return sum(scaled_data .values())
 
 
 def new_stock_is_better(fundamentals, fundamentals_items):
