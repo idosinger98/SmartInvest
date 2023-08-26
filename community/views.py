@@ -1,6 +1,5 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect, get_object_or_404
-from community.models import Post, Comment
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from community.models import Post, Comment
@@ -10,16 +9,31 @@ from stockAnalysis.models import AnalyzedStock
 from django.utils import timezone
 from django.http import HttpResponse
 from users.models import Profile
+import json
+from django.db.models import F
 
 
 def community(request):
-    posts = Post.objects.order_by('-time')
+    posts = Post.objects.sort_posts_by_time()
     paginator = Paginator(posts, 6)  # 6 posts per page
     page_number = request.GET.get('page')
     paginated_posts = paginator.get_page(page_number)
 
+    target_post_ids = [post.id for post in paginated_posts]
+    target_posts_with_stock_image = Post.objects.filter(
+        id__in=target_post_ids).annotate(
+        stock_image=F('analysis_id__stock_image'))
+
+    posts_with_image = []
+    for post in target_posts_with_stock_image:
+        posts_with_image.append({
+            'id': post.id,
+            'stock_image': post.stock_image,
+        })
+
     context = {
         'paginated_posts': paginated_posts,
+        'serialized_posts': json.dumps(posts_with_image),
         'posts': posts
     }
 
@@ -39,7 +53,13 @@ def show_post(request, post_id):
 
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
-    context = {'posts': Post.objects.all().values, 'post': post, 'comments': comments}
+
+    context = {
+        'posts': Post.objects.all().values,
+        'post': post,
+        'comments': comments,
+        'post_chart': post.analysis_id.stock_image
+    }
     return render(request, 'community/post-details.html', context)
 
 
@@ -83,7 +103,7 @@ def check_like(request, postId):
 @login_required
 def check_comment_like(request, commentId):
     comment_id = request.GET.get('comment_id')
-    profile_id = request.GET.get('profile_id')
+    profile_id = Profile.objects.get(user_id=request.user).profile_id
 
     comment = Comment.objects.get(pk=comment_id)
 
@@ -111,34 +131,33 @@ def delete_post(request, post_id):
 
     return community(request=request)
 
+
 @login_required
 def create_post_view(request, pk):
-    analyzedStock = AnalyzedStock.objects.filter(id=pk).first()
-    post = Post.objects.filter(analysis_id=analyzedStock).first()
+    analyzed_stock = AnalyzedStock.objects.filter(id=pk).first()
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            if post:
-                post.description = form.cleaned_data['description']
-                post.title = form.cleaned_data['title']
-                post.likes = 0
-                post.time = timezone.now()
-                post.save()
-            else:
-                post = Post.objects.create(analysis_id=analyzedStock, description=form.cleaned_data['description'],
-                                           title=form.cleaned_data['title'], likes=0, time=timezone.now())
-                post.save()
+            if create_post(analyzed_stock, form.cleaned_data['description'], title=form.cleaned_data['title']):
+                analyzed_stock.is_public = True
+                analyzed_stock.save(update_fields=['is_public'])
         else:
             return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
     else:
         form = PostForm()
+
     return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
 
 
-# def post_deatils(request, pk):
-#     post = Post.objects.filter(id=pk).first()
-#     comments = Comment.objects.get_all_comments_on_post(post.id)
-#     return render(request, 'community/post-details.html', {'post': post, 'comments': comments})
+def create_post(analyzed_stock, description, title):
+    (post, created) = Post.objects.get_or_create(
+        analysis_id=analyzed_stock,
+        description=description,
+        title=title,
+        time=timezone.now()
+    )
+
+    return created
 
 
 @login_required

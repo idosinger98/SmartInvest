@@ -1,5 +1,11 @@
+import {StockChart} from "../../../static/js/stockChart.js";
+import {sendToastMessage, MESSAGE_TYPE} from '../../../static/js/toastinette.js';
 
-// script.js
+
+const chart = new StockChart();
+console.log(postData);
+
+
 $(document).ready(function() {
   // Function for post likes
   let likeButton = $('#likeButton');
@@ -54,14 +60,13 @@ $(document).ready(function() {
   for (let i = 1; i <= counter; i++) {
     let likesCommentIcon = $('#likesCommentIcon' + i);
     let commentId = likesCommentIcon.data('comment-id');
-    let profileId = likesCommentIcon.data('profile-id');
+//    let profileId = likesCommentIcon.data('profile-id');
 
     $.ajax({
       url: 'check-comment-like/',
       method: 'GET',
       data: {
         'comment_id': commentId,
-        'profile_id': profileId
       },
       success: function(response) {
         if (response.liked) {
@@ -180,3 +185,6 @@ $(document).ready(function() {
     });
   });
 });
+
+chart.loadChartFromJson(JSON.stringify(postData));
+chart.drawChart('chart_container');

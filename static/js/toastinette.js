@@ -9,6 +9,14 @@
  * License: MIT
  */
 
+export function sendNotLoginMessage(){
+    sendToastMessage(
+            'you should be logged in to use this feature :)',
+            MESSAGE_TYPE.ERROR,
+            {title: "login required"}
+        );
+}
+
 export function sendToastMessage(message, type, options = {}){
     const defaultOptions = {
         title: "",
@@ -37,37 +45,37 @@ export const MESSAGE_TYPE = Object.freeze({
 
 const Toastinette = {
 
-    C_INFO: 'var(--toast-info)',
-    C_WARNING: 'var(--toast-warning)',
-    C_ERROR: 'var(--toast-error)',
-    C_SUCCESS: 'var(--toast-success)',
+    C_INFO: 'var(--toastInette-info)',
+    C_WARNING: 'var(--toastInette-warning)',
+    C_ERROR: 'var(--toastInette-error)',
+    C_SUCCESS: 'var(--toastInette-success)',
 
     init(options, container) {
-        let toast = this.create(options.position, options.title, options.message, options.type)
-        container.appendChild(toast);
+        let toastInette = this.create(options.position, options.title, options.message, options.type)
+        container.appendChild(toastInette);
 
-        let close = document.querySelectorAll('.toast-close button');
+        let close = document.querySelectorAll('.toastInette-close button');
 
-        // close toast on click on close button
+        // close toastInette on click on close button
         if(close.length > 0) {
             close.forEach((btn) => {
                 btn.addEventListener('click', () => {
-                    this.removeToast(toast);
+                    this.removeToast(toastInette);
                 });
             });
         }
 
-        // else close toast after duration
+        // else close toastInette after duration
         if(!isNaN(options.autoClose) && (options.autoClose !== false) && (options.autoClose !== undefined)) {
             if(options.progress === true) {
                 // Animate the progress bar
-                toast.classList.add('toast-auto-close');
-                this.animateProgressBar(toast, options.autoClose, options.progress);
+                toastInette.classList.add('toastInette-auto-close');
+                this.animateProgressBar(toastInette, options.autoClose, options.progress);
             }
 
-            // Close toast after duration
+            // Close toastInette after duration
             setTimeout(() => {
-                this.removeToast(toast);
+                this.removeToast(toastInette);
             }, options.autoClose);
         }
     },
@@ -76,7 +84,7 @@ const Toastinette = {
         // Variables
         let 
         progress,
-        toast,
+        toastInette,
         toastIcon,
         toastContent,
         toastTitle,
@@ -84,21 +92,21 @@ const Toastinette = {
         toastClose,
         toastCloseButton;
 
-        // Generate Toast Progress Bar
+        // Generate toastInette Progress Bar
         progress = this.generateProgressBar();
 
-        // Generate Toast
-        toast = this.generateToast(type, position);
+        // Generate toastInette
+        toastInette = this.generateToast(type, position);
 
-        // Generate Toast Icon
+        // Generate toastInette Icon
         toastIcon = this.generateToastIcon(type);
 
-        // Generate Toast Content
+        // Generate toastInette Content
         toastContent = this.generateToastContent(title, message).toastContent;
         toastTitle = this.generateToastContent(title, message).toastTitle;
         toastMessage = this.generateToastContent(title, message).toastMessage;
 
-        // Generate Toast Close Button
+        // Generate toastInette Close Button
         toastClose = this.generateCloseBtn(type).toastClose;
         toastCloseButton = this.generateCloseBtn(type).toastCloseButton;
 
@@ -108,53 +116,53 @@ const Toastinette = {
             toastContent.appendChild(toastTitle);
         }
         toastContent.appendChild(toastMessage);
-        toast.appendChild(toastIcon);
-        toast.appendChild(toastContent);
-        toast.appendChild(toastClose);
-        toast.appendChild(progress);
+        toastInette.appendChild(toastIcon);
+        toastInette.appendChild(toastContent);
+        toastInette.appendChild(toastClose);
+        toastInette.appendChild(progress);
         
-        return toast;
+        return toastInette;
     },
 
     generateProgressBar() {
         let progress;
 
         progress = document.createElement('div');
-        progress.classList.add('toast-progress');
+        progress.classList.add('toastInette-progress');
 
         return progress;
     },
 
     generateToast(type, position) {
-        let toast;
+        let toastInette;
 
-        toast = document.createElement('div');
-        toast.classList.add('toast');
+        toastInette = document.createElement('div');
+        toastInette.classList.add('toastInette');
         
         switch(type) {
             case 'success':
-                toast.classList.add('toast-success');
+                toastInette.classList.add('toastInette-success');
                 break;
             case 'error':
-                toast.classList.add('toast-error');
+                toastInette.classList.add('toastInette-error');
                 break;
             case 'warning':
-                toast.classList.add('toast-warning');
+                toastInette.classList.add('toastInette-warning');
                 break;
             case 'info':
-                toast.classList.add('toast-info');
+                toastInette.classList.add('toastInette-info');
                 break;
         }
-        toast.dataset.position = position;
+        toastInette.dataset.position = position;
 
-        return toast;
+        return toastInette;
     },
 
     generateToastIcon(type) {
         let toastIcon;
 
         toastIcon = document.createElement('div');
-        toastIcon.classList.add('toast-icon');
+        toastIcon.classList.add('toastInette-icon');
         switch(type) {
             case 'success':
                 toastIcon.innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path fill=\"none\" d=\"M0 0h24v24H0z\"/><path d=\"M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-.997-4L6.76 11.757l1.414-1.414 2.829 2.829 5.656-5.657 1.415 1.414L11.003 16z\" fill=\"" + this.C_SUCCESS + "\"/></svg>";
@@ -180,18 +188,18 @@ const Toastinette = {
         toastMessage;
 
         toastContent = document.createElement('div');
-        toastContent.classList.add('toast-content');
+        toastContent.classList.add('toastInette-content');
 
-        // Toast Title
+        // toastInette Title
         if(title !== undefined && title !== '') {
             toastTitle = document.createElement('div');
-            toastTitle.classList.add('toast-title');
+            toastTitle.classList.add('toastInette-title');
             toastTitle.innerText = title;
         }
 
-        // Toast Message
+        // toastInette Message
         toastMessage = document.createElement('div');
-        toastMessage.classList.add('toast-message');
+        toastMessage.classList.add('toastInette-message');
         toastMessage.innerText = message;
 
         return { toastContent, toastTitle, toastMessage };
@@ -203,9 +211,9 @@ const Toastinette = {
         toastCloseButton;
 
         toastClose = document.createElement('div');
-        toastClose.classList.add('toast-close');
+        toastClose.classList.add('toastInette-close');
 
-        // Toast Close Button
+        // toastInette Close Button
         toastCloseButton = document.createElement('button');
         switch(type) {
             case 'success':
@@ -225,17 +233,17 @@ const Toastinette = {
         return { toastClose, toastCloseButton };
     },
 
-    removeToast(toast) {
+    removeToast(toastInette) {
         const DELETION_DURATION = 600;
 
-        toast.style.animation = `toastFadeOut ${DELETION_DURATION}ms ease-out backwards`;
+        toastInette.style.animation = `toastFadeOut ${DELETION_DURATION}ms ease-out backwards`;
         setTimeout(() => {
-            toast.remove();
+            toastInette.remove();
         }, DELETION_DURATION);
     },
 
-    animateProgressBar(toast, duration, progress) {
-        let progressBar = toast.querySelector('.toast-progress');
+    animateProgressBar(toastInette, duration, progress) {
+        let progressBar = toastInette.querySelector('.toastInette-progress');
 
         if(progress === true) {
             progressBar.style.animation = `progressBar ${duration}ms ease-in-out forwards`;

@@ -37,7 +37,7 @@ class TestLoginView:
             'password': "testpassword",
         })
         assert response.status_code == 302
-        assert response.url == reverse('show_details')
+        assert response.url == reverse('landing_page')
 
     def test_sign_in_POST_invalid(self, client):
         response = client.post('/login/', {

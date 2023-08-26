@@ -1,4 +1,4 @@
-import {GET_ALGOS_URL} from "../../../static/js/urls.js";
+import {GET_ALGOS_URL} from "./urls.js";
 
 export class IndicatorCheckBox {
     constructor(name, info) {

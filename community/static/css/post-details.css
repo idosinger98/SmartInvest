@@ -1,0 +1,25 @@
+.post-details-page {
+    padding: 100px;
+}
+
+.likeButton {
+  border-radius: 4px;
+  padding: 10px 20px;
+  border: 0;
+  background-color: #e84545;
+  color: white;
+}
+
+.likeComment {
+    cursor: pointer;
+}
+
+.deleteComment {
+    cursor: pointer;
+}
+
+#chart_container{
+    padding-top: 20px;
+    height: 500px;
+    display: inherit;
+}
