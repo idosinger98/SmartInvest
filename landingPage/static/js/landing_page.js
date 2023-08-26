@@ -1,7 +1,37 @@
-import {MESSAGE_TYPE, sendToastMessage} from "../../../static/js/toastinette.js";
+import {MESSAGE_TYPE, sendToastMessage, sendNotLoginMessage} from "../../../static/js/toastinette.js";
 
-document.getElementById('reviewButton').addEventListener('click', toggleReviewForm);
-document.getElementById('cancelButton').addEventListener('click', toggleCancel);
+
+function toggleReviewForm() {
+    const reviewFormContainer = document.getElementById("reviewFormContainer");
+    const reviewButton = document.getElementById("reviewButton");
+    if (reviewFormContainer.style.display === "none") {
+        reviewFormContainer.style.display = "block";
+        reviewButton.style.display = "none";
+    } else {
+        reviewFormContainer.style.display = "none";
+        reviewButton.style.display = "block";
+    }
+}
+
+function toggleCancel() {
+    const reviewFormContainer = document.getElementById("reviewFormContainer");
+    const reviewButton = document.getElementById("reviewButton");
+    reviewFormContainer.style.display = "none";
+    reviewButton.style.display = "block";
+}
+
+const isAuthenticatedData = document.getElementById('isAuthenticated');
+const reviewButtonButton = document.getElementById('reviewButtonButton');
+
+if (isAuthenticatedData) {
+    const isAuthenticated = JSON.parse(document.getElementById('isAuthenticated').textContent.toLowerCase());
+
+    reviewButtonButton?.addEventListener('click', isAuthenticated ? toggleReviewForm : sendNotLoginMessage);
+}else if(reviewButtonButton){
+    reviewButtonButton.addEventListener('click', sendNotLoginMessage);
+}
+
+document.getElementById('cancelButton')?.addEventListener('click', toggleCancel);
 
 function submitForm(event, successCallback) {
     event.preventDefault();
@@ -16,7 +46,7 @@ function submitForm(event, successCallback) {
         if (request.status === 200) {
             successCallback();
         } else {
-            sendToastMessage('An error occurred while sending the message. Please try again.', MESSAGE_TYPE.ERROR);
+            sendToastMessage('An error occurred while sending the message. Please try again later.', MESSAGE_TYPE.ERROR);
         }
     };
     request.send(formData);
@@ -30,7 +60,7 @@ document.querySelector('#reviewForm').addEventListener('submit', function (event
 
 document.querySelector('#contact-form').addEventListener('submit', function (event) {
     submitForm(event, function () {
-        showSuccessMessage();
+        checkContactFormValid();
     });
 });
 
@@ -38,7 +68,7 @@ function checkAndAddReview() {
     const formFields = document.querySelectorAll('#reviewForm input, #reviewForm textarea');
     let valid = false;
 
-    for (let i = 0; i < formFields.length-1; i++) {
+    for (let i = 0; i < formFields.length - 1; i++) {
         if (formFields[i].checked) {
             valid = true;
             break;
@@ -46,7 +76,7 @@ function checkAndAddReview() {
     }
     if (valid) {
         for (let i = 1; i < formFields.length - 1; i++) {
-                formFields[i].checked = false;
+            formFields[i].checked = false;
         }
 
         formFields[6].value = '';
@@ -57,8 +87,7 @@ function checkAndAddReview() {
     }
 }
 
-
-document.querySelector('#DeleteReviewForm').addEventListener('submit', function (event) {
+document.querySelector('#DeleteReviewForm')?.addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission behavior
 
     // Ask the user to confirm before proceeding
@@ -75,7 +104,7 @@ document.querySelector('#DeleteReviewForm').addEventListener('submit', function 
             if (request.status === 200) {
                 window.location.reload();
             } else {
-                sendToastMessage('An error occurred while sending the message. Please try again.',MESSAGE_TYPE.ERROR);
+                sendToastMessage('An error occurred while sending the message. Please try again later.', MESSAGE_TYPE.ERROR);
             }
         };
         request.send(formData);
@@ -83,8 +112,7 @@ document.querySelector('#DeleteReviewForm').addEventListener('submit', function 
 });
 
 
-function showSuccessMessage() {
-    const successMessage = document.querySelector('.sent-message');
+function checkContactFormValid() {
     const formFields = document.querySelectorAll('#contact-form input, #contact-form textarea');
     let isValid = true;
 
@@ -97,37 +125,12 @@ function showSuccessMessage() {
     }
 
     if (isValid) {
-        successMessage.style.display = 'block';
-
-        setTimeout(function () {
-            successMessage.style.display = 'none';
-
-            // Reset form fields after 3 seconds
-            for (let i = 0; i < formFields.length; i++) {
+        sendToastMessage('Your message has been sent. Thank you!', MESSAGE_TYPE.SUCCESS);
+        for (let i = 0; i < formFields.length; i++) {
                 formFields[i].value = '';
             }
-            window.location.reload();
-        }, 3000);
+        window.location.reload();
     }
-}
-
-function toggleReviewForm() {
-    const reviewFormContainer = document.getElementById("reviewFormContainer");
-    const reviewButton = document.getElementById("reviewButtonDiv");
-    if (reviewFormContainer.style.display === "none") {
-        reviewFormContainer.style.display = "block";
-        reviewButton.style.display = "none";
-    } else {
-        reviewFormContainer.style.display = "none";
-        reviewButton.style.display = "block";
-    }
-}
-
-function toggleCancel() {
-    const reviewFormContainer = document.getElementById("reviewFormContainer");
-    const reviewButton = document.getElementById("reviewButtonDiv");
-    reviewFormContainer.style.display = "none";
-    reviewButton.style.display = "block";
 }
 
 
@@ -181,7 +184,7 @@ window.addEventListener("load", function () {
             for (let i of all) {
                 let item = i.innerHTML.toLowerCase();
                 stockListContainer.style.display = "block"
-                if (item.indexOf(search) == -1) {
+                if (item.indexOf(search) === -1) {
                     i.classList.add("hide");
                 } else {
                     i.classList.remove("hide");
