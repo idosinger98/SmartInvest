@@ -4,30 +4,6 @@
     {% block head %}
         <link href="{% static 'css/landingPage.css' %}" rel="stylesheet">
         <title>Smart Invest</title>
-        <style>
-            .error-message1,
-            .sent-message1 {
-                display: none;
-                padding: 15px;
-                margin-bottom: 24px;
-                font-weight: 600;
-                border-radius: 8px;
-            }
-
-            .error-message1 {
-                margin-top: 10px;
-                background: #f44336;
-                color: #ffffff;
-                text-align: left;
-            }
-
-            .sent-message1 {
-                margin-top: 10px;
-                background: #4caf50;
-                color: #ffffff;
-                text-align: center;
-            }
-        </style>
     {% endblock head %}
 </head>
 <body class="index-page" data-bs-spy="scroll" data-bs-target="#navmenu">
@@ -447,9 +423,9 @@
                         <p>
                             On this page you can see all the reviews that the customers have written about us
                         </p>
-                        {% if request.user.is_authenticated %}
-                            {% if review_by_user %}
-                                <div id="reviewButton" class="row">
+                        <div id="reviewButton" class="col-md-12 text-left">
+                            {% if request.user.is_authenticated %}
+                                {% if review_by_user %}
                                     <form id="DeleteReviewForm" action="{% url 'delete_review' %}" method="POST">
                                         {% csrf_token %}
                                         <div class="col-md-6">
@@ -458,21 +434,19 @@
                                             </button>
                                         </div>
                                     </form>
-
-                                </div>
-                            {% else %}
-                                <div id="reviewButtonDiv" class="col-md-12 text-left">
-                                    <button id="reviewButton" type="button" class="btn btn-primary btn-rounded btn-lg"
+                                {% else %}
+                                    <button id="reviewButtonButton" type="button"
+                                            class="btn btn-primary btn-rounded btn-lg"
                                             style="color: white">Add Review
                                     </button>
-                                </div>
+                                {% endif %}
+                            {% else %}
+                                <button id="reviewButtonButton" type="button"
+                                        class="btn btn-primary btn-rounded btn-lg"
+                                        style="color: white">Add Review
+                                </button>
                             {% endif %}
-                        {% else %}
-                            <div class="col-md-12 text-left">
-                                <a href="{% url 'login' %}" class="btn btn-primary btn-rounded btn-lg"
-                                   style="color: white">Add Review</a>
-                            </div>
-                        {% endif %}
+                        </div>
                         <div id="reviewFormContainer" class="col-30" style="display: none;">
                             <div class="col-5">
                                 <form id="reviewForm" action="{% url 'create_review' %}" method="post" class="review">
@@ -701,8 +675,6 @@
                                 </div>
 
                                 <div class="col-md-12 text-center">
-                                    <div class="error-message"></div>
-                                    <div class="sent-message">Your message has been sent. Thank you!</div>
                                     <button type="submit">Send Message</button>
                                 </div>
 
@@ -719,7 +691,9 @@
 
     </main>
 
-
+    <script type="application/json" id="isAuthenticated">
+        {{ request.user.is_authenticated|yesno:"true,false" }}
+    </script>
     <script type="module" src=" {% static '/js/landing_page.js' %}"></script>
 
 {% endblock content %}

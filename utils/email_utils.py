@@ -24,6 +24,8 @@ def connectedApiAndSendEmail(subject_str, content, user=None):
                                                    sender=sender, subject=subject_str)
     try:
         api_instance.send_transac_email(send_smtp_email)
+        print('sent email')
         return True
     except ApiException:
+        print(ApiException.args)
         return False
