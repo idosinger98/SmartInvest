@@ -95,18 +95,22 @@ def __check_start_date_before_end(start, end):
         raise BadStockRequestException('Invalid input - start date cannot be after end date.')
 
 
-def get_stock_fundamentals(stock_name):
+def get_stock_fundamentals(symbol):
     try:
-        response = yf.Ticker(stock_name).info
+        response = yf.Ticker(symbol).info
         handle_response(response)
-        stock_keys = set(response.keys())
+        symbol_keys = set(response.keys())
 
-        if stock_name in INDICES:
-            ratios_present_in_info = {ratio: key for ratio, (key, _) in INDICES_RATIOS.items() if key in stock_keys}
+        if is_index(symbol):
+            ratios_present_in_info = {ratio: key for ratio, (key, _) in INDICES_RATIOS.items() if key in symbol_keys}
         else:
-            ratios_present_in_info = {ratio: key for ratio, (key, _) in STOCK_RATIOS.items() if key in stock_keys}
+            ratios_present_in_info = {ratio: key for ratio, (key, _) in STOCK_RATIOS.items() if key in symbol_keys}
 
         return dict(map(lambda item: (item[0], response[item[1]]), ratios_present_in_info.items()))
 
     except ValueError:
         raise StockNotFoundException()
+
+
+def is_index(symbol):
+    return symbol in INDICES

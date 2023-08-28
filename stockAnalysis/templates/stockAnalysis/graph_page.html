@@ -30,14 +30,16 @@
                             {% endfor %}
                         </ul>
                     </div>
-                    <div id="compareStocksContainer">
-                        <div id="comparisonResult"></div>
-                    </div>
-                    <div id="search-compare">
-                        <div id="compare-result-message"></div>
-                        <input type="text" class="search-input" id="stockSymbolInput" placeholder="Enter a stock's symbol">
-                        <button class="search-button" id="compareButton">Compare</button>
-                    </div>
+                    {% if notIndex %}
+                        <div id="compareStocksContainer">
+                            <div id="comparisonResult"></div>
+                        </div>
+                        <div id="search-compare">
+                            <div id="compare-result-message"></div>
+                            <input type="text" class="search-input" id="stockSymbolInput" placeholder="Enter a stock's symbol">
+                            <button class="search-button" id="compareButton">Compare</button>
+                        </div>
+                    {% endif %}
                 </div>
                 <button id="saveButton" class="button-17" role="button">KEEP CHART</button>
             </div>

@@ -62,7 +62,8 @@ def search_stock_view(request):
         return render(request,
                       'stockAnalysis/graph_page.html',
                       {StockViewParams.STOCK_SYMBOL.value: symbol, StockViewParams.STOCK_DATA.value: response_dict,
-                       StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals})
+                       StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals,
+                       'notIndex': not Yfinance.is_index(symbol)})
     except Exception as e:
         error_msg, status_code = handle_exception(e)
         return JsonResponse(error_msg, status=status_code, safe=False)
