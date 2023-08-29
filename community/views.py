@@ -54,7 +54,7 @@ def show_post(request, post_id):
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
 
     context = {
-        'posts': Post.objects.all().values,
+        'posts': Post.objects.sort_posts_by_time()[:5],
         'post': post,
         'comments': comments,
         'post_chart': post.analysis_id.stock_image
