@@ -11,7 +11,11 @@
         <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" href="../../static/css/styles.css">
-
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
     {% load static %}
 {% endblock %}
     </head>
@@ -45,6 +49,8 @@
                 <div class="centered">
                     <input type="text" placeholder="Title" id="titleInput">
                     <textarea placeholder="Description" id="textArea"></textarea>
+                     <label id="stockSymbolValue" class="hidden" data-stock-value="{{ StockViewParams.STOCK_SYMBOL.value }}"></label>
+
                     <div class="checkbox-container">
                         <input type="checkbox" id="publicCheckBox">
                         <label for="publicCheckBox">Share it with the world</label>

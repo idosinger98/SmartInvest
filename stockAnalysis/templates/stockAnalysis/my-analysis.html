@@ -26,8 +26,9 @@
             <div class="service-item d-flex">
               <div class="icon flex-shrink-0"><i class="bi bi-bar-chart"></i></div>
               <div>
-                <h4 class="title"><a href="#" class="stretched-link">Analyze #{{forloop.counter}}</a></h4>
-                <p class="description">{{analyze.description}}</p>
+                <h4 class="title"><a href="{% url 'create_post' pk=analyze.pk  %}" class="stretched-link">Analyze #{{forloop.counter}}</a></h4>
+                <h4 class="description"> The name of the stock you analyzed: {{analyze.symbol.symbol}}</h4>
+                  <h4 class="description"> The analysis you wrote: {{analyze.description}}</h4>
               </div>
             </div>
           </div>

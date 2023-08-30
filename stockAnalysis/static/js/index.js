@@ -160,12 +160,15 @@ submitButton.addEventListener('click', async () => {
         return;
     }
     const description = document.getElementById('textArea').value;
-    const bodyData ={
-        'chart':await chart.chartToJson(),
+    const stockSymbolValueLabel = document.getElementById('stockSymbolValue');
+    const stockSymbolValue = stockSymbolValueLabel.dataset.stockValue;
+    const bodyData = {
+        'chart': await chart.chartToJson(),
         'description': description,
         'is_public': publicCheckBox.checked,
         'title': titleInput.value,
-    }
+        'stockSymbolValue': "aapl" , // Include the stock symbol value
+    };
     console.log(bodyData);
 
     fetch(SAVE_STOCK_URL, {

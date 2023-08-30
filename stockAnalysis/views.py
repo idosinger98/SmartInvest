@@ -58,7 +58,6 @@ def search_stock_view(request):
         response_dict = {StockViewParams.STOCK.value: stock_details.to_json()}
         fundamentals = Yfinance.get_stock_fundamentals(symbol)
         StockSymbol.objects.get_or_create(symbol=symbol.upper())
-
         return render(request,
                       'stockAnalysis/graph_page.html',
                       {StockViewParams.STOCK_SYMBOL.value: symbol, StockViewParams.STOCK_DATA.value: response_dict,
@@ -133,12 +132,14 @@ def save_stock_analysis(request):
         user = Profile.objects.get(user_id=request.user)
         request_body = json_to_object(request.body)
         chart_json = request_body[SaveViewParams.CHART.value]
+        stock_symbol_value = request_body['stockSymbolValue']
         if not isinstance(request_body[SaveViewParams.DESCRIPTION.value], str) or \
                 not isinstance(request_body[SaveViewParams.PUBLISH.value], bool) or \
                 not is_valid_json_chart(chart_json):
             raise ValueError('error occur, chart did not saved')
         stock_analyzed = AnalyzedStock(
             analyst_id=user,
+            symbol=StockSymbol.objects.get(symbol=stock_symbol_value.upper()),
             stock_image=chart_json,
             description=request_body[SaveViewParams.DESCRIPTION.value],
             is_public=False)
