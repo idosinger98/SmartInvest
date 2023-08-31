@@ -62,7 +62,8 @@ def search_stock_view(request):
         return render(request,
                       'stockAnalysis/graph_page.html',
                       {StockViewParams.STOCK_SYMBOL.value: symbol, StockViewParams.STOCK_DATA.value: response_dict,
-                       StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals})
+                       StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals,
+                       'notIndex': not Yfinance.is_index(symbol)})
     except Exception as e:
         error_msg, status_code = handle_exception(e)
         return JsonResponse(error_msg, status=status_code, safe=False)
@@ -89,14 +90,9 @@ def compare_stocks(request):
 
 
 def get_stock_fundamentals_score(fundamentals):
-    score = float(fundamentals['Current Ratio']) * 0.25 +\
-            float(fundamentals['Quick Ratio']) * 0.1 +\
-            float(fundamentals['Gross Profit Margin']) * 0.2 +\
-            float(fundamentals['Short Ratio']) * 0.05 +\
-            float(fundamentals['Price/Earning to Growth']) * 0.25 +\
-            float(fundamentals['Price-to-Earning (P/E) ratio']) * 0.25
+    scaled_data = {key: float(value) * (1 / len(fundamentals)) for key, value in fundamentals.items()}
 
-    return score
+    return sum(scaled_data.values())
 
 
 def new_stock_is_better(fundamentals, fundamentals_items):

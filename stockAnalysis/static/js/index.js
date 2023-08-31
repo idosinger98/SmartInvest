@@ -188,8 +188,9 @@ publicCheckBox.addEventListener('change', () => {
 
 document.addEventListener('DOMContentLoaded', function () {
     const stockSymbolInput = document.getElementById('stockSymbolInput');
-    const compareButton = document.getElementById('compareButton');
     const comparisonResult = document.getElementById('comparisonResult');
+    const comparisonResultMessage = document.getElementById('compare-result-message');
+
 
   document.getElementById('compareButton').addEventListener('click', function() {
     console.log('compareButton was clicked!');
@@ -208,11 +209,16 @@ document.addEventListener('DOMContentLoaded', function () {
       if (xhr.status === 200) {
         let response = JSON.parse(xhr.responseText);
         comparisonResult.innerHTML = ''; // Clear previous content
+        comparisonResultMessage.innerHTML = '';
         const fundamentals = response.fundamentals;
-        const message = response.is_better ? "This stock is better" : "This stock is worse";
+        const message = `${symbol.toUpperCase()} will ${response.is_better ? '' : 'not'} be a better invest!`;
         const messageElement = document.createElement('p');
         messageElement.textContent = message;
-        comparisonResult.appendChild(messageElement);
+        messageElement.style.color = response.is_better ? 'green' : 'red';
+        comparisonResultMessage.appendChild(messageElement);
+        const stockName = document.createElement('p');
+        stockName.textContent = symbol.toUpperCase();
+        comparisonResult.appendChild(stockName);
         for (const key in fundamentals) {
             if (fundamentals.hasOwnProperty(key)) {
                 const value = fundamentals[key];

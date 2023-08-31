@@ -22,16 +22,24 @@
                 <div id="chart_container"></div>
                 <div id="fundamentals-container">
                     <h1>Fundamental Analysis</h1>
-                    <ul>
-                        {% for key, value in fundamentals.items %}
-                            <li>{{ key }}: {{ value }}</li>
-                        {% endfor %}
-                    </ul>
-                    <div id="compareStocksContainer">
-                        <input type="text" class="search-input" id="stockSymbolInput" placeholder="Enter a stock's symbol">
-                        <button class="search-button" id="compareButton">Compare</button>
-                        <div id="comparisonResult"></div>
+                    <div id="main-stock-container">
+                        <p>{{ sy }}</p>
+                        <ul>
+                            {% for key, value in fundamentals.items %}
+                                <li>{{ key }}: {{ value }}</li>
+                            {% endfor %}
+                        </ul>
                     </div>
+                    {% if notIndex %}
+                        <div id="compareStocksContainer">
+                            <div id="comparisonResult"></div>
+                        </div>
+                        <div id="search-compare">
+                            <div id="compare-result-message"></div>
+                            <input type="text" class="search-input" id="stockSymbolInput" placeholder="Enter a stock's symbol">
+                            <button class="search-button" id="compareButton">Compare</button>
+                        </div>
+                    {% endif %}
                 </div>
                 <button id="saveButton" class="button-17" role="button">KEEP CHART</button>
             </div>
