@@ -5,7 +5,7 @@ from community.models import Post
 from stockAnalysis.views import get_biggest_indices
 import json
 from landingPage.forms import ContactForm
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from utils.email_utils import connectedApiAndSendEmail
 from dotenv import load_dotenv
 from users.models import Profile
@@ -52,6 +52,7 @@ def get_symbols():
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
+        print(form.is_valid())
         if form.is_valid():
             body = {
                 'name': form.cleaned_data['name'],
@@ -59,7 +60,7 @@ def contact(request):
                 'message': form.cleaned_data['message'],
             }
             message = f"Name: {body['name']}<br><br>Email: {body['email']}<br><br>Message: {body['message']}"
-            connectedApiAndSendEmail(subject_str=form.cleaned_data['subject'], content=message)
-            return HttpResponse()
+            if connectedApiAndSendEmail(subject_str=form.cleaned_data['subject'], content=message):
+                return HttpResponse()
 
-    return HttpResponse()
+    return HttpResponseBadRequest()

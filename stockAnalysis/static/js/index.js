@@ -1,7 +1,7 @@
 import {StockChart} from "../../../static/js/stockChart.js";
 import {IndicatorCheckBox} from "../../../static/js/indicatorCheckBox.js";
 import {SAVE_STOCK_URL, CHECK_CONNECTED_URL} from "../../../static/js/urls.js";
-import {sendToastMessage, MESSAGE_TYPE} from '../../../static/js/toastinette.js';
+import {sendToastMessage, MESSAGE_TYPE, sendNotLoginMessage} from '../../../static/js/toastinette.js';
 
 const data =
     typeof stockData !== 'undefined' ?
@@ -126,11 +126,7 @@ const publicCheckBox = document.getElementById('publicCheckBox');
 document.getElementById('saveButton').addEventListener('click', async function () {
     this.blur();
     if(!await is_user_connected()){
-        sendToastMessage(
-            'you should be logged in to use this feature :)',
-            MESSAGE_TYPE.ERROR,
-            {title: "login required"}
-        );
+        sendNotLoginMessage();
         return;
     }
     overlay.style.display = 'block';
