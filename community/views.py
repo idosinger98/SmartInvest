@@ -131,23 +131,6 @@ def delete_post(request, post_id):
     return community(request=request)
 
 
-@login_required
-def create_post_view(request, pk):
-    analyzed_stock = AnalyzedStock.objects.filter(id=pk).first()
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            if create_post(analyzed_stock, form.cleaned_data['description'], title=form.cleaned_data['title']):
-                analyzed_stock.is_public = True
-                analyzed_stock.save(update_fields=['is_public'])
-        else:
-            return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
-    else:
-        form = PostForm()
-
-    return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
-
-
 def create_post(analyzed_stock, description, title):
     (post, created) = Post.objects.get_or_create(
         analysis_id=analyzed_stock,
