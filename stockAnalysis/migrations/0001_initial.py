@@ -27,7 +27,8 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True)),
                 ('is_public', models.BooleanField(default=False)),
                 ('analyst_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.profile')),
-                ('symbol', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='stockAnalysis.stocksymbol')),
+                ('symbol', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                             to='stockAnalysis.stocksymbol')),
             ],
         ),
     ]

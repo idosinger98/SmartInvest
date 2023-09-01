@@ -8,7 +8,7 @@ from .exceptions.UnsupportedMediaException import UnsupportedMediaException
 from .utils import Yfinance
 from http import HTTPStatus
 from .utils.IndicatorsAlgo import calculate_algorithms
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .exceptions.StockNotFoundException import StockNotFoundException
 from .utils.IndicatorsAlgo import get_indicators_dict
 from pandas import DataFrame
@@ -21,6 +21,9 @@ from .utils.ViewsParametersEnums import SaveStockViewParameters as SaveViewParam
 from .utils.ViewsParametersEnums import ChartDetails
 from utils.Constants import RequestContentType as ReqType
 from community.views import create_post
+from community.forms import PostForm
+from community.models import Post
+from django.utils import timezone
 
 
 def get_biggest_indices(request):
@@ -182,3 +185,48 @@ def is_valid_json_chart(json_chart):
         return False
 
     return True
+
+
+@login_required
+def my_analysis_details_view(request, pk):
+    stock_analyzed = AnalyzedStock.objects.filter(id=pk).first()
+    if stock_analyzed.is_public is False:
+        context = {
+            'stock_analyzed': stock_analyzed,
+            'post_chart': stock_analyzed.stock_image
+        }
+        return render(request, 'stockAnalysis/my_analysis_details.html', context)
+    else:
+        post = Post.objects.filter(analysis_id=stock_analyzed).first()
+        return redirect('post-details', post_id=post.id)
+
+
+@login_required
+def edit_analysis_details_view(request, pk):
+    stock_analyzed = AnalyzedStock.objects.filter(id=pk).first()
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = Post.objects.create(analysis_id=stock_analyzed, description=form.cleaned_data['description'],
+                                       title=form.cleaned_data['title'], time=timezone.now())
+            post.save()
+            stock_analyzed.is_public = True
+            stock_analyzed.save()
+            return redirect('post-details', post_id=post.id)
+
+        elif stock_analyzed.is_public is False:
+            stock_analyzed.description = form.cleaned_data['description']
+            stock_analyzed.save()
+
+    context = {
+        'stock_analyzed': stock_analyzed,
+        'post_chart': stock_analyzed.stock_image
+    }
+    return render(request, 'stockAnalysis/my_analysis_details.html', context)
+
+
+@login_required
+def delete_analysis(request, pk):
+    stock_analyzed = AnalyzedStock.objects.filter(id=pk).first()
+    stock_analyzed.delete()
+    return redirect('my-analysis')

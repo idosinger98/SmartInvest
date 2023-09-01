@@ -20,9 +20,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
                 ('description', models.TextField(default='NO DESCRIPTION')),
-                ('title', models.CharField(default=models.BigAutoField(primary_key=True, serialize=False), max_length=50)),
+                ('title', models.CharField(default=models.BigAutoField(primary_key=True, serialize=False),
+                                           max_length=50)),
                 ('time', models.DateTimeField(default=django.utils.timezone.now)),
-                ('analysis_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='stockAnalysis.analyzedstock')),
+                ('analysis_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE,
+                                                     to='stockAnalysis.analyzedstock')),
                 ('likes', models.ManyToManyField(blank=True, to='users.profile')),
             ],
         ),
@@ -34,7 +36,8 @@ class Migration(migrations.Migration):
                 ('time', models.DateTimeField(default=django.utils.timezone.now)),
                 ('likes', models.ManyToManyField(blank=True, related_name='liked_comments', to='users.profile')),
                 ('post_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='community.post')),
-                ('publisher_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='published_comments', to='users.profile')),
+                ('publisher_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                                   related_name='published_comments', to='users.profile')),
             ],
         ),
     ]

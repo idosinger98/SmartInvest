@@ -18,7 +18,7 @@ class StockSymbol(models.Model):
 class AnalyzedStock(models.Model):
     analyst_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
     symbol = models.ForeignKey(StockSymbol, on_delete=models.CASCADE)
-    stock_image = models.JSONField()    # for now as json. maybe will change.
+    stock_image = models.JSONField()
     description = models.TextField(blank=True)
     is_public = models.BooleanField(default=False)
     objects = AnalyzedStocksManager()

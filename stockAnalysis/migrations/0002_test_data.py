@@ -31,12 +31,11 @@ class Migration(migrations.Migration):
                 StockSymbol(
                    symbol=symbol
                 ).save()
-       
         with transaction.atomic():
             for publisher_id, symbol_id, stock_json, content, public in analyzed_stock_test_data:
                 AnalyzedStock(
                     analyst_id=Profile.objects.get(pk=publisher_id),
-                    symbol = StockSymbol.objects.get(pk=symbol_id),
+                    symbol=StockSymbol.objects.get(pk=symbol_id),
                     stock_image=stock_json,
                     description=content,
                     is_public=public

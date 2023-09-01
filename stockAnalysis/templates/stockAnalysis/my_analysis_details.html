@@ -1,0 +1,107 @@
+{% extends 'nav_menu.html' %}
+{% load static %}
+
+<head>
+    {% block head %}
+        <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/toastinette.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="../../static/css/styles.css">
+        <style>
+            #checkboxList {
+                display: none;
+                pointer-events: none;
+            }
+        </style>
+    {% endblock head %}
+</head>
+
+{% block content %}
+<body class="blog-details-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+    <main id="main">
+
+        <!-- Blog Details Page Title & Breadcrumbs -->
+        <div data-aos="fade" class="page-title">
+            <div class="heading">
+                <div class="container mt-5">
+                    <div class="row d-flex justify-content-center text-center">
+                        <div class="col-lg-8">
+                            <h1>My analysis details</h1>
+                            <p class="mb-0">On this page you can see the analysis you performed, edit it and share it with the whole world</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Page Title -->
+
+        <!-- Blog-details Section - Blog Details Page -->
+        <section id="blog-details" class="blog-details">
+
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+                <div class="row g-5">
+
+                    <div class="col-lg-9">
+
+                        <article class="article">
+
+                            <div id='chart_container' class="post-img"></div>
+                            <div class="content">
+                                <h3> Your description:</h3>
+
+                                <p>
+                                    {{ stock_analyzed.description }}
+                                </p>
+                            </div><!-- End post content -->
+                            <div>
+                                <button id="saveButton" class="button-17" role="button">Edit Your Analysis</button>
+                                <div id="checkboxesContainer">
+                                    <ul id="checkboxList" class="ks-cboxtags"></ul>
+                                </div>
+                                <div id="overlay"></div>
+                                <div id="window">
+                                    <button id="closeButton" class="button-17">X</button>
+                                    <div id="title">Your Analyze</div>
+                                    <form action="{% url 'edit_analysis_details' pk=stock_analyzed.pk %}" method="POST" >
+                                        {% csrf_token %}
+                                        <div class="centered">
+                                            <input type="text" name="title" placeholder="Title" id="titleInput">
+                                            <textarea placeholder="Description" name="description" id="textArea">{{stock_analyzed.description}}</textarea>
+                                            <div class="checkbox-container">
+                                                <input type="checkbox" id="publicCheckBox">
+                                                <label for="publicCheckBox">Share it with the world</label>
+                                            </div>
+                                            <button id="submitButton" class="button-17" type="submit">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </article><!-- End post article -->
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section><!-- End Blog-details Section -->
+
+    </main>
+
+    <script>
+        const postData = {{post_chart | safe}};
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+    <script type="module" src="{% static 'js/post-details.js' %}"></script>
+    <script type="module" src="../../static/js/index.js"></script>
+</body>
+{% endblock content %}
