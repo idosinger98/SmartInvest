@@ -4,8 +4,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from community.models import Post, Comment
 from django.contrib.auth.decorators import login_required
-from community.forms import PostForm, CommentForm
-from stockAnalysis.models import AnalyzedStock
+from community.forms import CommentForm
 from django.utils import timezone
 from users.models import Profile
 import json
