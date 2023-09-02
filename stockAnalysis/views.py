@@ -189,8 +189,10 @@ def is_valid_json_chart(json_chart):
 
 @login_required
 def my_analysis_details_view(request, pk):
-    stock_analyzed = AnalyzedStock.objects.filter(id=pk).first()
-    if stock_analyzed.is_public is False:
+    stock_analyzed = AnalyzedStock.objects.filter(id=pk, analyst_id__user_id=request.user).first()
+    if stock_analyzed is None:
+        return HttpResponse('Error')
+    elif stock_analyzed.is_public is False:
         context = {
             'stock_analyzed': stock_analyzed,
             'post_chart': stock_analyzed.stock_image
@@ -203,8 +205,11 @@ def my_analysis_details_view(request, pk):
 
 @login_required
 def edit_analysis_details_view(request, pk):
-    stock_analyzed = AnalyzedStock.objects.filter(id=pk).first()
-    if request.method == 'POST':
+    stock_analyzed = AnalyzedStock.objects.filter(id=pk, analyst_id__user_id=request.user).first()
+    if stock_analyzed is None:
+        return HttpResponse('Error')
+
+    elif request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
             post = Post.objects.create(analysis_id=stock_analyzed, description=form.cleaned_data['description'],
