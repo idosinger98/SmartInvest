@@ -698,9 +698,11 @@
     <script type="application/json" id="isAuthenticated">
         {{ request.user.is_authenticated|yesno:"true,false" }}
     </script>
-    <script type="application/json" id="post_images">
-        {{ last_three_posts | safe }}
-    </script>
+    {% if messages %}
+        {% for message in messages %}
+            <script type="application/json" id="message">{{ message }}</script>
+        {% endfor %}
+    {% endif %}
 
     <script type="module" src=" {% static '/js/landing_page.js' %}"></script>
 

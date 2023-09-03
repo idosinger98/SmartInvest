@@ -8,7 +8,7 @@ from .exceptions.UnsupportedMediaException import UnsupportedMediaException
 from .utils import Yfinance
 from http import HTTPStatus
 from .utils.IndicatorsAlgo import calculate_algorithms
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .exceptions.StockNotFoundException import StockNotFoundException
 from .utils.IndicatorsAlgo import get_indicators_dict
 from pandas import DataFrame
@@ -21,6 +21,7 @@ from .utils.ViewsParametersEnums import SaveStockViewParameters as SaveViewParam
 from .utils.ViewsParametersEnums import ChartDetails
 from utils.Constants import RequestContentType as ReqType
 from community.views import create_post
+from django.contrib import messages
 
 
 def get_biggest_indices(request):
@@ -65,7 +66,9 @@ def search_stock_view(request):
                        StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals})
     except Exception as e:
         error_msg, status_code = handle_exception(e)
-        return JsonResponse(error_msg, status=status_code, safe=False)
+        messages.error(request, error_msg)
+        return redirect('landing_page')
+
 
 
 def compare_stocks(request):
