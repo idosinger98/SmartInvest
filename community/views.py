@@ -4,8 +4,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from community.models import Post, Comment
 from django.contrib.auth.decorators import login_required
-from community.forms import PostForm, CommentForm
-from stockAnalysis.models import AnalyzedStock
+from community.forms import CommentForm
 from django.utils import timezone
 from users.models import Profile
 import json
@@ -129,23 +128,6 @@ def delete_post(request, post_id):
     Post.objects.delete_post(post_id=post_id, profile_id=profile.profile_id)
 
     return community(request=request)
-
-
-@login_required
-def create_post_view(request, pk):
-    analyzed_stock = AnalyzedStock.objects.filter(id=pk).first()
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            if create_post(analyzed_stock, form.cleaned_data['description'], title=form.cleaned_data['title']):
-                analyzed_stock.is_public = True
-                analyzed_stock.save(update_fields=['is_public'])
-        else:
-            return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
-    else:
-        form = PostForm()
-
-    return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
 
 
 def create_post(analyzed_stock, description, title):
