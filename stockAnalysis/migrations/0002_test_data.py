@@ -15,12 +15,12 @@ class Migration(migrations.Migration):
     def generate_data(apps, schema_editor):
 
         analyzed_stock_test_data = [
-            (1, "AAPL", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of aapl stock', False),
-            (2, "TSLA", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of msft stock', False),
-            (3, "AAPL", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of netflix stock', False),
-            (4, "TSLA", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of nvda stock', False),
-            (5, "AAPL", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of some stock - sellll', True),
-            (1, "TSLA", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of general motors stock', False),
+            (1, "AAPL", '{"image": "/static/assets/img/defaultStockImg.jpg"}', 'analysis of aapl stock', False),
+            (2, "TSLA", '{"image": "/static/assets/img/defaultStockImg.jpg"}', 'analysis of msft stock', False),
+            (3, "AAPL", '{"image": "/static/assets/img/defaultStockImg.jpg"}', 'analysis of netflix stock', False),
+            (4, "TSLA", '{"image": "/static/assets/img/defaultStockImg.jpg"}', 'analysis of nvda stock', False),
+            (5, "AAPL", '{"image": "/static/assets/img/defaultStockImg.jpg"}', 'analysis of some stock - sellll', True),
+            (1, "TSLA", '{"image": "/static/assets/img/defaultStockImg.jpg"}', 'analysis of general motors', False),
         ]
         stock_symbol_test_data = [
            ("AAPL"),

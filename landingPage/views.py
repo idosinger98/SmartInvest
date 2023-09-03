@@ -31,7 +31,9 @@ def home(request, return_after_wrong_symbol=False):
     clients = Profile.objects.count()
     posts = Post.objects.count()
     review_avg = Review.objects.get_average_rating()
-    my_analysis = AnalyzedStock.objects.filter(analyst_id=request.user).count() if request.user.is_authenticated else 0
+    my_analysis = AnalyzedStock.objects.filter(
+        analyst_id=Profile.objects.filter(
+            user_id=request.user).first()).count() if request.user.is_authenticated else 0
 
     # Check if the user is authenticated before filtering by user ID
     if request.user.is_authenticated:
