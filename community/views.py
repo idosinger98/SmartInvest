@@ -10,7 +10,6 @@ from django.utils import timezone
 from django.http import HttpResponse
 from users.models import Profile
 import json
-from django.db.models import F
 
 
 def community(request):
@@ -20,9 +19,7 @@ def community(request):
     paginated_posts = paginator.get_page(page_number)
 
     target_post_ids = [post.id for post in paginated_posts]
-    target_posts_with_stock_image = Post.objects.filter(
-        id__in=target_post_ids).annotate(
-        stock_image=F('analysis_id__stock_image'))
+    target_posts_with_stock_image = Post.objects.get_posts_with_image(target_post_ids)
 
     posts_with_image = []
     for post in target_posts_with_stock_image:

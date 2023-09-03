@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.db.models import Count
 from users.models import Profile
 from stockAnalysis.models import AnalyzedStock
+from django.db.models import F
 
 
 class PostManager(models.Manager):
@@ -64,6 +65,10 @@ class PostManager(models.Manager):
     def create_new_post(self, analysis_id, title='No title was added'):
         return Post.objects.create(analysis_id=analysis_id, title=title, time=timezone.now())
 
+    def get_posts_with_image(self, id_list):
+        return Post.objects.filter(
+            id__in=id_list).annotate(
+            stock_image=F('analysis_id__stock_image'))
 
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)
