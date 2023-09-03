@@ -70,7 +70,6 @@ def search_stock_view(request):
         return redirect('landing_page')
 
 
-
 def compare_stocks(request):
     try:
         if request.method == 'POST':

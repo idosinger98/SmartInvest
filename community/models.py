@@ -70,6 +70,7 @@ class PostManager(models.Manager):
             id__in=id_list).annotate(
             stock_image=F('analysis_id__stock_image'))
 
+
 class Post(models.Model):
     id = models.BigAutoField(primary_key=True)
     analysis_id = models.OneToOneField(AnalyzedStock, on_delete=models.CASCADE)

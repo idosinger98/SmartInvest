@@ -15,6 +15,7 @@ class ReviewManager(models.Manager):
     def get_average_rating(self):
         return self.all().aggregate(avg_rating=Avg('rating'))['avg_rating']
 
+
 class Review(models.Model):
     review_id = models.BigAutoField(primary_key=True)
     publisher_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
