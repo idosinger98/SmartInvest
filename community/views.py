@@ -4,10 +4,8 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from community.models import Post, Comment
 from django.contrib.auth.decorators import login_required
-from community.forms import PostForm, CommentForm
-from stockAnalysis.models import AnalyzedStock
+from community.forms import CommentForm
 from django.utils import timezone
-from django.http import HttpResponse
 from users.models import Profile
 import json
 
@@ -52,7 +50,7 @@ def show_post(request, post_id):
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)
 
     context = {
-        'posts': Post.objects.all().values,
+        'posts': Post.objects.sort_posts_by_time()[:5],
         'post': post,
         'comments': comments,
         'post_chart': post.analysis_id.stock_image
@@ -129,23 +127,6 @@ def delete_post(request, post_id):
     return community(request=request)
 
 
-@login_required
-def create_post_view(request, pk):
-    analyzed_stock = AnalyzedStock.objects.filter(id=pk).first()
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            if create_post(analyzed_stock, form.cleaned_data['description'], title=form.cleaned_data['title']):
-                analyzed_stock.is_public = True
-                analyzed_stock.save(update_fields=['is_public'])
-        else:
-            return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
-    else:
-        form = PostForm()
-
-    return render(request, 'community/create_post.html', {'form': form, 'pk': pk})
-
-
 def create_post(analyzed_stock, description, title):
     (post, created) = Post.objects.get_or_create(
         analysis_id=analyzed_stock,
@@ -155,20 +136,3 @@ def create_post(analyzed_stock, description, title):
     )
 
     return created
-
-
-@login_required
-def comment(request, post_id):
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            post = Post.objects.filter(id=post_id).first()
-            profile = Profile.objects.filter(user_id=request.user).first()
-            create_comment = Comment.objects.create(publisher_id=profile,
-                                                    content=form.cleaned_data['content'],
-                                                    post_id=post,
-                                                    time=timezone.now())
-            create_comment.save()
-            return HttpResponse()
-
-    return HttpResponse()
