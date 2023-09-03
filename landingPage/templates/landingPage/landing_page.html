@@ -130,35 +130,35 @@
                         <div class="stats-item text-center w-100 h-100">
                             <span data-purecounter-start="0" data-purecounter-end="{{ clients }}"
                                   data-purecounter-duration="1" class="purecounter"></span>
-                            <p>Clients</p>
+                            <p>registered users</p>
                         </div>
                     </div><!-- End Stats Item -->
 
-                    <div class="col-lg-3 col-md-6">
-                        <div class="stats-item text-center w-100 h-100">
-                            <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1"
-                                  class="purecounter"></span>
-                            <p>Projects</p>
-                        </div>
-                    </div><!-- End Stats Item -->
 
                     <div class="col-lg-3 col-md-6">
                         <div class="stats-item text-center w-100 h-100">
                             <span data-purecounter-start="0"
                                   data-purecounter-end={{ posts }} data-purecounter-duration="1"
                                   class="purecounter"></span>
-                            <p>Number of posts</p>
+                            <p>community posts</p>
                         </div>
                     </div><!-- End Stats Item -->
 
                     <div class="col-lg-3 col-md-6">
                         <div class="stats-item text-center w-100 h-100">
-                            <span data-purecounter-start="0" data-purecounter-end="3" data-purecounter-duration="1"
+                            <span data-purecounter-start="0" data-purecounter-end={{ my_analysis }} data-purecounter-duration="1"
                                   class="purecounter"></span>
-                            <p>Workers</p>
+                            <p>my analysis</p>
                         </div>
                     </div><!-- End Stats Item -->
 
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stats-item text-center w-100 h-100">
+                            <span data-purecounter-start="0" data-purecounter-end={{ review }} data-purecounter-duration="1"
+                                  class="purecounter"></span>
+                            <p>average review</p>
+                        </div>
+                    </div><!-- End Stats Item -->
                 </div>
 
             </div>
@@ -392,23 +392,7 @@
 
         <!-- Call-to-action Section - Home Page -->
         <section id="call-to-action" class="call-to-action">
-
             <img src="{% static "assets/img/cta-bg.jpg" %}" alt="">
-
-            <div class="container">
-                <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="col-xl-10">
-                        <div class="text-center">
-                            <h3>Call To Action</h3>
-                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                                nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                                officia deserunt mollit anim id est laborum.</p>
-                            <a class="cta-btn" href="#">Call To Action</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </section><!-- End Call-to-action Section -->
 
         <!-- Testimonials Section - Home Page -->
@@ -563,7 +547,11 @@
                             <article>
 
                                 <div class="post-img">
-                                    <img src="{% static  "assets/img/team/ido.png" %}" alt="" class="img-fluid">
+                                    {% if post.stock_image %}
+                                        <img id="post-img-{{ post.id }}-home" src="{{ post.stock_image }}" alt="" class="img-fluid">
+                                    {% else %}
+                                        <img id="post-img-{{ post.id }}-home" src="{% static 'assets/img/defaultStockImg.jpg' %}" alt="" class="img-fluid">
+                                    {% endif %}
                                 </div>
 
                                 <h2 class="title">
@@ -694,6 +682,12 @@
     <script type="application/json" id="isAuthenticated">
         {{ request.user.is_authenticated|yesno:"true,false" }}
     </script>
+    {% if messages %}
+        {% for message in messages %}
+            <script type="application/json" id="message">{{ message }}</script>
+        {% endfor %}
+    {% endif %}
+
     <script type="module" src=" {% static '/js/landing_page.js' %}"></script>
 
 </body>

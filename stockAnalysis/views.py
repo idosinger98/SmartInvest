@@ -21,6 +21,7 @@ from .utils.ViewsParametersEnums import SaveStockViewParameters as SaveViewParam
 from .utils.ViewsParametersEnums import ChartDetails
 from utils.Constants import RequestContentType as ReqType
 from community.views import create_post
+from django.contrib import messages
 from community.forms import PostForm
 from community.models import Post
 from django.utils import timezone
@@ -68,7 +69,8 @@ def search_stock_view(request):
                        'notIndex': not Yfinance.is_index(symbol)})
     except Exception as e:
         error_msg, status_code = handle_exception(e)
-        return JsonResponse(error_msg, status=status_code, safe=False)
+        messages.error(request, error_msg)
+        return redirect('landing_page')
 
 
 def compare_stocks(request):
