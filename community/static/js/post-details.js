@@ -3,8 +3,6 @@ import {sendToastMessage, MESSAGE_TYPE} from '../../../static/js/toastinette.js'
 
 
 const chart = new StockChart();
-console.log(postData);
-
 
 $(document).ready(function() {
   // Function for post likes
