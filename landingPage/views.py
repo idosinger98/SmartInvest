@@ -9,7 +9,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from utils.email_utils import connectedApiAndSendEmail
 from dotenv import load_dotenv
 from users.models import Profile
-from stockAnalysis.models import StockSymbol
+from stockAnalysis.models import StockSymbol, AnalyzedStock
 
 load_dotenv()
 
@@ -30,6 +30,8 @@ def home(request, return_after_wrong_symbol=False):
     sorted_stocks_names = sorted(stocks_names)
     clients = Profile.objects.count()
     posts = Post.objects.count()
+    review_avg = Review.objects.get_average_rating()
+    my_analysis = AnalyzedStock.objects.filter(analyst_id=request.user).count() if request.user.is_authenticated else 0
 
     # Check if the user is authenticated before filtering by user ID
     if request.user.is_authenticated:
@@ -40,7 +42,7 @@ def home(request, return_after_wrong_symbol=False):
     context = {'list_review': list_review, 'form': form, 'from_contant': from_contant,
                'last_three_posts': last_three_posts, 'best_stocks': best_stocks,
                'wrong_symbol': return_after_wrong_symbol, 'stocks_names': sorted_stocks_names, 'clients': clients,
-               'posts': posts, 'review_by_user': review_by_user}
+               'posts': posts, 'review_by_user': review_by_user, 'my_analysis': my_analysis, 'review': review_avg}
 
     return render(request, 'landingPage/landing_page.html', context)
 
