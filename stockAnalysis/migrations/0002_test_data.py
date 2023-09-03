@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             (2, "TSLA", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of msft stock', False),
             (3, "AAPL", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of netflix stock', False),
             (4, "TSLA", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of nvda stock', False),
-            (5, "AAPL", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of ido singer stock - sellll', True),
+            (5, "AAPL", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of some stock - sellll', True),
             (1, "TSLA", {'image': 'static/assets/img/defaultStockImg.jpg'}, 'analysis of general motors stock', False),
         ]
         stock_symbol_test_data = [
