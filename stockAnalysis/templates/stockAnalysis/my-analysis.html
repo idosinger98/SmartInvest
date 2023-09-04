@@ -3,6 +3,11 @@
 <head>
   {% block head %}
   <link href="{% static 'css/my-analysis.css' %}" rel="stylesheet">
+      <style>
+      .indented-icon {
+    text-indent: 100px;
+}
+      </style>
   {% endblock head %}
 </head>
 {% block content %}
@@ -25,11 +30,19 @@
           <div class="col-lg-6 " data-aos="fade-up" data-aos-delay="100">
             <div class="service-item d-flex">
               <div class="icon flex-shrink-0"><i class="bi bi-bar-chart"></i></div>
-              <div>
-                <h4 class="title"><a href="#" class="stretched-link">Analyze #{{forloop.counter}}</a></h4>
-                <p class="description">{{analyze.description}}</p>
+                <div>
+                <h4 class="title"><a href="{% url 'my_analysis_details' pk=analyze.pk  %}" class="stretched-link">Analyze #{{forloop.counter}}</a></h4>
+                <h4 class="description"> The name of the stock you analyzed: {{analyze.symbol.symbol}}</h4>
+                  <h4 class="description"> The analysis you wrote: {{analyze.description}}</h4>
+                   <h4 class="description"> Is public: {{analyze.is_public}}</h4>
+                </div>
               </div>
-            </div>
+             <div>
+    <a href="#" data-delete-url="{% url 'delete_analysis' analyze.pk %}" class="delete-link">
+        <i class="bi bi-trash indented-icon"></i>
+    </a>
+</div>
+
           </div>
           {% endfor %}
           {% else %}
@@ -43,7 +56,7 @@
 
   <!-- Scroll Top Button -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
+ <script src=" {% static '/js/my-analysis.js' %}"></script>
   <script>
     const researchModal = new bootstrap.Modal(document.getElementById('researchModal'));
     researchModal.show();

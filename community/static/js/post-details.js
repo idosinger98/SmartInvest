@@ -3,8 +3,6 @@ import {sendToastMessage, MESSAGE_TYPE} from '../../../static/js/toastinette.js'
 
 
 const chart = new StockChart();
-console.log(postData);
-
 
 $(document).ready(function() {
   // Function for post likes
@@ -159,31 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmDelete(post_id, comment_id, profile_id);
         });
     });
-});
-
-$(document).ready(function() {
-  $('#commentForm').submit(function(event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    // Retrieve the comment content and post ID
-    let commentContent = $('#commentInput').val();
-    let post_id = postId; // Replace with the actual post ID
-    let profile_id = userId;
-
-    // Send an AJAX request to the comment creation URL
-    $.ajax({
-
-      method: 'POST',
-      data: {
-        'content': commentContent,
-        'post_id': post_id,
-        'profile_id': profile_id
-      },
-      success: function(response) {
-        window.location.reload();
-      }
-    });
-  });
 });
 
 chart.loadChartFromJson(JSON.stringify(postData));

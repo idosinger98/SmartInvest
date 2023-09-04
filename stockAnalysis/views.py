@@ -8,7 +8,7 @@ from .exceptions.UnsupportedMediaException import UnsupportedMediaException
 from .utils import Yfinance
 from http import HTTPStatus
 from .utils.IndicatorsAlgo import calculate_algorithms
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .exceptions.StockNotFoundException import StockNotFoundException
 from .utils.IndicatorsAlgo import get_indicators_dict
 from pandas import DataFrame
@@ -21,6 +21,10 @@ from .utils.ViewsParametersEnums import SaveStockViewParameters as SaveViewParam
 from .utils.ViewsParametersEnums import ChartDetails
 from utils.Constants import RequestContentType as ReqType
 from community.views import create_post
+from django.contrib import messages
+from community.forms import PostForm
+from community.models import Post
+from django.utils import timezone
 
 
 def get_biggest_indices(request):
@@ -58,14 +62,15 @@ def search_stock_view(request):
         response_dict = {StockViewParams.STOCK.value: stock_details.to_json()}
         fundamentals = Yfinance.get_stock_fundamentals(symbol)
         StockSymbol.objects.get_or_create(symbol=symbol.upper())
-
         return render(request,
                       'stockAnalysis/graph_page.html',
                       {StockViewParams.STOCK_SYMBOL.value: symbol, StockViewParams.STOCK_DATA.value: response_dict,
-                       StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals})
+                       StockViewParams.INDICATORS.value: get_indicators_dict(), 'fundamentals': fundamentals,
+                       'notIndex': not Yfinance.is_index(symbol)})
     except Exception as e:
         error_msg, status_code = handle_exception(e)
-        return JsonResponse(error_msg, status=status_code, safe=False)
+        messages.error(request, error_msg)
+        return redirect('landing_page')
 
 
 def compare_stocks(request):
@@ -89,14 +94,9 @@ def compare_stocks(request):
 
 
 def get_stock_fundamentals_score(fundamentals):
-    score = float(fundamentals['Current Ratio']) * 0.25 +\
-            float(fundamentals['Quick Ratio']) * 0.1 +\
-            float(fundamentals['Gross Profit Margin']) * 0.2 +\
-            float(fundamentals['Short Ratio']) * 0.05 +\
-            float(fundamentals['Price/Earning to Growth']) * 0.25 +\
-            float(fundamentals['Price-to-Earning (P/E) ratio']) * 0.25
+    scaled_data = {key: float(value) * (1 / len(fundamentals)) for key, value in fundamentals.items()}
 
-    return score
+    return sum(scaled_data.values())
 
 
 def new_stock_is_better(fundamentals, fundamentals_items):
@@ -133,12 +133,14 @@ def save_stock_analysis(request):
         user = Profile.objects.get(user_id=request.user)
         request_body = json_to_object(request.body)
         chart_json = request_body[SaveViewParams.CHART.value]
+        stock_symbol_value = request_body['stockSymbolValue']
         if not isinstance(request_body[SaveViewParams.DESCRIPTION.value], str) or \
                 not isinstance(request_body[SaveViewParams.PUBLISH.value], bool) or \
                 not is_valid_json_chart(chart_json):
             raise ValueError('error occur, chart did not saved')
         stock_analyzed = AnalyzedStock(
             analyst_id=user,
+            symbol=StockSymbol.objects.get(symbol=stock_symbol_value.upper()),
             stock_image=chart_json,
             description=request_body[SaveViewParams.DESCRIPTION.value],
             is_public=False)
@@ -181,3 +183,53 @@ def is_valid_json_chart(json_chart):
         return False
 
     return True
+
+
+@login_required
+def my_analysis_details_view(request, pk):
+    stock_analyzed = AnalyzedStock.objects.filter(id=pk, analyst_id__user_id=request.user).first()
+    if stock_analyzed is None:
+        return HttpResponse('Error')
+    elif stock_analyzed.is_public is False:
+        context = {
+            'stock_analyzed': stock_analyzed,
+            'post_chart': stock_analyzed.stock_image
+        }
+        return render(request, 'stockAnalysis/my_analysis_details.html', context)
+    else:
+        post = Post.objects.filter(analysis_id=stock_analyzed).first()
+        return redirect('post-details', post_id=post.id)
+
+
+@login_required
+def edit_analysis_details_view(request, pk):
+    stock_analyzed = AnalyzedStock.objects.filter(id=pk, analyst_id__user_id=request.user).first()
+    if stock_analyzed is None:
+        return HttpResponse('Error')
+
+    elif request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = Post.objects.create(analysis_id=stock_analyzed, description=form.cleaned_data['description'],
+                                       title=form.cleaned_data['title'], time=timezone.now())
+            post.save()
+            stock_analyzed.is_public = True
+            stock_analyzed.save()
+            return redirect('post-details', post_id=post.id)
+
+        elif stock_analyzed.is_public is False:
+            stock_analyzed.description = form.cleaned_data['description']
+            stock_analyzed.save()
+
+    context = {
+        'stock_analyzed': stock_analyzed,
+        'post_chart': stock_analyzed.stock_image
+    }
+    return render(request, 'stockAnalysis/my_analysis_details.html', context)
+
+
+@login_required
+def delete_analysis(request, pk):
+    stock_analyzed = AnalyzedStock.objects.filter(id=pk).first()
+    stock_analyzed.delete()
+    return redirect('my-analysis')

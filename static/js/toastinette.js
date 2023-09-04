@@ -9,6 +9,14 @@
  * License: MIT
  */
 
+export function sendNotLoginMessage(){
+    sendToastMessage(
+            'you should be logged in to use this feature :)',
+            MESSAGE_TYPE.ERROR,
+            {title: "login required"}
+        );
+}
+
 export function sendToastMessage(message, type, options = {}){
     const defaultOptions = {
         title: "",

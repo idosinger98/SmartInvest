@@ -310,15 +310,35 @@ ul.ks-cboxtags li input[type="checkbox"]:hover + label {
     position: absolute;
 }
 
+#main-stock-container {
+    display: inline-block;
+}
+
+#compareStocksContainer {
+    display: inline-block;
+    margin: 20px;
+}
+
 #fundamentals-container li {
-    font-size: 18px;
+    font-size: 15px;
     margin-bottom: 10px;
 }
 
 #fundamentals-container h1 {
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
     margin-top: 10px;
+    text-decoration: underline;
+}
+
+#main-stock-container p {
+    font-size: 20px;
+    text-decoration: underline;
+    margin-left: 15px;
+}
+
+#comparisonResult p {
+    font-size: 20px;
     text-decoration: underline;
 }
 
@@ -335,7 +355,25 @@ ul.ks-cboxtags li input[type="checkbox"]:hover + label {
   border-radius: 5px;
   padding: 5px 10px;
 }
-
 #compareStocksContainer {
    margin: 20px;
+}
+ #window {
+     position: fixed;
+     top: 55%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     background-color: #fff;
+     z-index: 1000;
+     padding: 20px;
+     border: 1px solid #ccc;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+ }
+.hidden {
+    display: none;
+}
+
+#blog-details {
+    margin-top: 0;
+    padding-top: 0;
 }
