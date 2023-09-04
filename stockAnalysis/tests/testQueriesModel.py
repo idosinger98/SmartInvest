@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth.models import User
 from django.db.models import QuerySet
 from users.models import Profile
-from stockAnalysis.models import AnalyzedStock
+from stockAnalysis.models import AnalyzedStock, StockSymbol
 
 
 @pytest.fixture
@@ -16,11 +16,22 @@ def test_user(db):
 
 @pytest.fixture
 @pytest.mark.django_db
-def test_analyzed_stock(db, test_user):
+def test_symbol(db):
+    # Create a test AnalyzedStocks object for testing
+    symbol = StockSymbol.objects.create(
+        symbol='NFLX'
+    )
+    return symbol
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def test_analyzed_stock(db, test_user, test_symbol):
     # Create a test AnalyzedStocks object for testing
     analyzed_stock = AnalyzedStock.objects.create(
         analyst_id=test_user,
-        stock_image={'symbol': 'AAPL', 'price': 150.0},
+        symbol=test_symbol,
+        stock_image={'symbol': 'NFLX', 'price': 150.0},
         description='Test description',
         is_public=True
     )
