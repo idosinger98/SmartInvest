@@ -1,5 +1,5 @@
 import {StockChart} from "../../../static/js/stockChart.js";
-import {sendToastMessage, MESSAGE_TYPE} from '../../../static/js/toastinette.js';
+import {sendNotLoginMessage, MESSAGE_TYPE} from '../../../static/js/toastinette.js';
 
 
 const chart = new StockChart();
@@ -42,6 +42,9 @@ $(document).ready(function() {
           document.getElementById('likeButton').innerHTML = '(' + response.likes + ') Unlike';
         }
       }
+      else{
+            sendNotLoginMessage();
+        }
     };
     xhr.send();
   });
@@ -58,7 +61,6 @@ $(document).ready(function() {
   for (let i = 1; i <= counter; i++) {
     let likesCommentIcon = $('#likesCommentIcon' + i);
     let commentId = likesCommentIcon.data('comment-id');
-//    let profileId = likesCommentIcon.data('profile-id');
 
     $.ajax({
       url: 'check-comment-like/',
@@ -96,8 +98,11 @@ $(document).ready(function() {
           } else {
             likesCommentIcon.innerHTML = 'Unlike';
           }
+        }else{
+            sendNotLoginMessage();
         }
       };
+
       xhr.send();
     });
   }

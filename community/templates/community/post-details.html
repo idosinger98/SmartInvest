@@ -9,8 +9,8 @@
     {% endblock head %}
 </head>
 
-{% block content %}
 <body class="blog-details-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+{% block content %}
   <main id="main">
 
     <!-- Blog Details Page Title & Breadcrumbs -->
@@ -122,12 +122,6 @@
                                             <p>
                                                 {{ comment.content }}
                                             </p>
-                                            <script>
-                                                let counter = {{ comments|length }};
-                                                let postId = {{ post.id }};
-                                                let userId = {{ user.profile.profile_id }};
-                                            </script>
-
                                             <div class="meta-bottom">
                                                 {% if comment.publisher_id.profile_id == user.profile.profile_id %}
                                                     <h5><a class="deleteComment"
@@ -191,7 +185,9 @@
 
     <script>
         const postData = {{post_chart | safe}};
+        const counter = {{ comments|length }};
     </script>
+    <script type="module" src="{% static 'js/post-details.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
@@ -201,6 +197,5 @@
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
-    <script type="module" src="{% static 'js/post-details.js' %}"></script>
-    </body>
 {% endblock content %}
+    </body>
