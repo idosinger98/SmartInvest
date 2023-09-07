@@ -17,6 +17,7 @@ yfinance = "*"
 matplotlib = "*"
 gunicorn = "*"
 mysqlclient = "*"
+setuptools = "*"
 
 [dev-packages]
 flake8 = "*"
