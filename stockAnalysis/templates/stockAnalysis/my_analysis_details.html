@@ -89,7 +89,8 @@
         const analyzeData = {{post_chart | safe}};
     </script>
     <script type="application/json" id="isAuthenticated">{{ request.user.is_authenticated|yesno:"true,false" }}</script>
-    <script type="module" src="../../static/js/overlayLogic.js"></script>
+    <script type="module" src="{% static 'js/my_analyze_details.js' %}"></script>
+    <script type="module" src="{% static 'js/overlayLogic.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
@@ -98,7 +99,6 @@
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="module" src="{% static 'js/my_analyze_details.js' %}"></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
 </body>
 {% endblock content %}

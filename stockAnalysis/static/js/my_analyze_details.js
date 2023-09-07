@@ -1,5 +1,5 @@
 import {StockChart} from "../../../static/js/stockChart.js";
-import {sendChart} from "./overlayLogic";
+import {sendChart} from "./overlayLogic.js";
 
 const chart = new StockChart();
 
