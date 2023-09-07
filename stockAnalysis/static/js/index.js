@@ -1,5 +1,6 @@
 import {StockChart} from "../../../static/js/stockChart.js";
 import {IndicatorCheckBox} from "../../../static/js/indicatorCheckBox.js";
+import {sendChart} from "./overlayLogic.js";
 
 const data = JSON.parse(stockData['stock']);
 const chart = new StockChart();
@@ -86,3 +87,9 @@ function getCookie(name) {
   if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
+const submitButton = document.getElementById('submitButton');
+
+submitButton.addEventListener('click',  () => {
+    submitButton.blur();
+    sendChart(chart);
+});

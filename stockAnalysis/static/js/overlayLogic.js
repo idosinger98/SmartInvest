@@ -5,7 +5,6 @@ import {SAVE_STOCK_URL} from "../../../static/js/urls.js";
 const overlay = document.getElementById('overlay');
 const windowElement = document.getElementById('window');
 const closeButton = document.getElementById('closeButton');
-const submitButton = document.getElementById('submitButton');
 const titleInput = document.getElementById('titleInput');
 const publicCheckBox = document.getElementById('publicCheckBox');
 
@@ -31,8 +30,7 @@ closeButton.addEventListener('click', () => {
     windowElement.style.display = 'none';
 });
 
-submitButton.addEventListener('click', async () => {
-    submitButton.blur();
+export async function sendChart(chart){
     if(!isTitleFilled(publicCheckBox.checked, titleInput.value)){
         sendToastMessage(
             'in case you want to publish your analysis you must fill the title.',
@@ -63,8 +61,7 @@ submitButton.addEventListener('click', async () => {
         .catch(error => sendToastMessage(error, MESSAGE_TYPE.ERROR));
     overlay.style.display = 'none';
     windowElement.style.display = 'none';
-});
-
+}
 
 function isTitleFilled(is_public, title){
     return !is_public ||  (title !== null && title.trim() !== "")
