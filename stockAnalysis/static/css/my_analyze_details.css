@@ -1,0 +1,11 @@
+#chart_container {
+    padding-top: 20px;
+    height: 500px;
+    width: inherit;
+    display: inherit;
+}
+
+#checkboxList {
+    display: none;
+    pointer-events: none;
+}

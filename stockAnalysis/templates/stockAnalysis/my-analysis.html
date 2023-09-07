@@ -31,10 +31,8 @@
             <div class="service-item d-flex">
               <div class="icon flex-shrink-0"><i class="bi bi-bar-chart"></i></div>
                 <div>
-                <h4 class="title"><a href="{% url 'my_analysis_details' pk=analyze.pk  %}" class="stretched-link">Analyze #{{forloop.counter}}</a></h4>
-                <h4 class="description"> The name of the stock you analyzed: {{analyze.symbol.symbol}}</h4>
-                  <h4 class="description"> The analysis you wrote: {{analyze.description}}</h4>
-                   <h4 class="description"> Is public: {{analyze.is_public}}</h4>
+                <h4 class="title"><a href="{% url 'my_analysis_details' pk=analyze.pk  %}" class="stretched-link">{{analyze.symbol.symbol}} #{{forloop.counter}}</a></h4>
+                  <h4 class="analyze_description"> Your analyze: {{analyze.description}}</h4>
                 </div>
               </div>
              <div>

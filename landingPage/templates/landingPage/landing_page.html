@@ -7,7 +7,7 @@
     {% endblock head %}
 </head>
 {% block content %}
-<body class="index-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+    <body class="index-page" data-bs-spy="scroll" data-bs-target="#navmenu">
     <div class="modal" id="researchModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -23,15 +23,14 @@
 
         <!-- Hero Section - Home Page -->
         <section id="hero" class="hero">
-            <img src=" {% static 'assets/img/home.jpg' %}" alt="" data-aos="fade-in">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-10">
+            <img src="{% static 'assets/img/home.jpg' %}" alt="" data-aos="fade-in">
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="row align-items-center gy-6 mb-5">
+                    <!-- Added 'align-items-center' to vertically center the content -->
+                    <div class="col-lg-8 col-sm-8 col-md-8" data-aos="fade-up" data-aos-delay="100">
                         <h2 data-aos="fade-up" data-aos-delay="100">Smart Invest, Think Different</h2>
                         <p data-aos="fade-up" data-aos-delay="200">Our goal is to teach, help and improve your thinking
                             about finance and stocks</p>
-                    </div>
-                    <div class="col-lg-5">
                         <form action="/stockgraph" method="GET" class="sign-up-form d-flex" data-aos="fade-up"
                               data-aos-delay="300">
                             <input type="text" class="form-control" name="sy" id="stockInput"
@@ -49,26 +48,27 @@
                             </ul>
                         </div>
                     </div>
+
+                    <!-- TOP 3 STOCKS -->
+                    <div class="col-lg-4 col-sm-4 col-md-4" data-aos="fade-up" data-aos-delay="100">
+                        {% for stock in best_stocks %}
+                            <a class="circular-component" id="stock-{{ forloop.counter }}"
+                               href="/stockgraph?sy={{ stock.name }}">
+                                <div class="icon" id="icon-{{ forloop.counter }}">
+                                    <!-- optional to add an icon -->
+                                </div>
+                                <h1 class="title" id="title-{{ forloop.counter }}">
+                                    {{ stock.name }}
+                                </h1>
+                                <p class="stock-value" id="value-{{ forloop.counter }}">
+                                    {{ stock.price }}
+                                </p>
+                            </a>
+                        {% endfor %}
+                    </div>
+
                 </div>
 
-                <!--            TOP 3 STOCKS                  -->
-                <div class="top-3-stocks">
-                    {% for stock in best_stocks %}
-                        <a class="circular-component" id="stock-{{ forloop.counter }}"
-                           href="/stockgraph?sy={{ stock.name }}">
-                            <div class="icon" id="icon-{{ forloop.counter }}">
-                                <!--                  <img class="icon-picture" src="{% static 'assets/img/icons/apple-icon.png' %}">-->
-                                <!--                  optional to add an icon-->
-                            </div>
-                            <h1 class="title" id="title-{{ forloop.counter }}">
-                                {{ stock.name }}
-                            </h1>
-                            <p class="stock-value" id="value-{{ forloop.counter }}">
-                                {{ stock.price }}
-                            </p>
-                        </a>
-                    {% endfor %}
-                </div>
             </div>
         </section><!-- End Hero Section -->
 
@@ -146,7 +146,8 @@
 
                     <div class="col-lg-3 col-md-6">
                         <div class="stats-item text-center w-100 h-100">
-                            <span data-purecounter-start="0" data-purecounter-end={{ my_analysis }} data-purecounter-duration="1"
+                            <span data-purecounter-start="0"
+                                  data-purecounter-end={{ my_analysis }} data-purecounter-duration="1"
                                   class="purecounter"></span>
                             <p>my analysis</p>
                         </div>
@@ -154,7 +155,8 @@
 
                     <div class="col-lg-3 col-md-6">
                         <div class="stats-item text-center w-100 h-100">
-                            <span data-purecounter-start="0" data-purecounter-end={{ review }} data-purecounter-duration="1"
+                            <span data-purecounter-start="0"
+                                  data-purecounter-end={{ review }} data-purecounter-duration="1"
                                   class="purecounter"></span>
                             <p>average review</p>
                         </div>
@@ -333,12 +335,6 @@
                     <div class="col-lg-4 col-md-6 member" data-aos="fade-up" data-aos-delay="100">
                         <div class="member-img">
                             <img src="{% static 'assets/img/team/ido.png' %}" class="img-fluid" alt="">
-                            <div class="social">
-                                <a href="#"><i class="bi bi-twitter"></i></a>
-                                <a href="#"><i class="bi bi-facebook"></i></a>
-                                <a href="#"><i class="bi bi-instagram"></i></a>
-                                <a href="#"><i class="bi bi-linkedin"></i></a>
-                            </div>
                         </div>
                         <div class="member-info text-center">
                             <h4>Ido Singer</h4>
@@ -351,12 +347,6 @@
                     <div class="col-lg-4 col-md-6 member" data-aos="fade-up" data-aos-delay="200">
                         <div class="member-img">
                             <img src="{% static "assets/img/team/daniel.png" %}" class="img-fluid" alt="">
-                            <div class="social">
-                                <a href="#"><i class="bi bi-twitter"></i></a>
-                                <a href="#"><i class="bi bi-facebook"></i></a>
-                                <a href="#"><i class="bi bi-instagram"></i></a>
-                                <a href="#"><i class="bi bi-linkedin"></i></a>
-                            </div>
                         </div>
                         <div class="member-info text-center">
                             <h4>Daniel Bazis</h4>
@@ -369,12 +359,6 @@
                     <div class="col-lg-4 col-md-6 member" data-aos="fade-up" data-aos-delay="300">
                         <div class="member-img">
                             <img src="{% static 'assets/img/team/tal.png' %}" class="img-fluid" alt="">
-                            <div class="social">
-                                <a href="#"><i class="bi bi-twitter"></i></a>
-                                <a href="#"><i class="bi bi-facebook"></i></a>
-                                <a href="#"><i class="bi bi-instagram"></i></a>
-                                <a href="#"><i class="bi bi-linkedin"></i></a>
-                            </div>
                         </div>
                         <div class="member-info text-center">
                             <h4>Tal Reinfeld</h4>
@@ -548,9 +532,12 @@
 
                                 <div class="post-img">
                                     {% if post.stock_image %}
-                                        <img id="post-img-{{ post.id }}-home" src="{{ post.stock_image }}" alt="" class="img-fluid">
+                                        <img id="post-img-{{ post.id }}-home" src="{{ post.stock_image }}" alt=""
+                                             class="img-fluid">
                                     {% else %}
-                                        <img id="post-img-{{ post.id }}-home" src="{% static 'assets/img/defaultStockImg.jpg' %}" alt="" class="img-fluid">
+                                        <img id="post-img-{{ post.id }}-home"
+                                             src="{% static 'assets/img/defaultStockImg.jpg' %}" alt=""
+                                             class="img-fluid">
                                     {% endif %}
                                 </div>
 
@@ -690,5 +677,5 @@
 
     <script type="module" src=" {% static '/js/landing_page.js' %}"></script>
 
-</body>
+    </body>
 {% endblock content %}

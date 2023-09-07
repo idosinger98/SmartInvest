@@ -1,7 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from community.models import Post, Comment
 from django.contrib.auth.decorators import login_required
 from community.forms import CommentForm
@@ -39,7 +39,7 @@ def community(request):
 def show_post(request, post_id):
     form = CommentForm(request.POST or None)
     if request.method == 'POST':
-        if form.is_valid():
+        if form.is_valid() and request.user.is_authenticated:
             content = form.cleaned_data['content']
             publisher = Profile.objects.filter(user_id=request.user).first()
             post = Post.objects.get(pk=post_id)
@@ -59,6 +59,9 @@ def show_post(request, post_id):
 
 
 def like_post(request, post_id):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+
     post = Post.objects.get(pk=post_id)
     profile = Profile.objects.filter(user_id=request.user).first()
     is_liked = post.likes.filter(pk=profile.profile_id).exists()
@@ -70,8 +73,10 @@ def like_post(request, post_id):
     return JsonResponse({'likes': post.likes.count(), 'is_liked': is_liked})
 
 
-@login_required
 def like_comment(request, comment_id):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+
     comment = Comment.objects.get(pk=comment_id)
     profile = Profile.objects.filter(user_id=request.user).first()
     is_liked = comment.likes.filter(pk=profile.profile_id).exists()
