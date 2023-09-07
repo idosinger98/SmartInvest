@@ -14,8 +14,10 @@ django-countries = "*"
 sib-api-v3-sdk = "*"
 python-dotenv = "*"
 yfinance = "*"
+matplotlib = "*"
 gunicorn = "*"
 mysqlclient = "*"
+setuptools = "*"
 
 [dev-packages]
 flake8 = "*"

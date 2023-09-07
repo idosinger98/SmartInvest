@@ -8,6 +8,7 @@ urlpatterns = [
     path('algorithms', views.post_calculate_algorithms),
     path('stockAnalysisSave', views.save_stock_analysis),
     path('compareStocks/', views.compare_stocks),
+    path('mlAlgorithm/', views.post_ml_algorithm, name='ml-algorithm'),
     path("my-analysis-details/<int:pk>/", views.my_analysis_details_view, name='my_analysis_details'),
     path("edit-analysis-details/<int:pk>/", views.edit_analysis_details_view, name='edit_analysis_details'),
     path('delete-analysis/<int:pk>/', views.delete_analysis, name='delete_analysis'),
