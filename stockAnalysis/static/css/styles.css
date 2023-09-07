@@ -124,10 +124,6 @@ ul.ks-cboxtags li input[type="checkbox"]:hover + label {
     align-items: baseline;
     margin-top: 100px;
 }
-.saveButton {
-
-}
-
 
 /* CSS */
 .button-17 {
@@ -373,7 +369,25 @@ ul.ks-cboxtags li input[type="checkbox"]:hover + label {
     display: none;
 }
 
-#blog-details {
-    margin-top: 0;
-    padding-top: 0;
+#ml-container h1 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 50px;
+    text-decoration: underline;
+}
+
+#chartContainer {
+    margin-left: 50px;
+}
+
+#main-stock-container p {
+    font-size: 20px;
+    text-decoration: underline;
+    margin-left: 15px;
+}
+
+#comparisonResult p {
+    font-size: 20px;
+    text-decoration: underline;
 }

@@ -5,6 +5,8 @@
 # Install Pipenv, the -n option makes sudo fail instead of asking for a
 # password if we don't have sufficient privileges to run it
 sudo -n dnf install -y pipenv
+sudo -n dnf install -y gcc
+sudo -n dnf install -y python3-devel mysql-devel
 
 cd /vagrant
 # Install dependencies with Pipenv

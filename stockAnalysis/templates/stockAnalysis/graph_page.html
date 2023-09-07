@@ -45,6 +45,11 @@
             <div id="checkboxesContainer">
                 <ul id="checkboxList" class="ks-cboxtags"></ul>
             </div>
+                    <div id="ml-container">
+                <h1>Graph Prediction</h1>
+                <div id="ml-graph-container"></div>
+                    <div id="chartContainer" data-sy="{{ sy }}" style="width: 800px; height: 400px;"></div>
+            </div>
             <div id="overlay"></div>
             <div id="window">
                 <button id="closeButton" class="button-17">X</button>
@@ -63,9 +68,7 @@
 
             </div>
         </div>
-        <div>
-                    <img src="" id="img12">
-                </div>
+
         <script>
             const indicators = {{ indicators | safe }};
             const stockData = {{ stock_data | safe }};
@@ -79,8 +82,14 @@
         <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
         <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
         <script type="module" src="../../static/js/index.js"></script>
+        <script type="module" src="../../static/js/overlayLogic.js"></script>
         <script type="module" src="../../../static/js/constants.js"></script>
         <script type="module" src="../../../static/js/indicatorCheckBox.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-data-adapter.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-cartesian.min.js"></script>
 {% endblock %}
     </body>
 </html>

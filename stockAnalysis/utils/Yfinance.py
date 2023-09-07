@@ -114,3 +114,7 @@ def get_stock_fundamentals(symbol):
 
 def is_index(symbol):
     return symbol in INDICES
+
+
+def download_stock_and_indices(list_of_symbols, start_date, end_date):
+    return yf.download(list_of_symbols, start=start_date, end=end_date)

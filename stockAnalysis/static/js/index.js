@@ -1,7 +1,6 @@
 import {StockChart} from "../../../static/js/stockChart.js";
 import {IndicatorCheckBox} from "../../../static/js/indicatorCheckBox.js";
-import {SAVE_STOCK_URL, CHECK_CONNECTED_URL} from "../../../static/js/urls.js";
-import {sendToastMessage, MESSAGE_TYPE, sendNotLoginMessage} from '../../../static/js/toastinette.js';
+import {sendChart} from "./overlayLogic.js";
 
 const data = JSON.parse(stockData['stock']);
 const chart = new StockChart();
@@ -16,69 +15,6 @@ for (const key of Object.keys(indicators)) {
     chart.addIndicatorCheckBox(listItem, data);
 }
 
-const overlay = document.getElementById('overlay');
-const windowElement = document.getElementById('window');
-const closeButton = document.getElementById('closeButton');
-const submitButton = document.getElementById('submitButton');
-const titleInput = document.getElementById('titleInput');
-const publicCheckBox = document.getElementById('publicCheckBox');
-
-document.getElementById('saveButton').addEventListener('click', function () {
-    this.blur();
-    if(!is_user_connected()){
-        sendNotLoginMessage();
-        return;
-    }
-    overlay.style.display = 'block';
-    windowElement.style.display = 'block';
-});
-
-overlay.addEventListener('click', (event) => {
-    if (event.target === overlay) {
-        overlay.style.display = 'none';
-        windowElement.style.display = 'none';
-    }
-});
-
-closeButton.addEventListener('click', () => {
-    overlay.style.display = 'none';
-    windowElement.style.display = 'none';
-});
-
-submitButton.addEventListener('click', async () => {
-    submitButton.blur();
-    if(!isTitleFilled(publicCheckBox.checked, titleInput.value)){
-        sendToastMessage(
-            'in case you want to publish your analysis you must fill the title.',
-            MESSAGE_TYPE.ERROR,
-            {title: "empty title"}
-        );
-        return;
-    }
-    const description = document.getElementById('textArea').value;
-    const stockSymbolValueLabel = document.getElementById('stockSymbolValue').getAttribute("data-stock-value");
-    const bodyData = {
-        'chart': await chart.chartToJson(),
-        'description': description,
-        'is_public': publicCheckBox.checked,
-        'title': titleInput.value,
-        'stockSymbolValue': stockSymbolValueLabel,
-    };
-    console.log(bodyData);
-
-    fetch(SAVE_STOCK_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bodyData)
-        })
-        .then(async response => [response.ok ? MESSAGE_TYPE.SUCCESS : MESSAGE_TYPE.ERROR, await response.text()])
-        .then(message => sendToastMessage(message[1], message[0]))
-        .catch(error => sendToastMessage(error, MESSAGE_TYPE.ERROR));
-    overlay.style.display = 'none';
-    windowElement.style.display = 'none';
-});
 
 publicCheckBox.addEventListener('change', () => {
     if (publicCheckBox.checked) {
@@ -93,6 +29,60 @@ document.addEventListener('DOMContentLoaded', function () {
     const comparisonResult = document.getElementById('comparisonResult');
     const comparisonResultMessage = document.getElementById('compare-result-message');
 
+     $(document).ready(function () {
+        const chartContainer = document.getElementById("chartContainer");
+        const symbol = chartContainer.getAttribute('data-sy'); // Replace with the actual symbol or retrieve it dynamically
+        const requestData = {
+            'sy': symbol
+        };
+
+        chartContainer.textContent = 'Calculating the graph prediction...';
+
+        $.ajax({
+            url: "mlAlgorithm/",  // Replace with the actual URL of your view
+            method: "POST",
+            dataType: "json",
+            data: JSON.stringify(requestData), // Send the 'symbol' parameter in the request body
+            contentType: "application/json",
+            timeout: 150000,
+            success: function (data) {
+                console.log("Succeed to fetch data.");
+
+                const chart2 = anychart.line()
+
+                function transformData(data) {
+                  data = JSON.parse(data);
+                  const result = [];
+                  for (const key in data) {
+                    const innerData = data[key];
+                    const innerArray = [];
+                    for (const innerKey in innerData) {
+                      innerArray.push([innerKey, innerData[innerKey]]);
+                    }
+                    result.push([key, innerArray]);
+                  }
+                  return result;
+                }
+
+                data = transformData(data);
+
+                const rawData = chart2.line(Object.values(data[0][1]));
+                const predictedData = chart2.line(Object.values(data[1][1])).stroke("orange");
+
+                chartContainer.style.marginLeft = '0px';
+                chartContainer.textContent = '';
+                chart2.container("chartContainer");
+                chart2.draw();
+
+            },
+            error: function (xhr, status, error) {
+                console.log("Error:", status, error);
+                if(xhr.responseJSON) {
+                    console.log("Error Response Data:", xhr.responseJSON);
+                }
+            }
+        });
+    });
 
   document.getElementById('compareButton').addEventListener('click', function() {
     console.log('compareButton was clicked!');
@@ -151,12 +141,9 @@ function getCookie(name) {
   if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
-function isTitleFilled(is_public, title){
-    return !is_public ||  (title !== null && title.trim() !== "")
-}
+const submitButton = document.getElementById('submitButton');
 
-function is_user_connected(){
-    const isAuthenticatedData = document.getElementById('isAuthenticated');
-    console.log(isAuthenticatedData);
-    return isAuthenticatedData ? JSON.parse(isAuthenticatedData.textContent.toLowerCase()) : false;
-}
+submitButton.addEventListener('click',  () => {
+    submitButton.blur();
+    sendChart(chart);
+});
