@@ -2,6 +2,13 @@
 
 SmartInvest is a web-based platform designed to empower investors with the tools and insights they need to make informed decisions about buying and selling stocks. Our platform offers a wide range of features, including financial data, interactive charts, and powerful machine learning algorithms, all geared towards helping you analyze investment performance and plan your withdrawal strategies effectively. Whether you're a beginner looking to get started or an advanced investor seeking to enhance your financial analysis and strategies, SmartInvest has something to offer you.
 
+## The Team
+
+Meet the team behind SmartInvest:
+
+- **Ido Singer**
+- **Daniel Bazis**
+- **Tal Reinfeld**
 ## Problem Statement
 
 ### The Challenge
