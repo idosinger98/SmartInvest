@@ -251,14 +251,9 @@ def edit_analysis_details_view(request, pk):
             stock_analyzed.description = form.cleaned_data['description']
             stock_analyzed.save()
 
-    context = {
-        'stock_analyzed': stock_analyzed,
-        'post_chart': stock_analyzed.stock_image
-    }
-
     messages.success(request, 'Your analyze has been change.')
 
-    return redirect('my_analysis_details',pk)
+    return redirect('my_analysis_details', pk)
 
 
 @login_required
