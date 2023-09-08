@@ -85,11 +85,13 @@ def compare_stocks(request):
             if symbol:
                 fundamentals = Yfinance.get_stock_fundamentals(symbol)
 
+                if not fundamentals:
+                    return JsonResponse('Stock does not exists!', status=HTTPStatus.INTERNAL_SERVER_ERROR, safe=False)
+
                 is_better = new_stock_is_better(fundamentals, fundamentals_items)
 
                 return JsonResponse({'fundamentals': fundamentals, 'is_better': is_better})
 
-        return JsonResponse({'error': 'Invalid request'})
     except Exception as e:
         error_msg, status_code = handle_exception(e)
         return JsonResponse(error_msg, status=status_code, safe=False)
