@@ -51,4 +51,4 @@ To get started with SmartInvest, follow these simple steps:
 
 Whether you're just starting your investment journey or looking to take your strategies to the next level, SmartInvest is here to assist you. Join our community of investors and start making smarter investment decisions today.
 
-For any questions or support, please contact us at [support@smartinvest.com](mailto:support@smartinvest.com).
+For any questions or support, please contact us at [support@smartinvest.com](mailto:smartInvest850@gmail.com).
