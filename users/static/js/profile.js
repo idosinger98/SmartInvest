@@ -11,9 +11,9 @@
 
         // When a new file is selected, update the profile image with the selected file (optional).
         $('#fileInput').change(function() {
-            var file = this.files[0];
+            let file = this.files[0];
             if (file) {
-                var reader = new FileReader();
+                let reader = new FileReader();
                 reader.onload = function(event) {
                     $('#profileImage').attr('src', event.target.result);
                 };

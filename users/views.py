@@ -71,7 +71,12 @@ def sign_out(request):
 
 class PasswordsChangeView(PasswordChangeView, LoginRequiredMixin):
     form_class = PasswordChangingForm
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('show_details')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Your password has been successfully changed.')
+        return response
 
 
 @login_required

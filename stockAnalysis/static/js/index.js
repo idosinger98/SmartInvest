@@ -16,14 +16,6 @@ for (const key of Object.keys(indicators)) {
 }
 
 
-publicCheckBox.addEventListener('change', () => {
-    if (publicCheckBox.checked) {
-        titleInput.style.display = 'block';
-    } else {
-        titleInput.style.display = 'none';
-    }
-});
-
 document.addEventListener('DOMContentLoaded', function () {
     const stockSymbolInput = document.getElementById('stockSymbolInput');
     const comparisonResult = document.getElementById('comparisonResult');

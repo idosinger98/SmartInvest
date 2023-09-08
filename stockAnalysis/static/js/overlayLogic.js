@@ -8,6 +8,14 @@ const closeButton = document.getElementById('closeButton');
 const titleInput = document.getElementById('titleInput');
 const publicCheckBox = document.getElementById('publicCheckBox');
 
+publicCheckBox.addEventListener('change', () => {
+    if (publicCheckBox.checked) {
+        titleInput.style.display = 'block';
+    } else {
+        titleInput.style.display = 'none';
+    }
+});
+
 document.getElementById('saveButton').addEventListener('click', function () {
     this.blur();
     if(!is_user_connected()){
