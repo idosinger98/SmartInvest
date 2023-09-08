@@ -8,6 +8,7 @@ from community.forms import CommentForm
 from django.utils import timezone
 from users.models import Profile
 import json
+from django.contrib import messages
 
 
 def community(request):
@@ -45,6 +46,8 @@ def show_post(request, post_id):
             post = Post.objects.get(pk=post_id)
             Comment.objects.comment_post(post_id=post, content=content, publisher_id=publisher)
             return redirect('post-details', post_id=post_id)
+        elif not request.user.is_authenticated:
+            messages.error(request, 'you should be login to comment on post')
 
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.get_all_comments_on_post(post_id=post_id)

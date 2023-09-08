@@ -1,20 +1,21 @@
 {% extends 'nav_menu.html' %}
 {% load static %}
-
+<html>
 <head>
     {% block head %}
         <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
-        <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css"
+              rel="stylesheet">
         <link rel="stylesheet" href="/static/css/toastinette.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" href="../../static/css/styles.css">
-       <link rel="stylesheet" href="../../static/css/my_analyze_details.css">
+        <link rel="stylesheet" href="../../static/css/my_analyze_details.css">
 
     {% endblock head %}
 </head>
 
-{% block content %}
 <body class="blog-details-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+{% block content %}
     <main id="main">
 
         <!-- Blog Details Page Title & Breadcrumbs -->
@@ -24,7 +25,8 @@
                     <div class="row d-flex justify-content-center text-center">
                         <div class="col-lg-8">
                             <h1>My analysis details</h1>
-                            <p class="mb-0">On this page you can see the analysis you performed, edit it and share it with the whole world</p>
+                            <p class="mb-0">On this page you can see the analysis you performed, edit it and share it
+                                with the whole world</p>
                         </div>
                     </div>
                 </div>
@@ -59,11 +61,12 @@
                                 <div id="window">
                                     <button id="closeButton" class="button-17">X</button>
                                     <div id="title">Your Analyze</div>
-                                    <form action="{% url 'edit_analysis_details' pk=stock_analyzed.pk %}" method="POST" >
+                                    <form action="{% url 'edit_analysis_details' pk=stock_analyzed.pk %}" method="POST">
                                         {% csrf_token %}
                                         <div class="centered">
                                             <input type="text" name="title" placeholder="Title" id="titleInput">
-                                            <textarea placeholder="Description" name="description" id="textArea">{{stock_analyzed.description}}</textarea>
+                                            <textarea placeholder="Description" name="description"
+                                                      id="textArea">{{ stock_analyzed.description }}</textarea>
                                             <div class="checkbox-container">
                                                 <input type="checkbox" id="publicCheckBox">
                                                 <label for="publicCheckBox">Share it with the world</label>
@@ -84,7 +87,11 @@
         </section><!-- End Blog-details Section -->
 
     </main>
-
+    {% if messages %}
+        {% for message in messages %}
+            <script type="application/json" id="message">{{ message }}</script>
+        {% endfor %}
+    {% endif %}
     <script>
         const analyzeData = {{post_chart | safe}};
     </script>
@@ -100,5 +107,6 @@
     <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
-</body>
 {% endblock content %}
+</body>
+</html>

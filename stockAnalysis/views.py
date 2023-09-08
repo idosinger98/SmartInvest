@@ -255,7 +255,10 @@ def edit_analysis_details_view(request, pk):
         'stock_analyzed': stock_analyzed,
         'post_chart': stock_analyzed.stock_image
     }
-    return render(request, 'stockAnalysis/my_analysis_details.html', context)
+
+    messages.success(request, 'Your analyze has been change.')
+
+    return redirect('my_analysis_details',pk)
 
 
 @login_required
