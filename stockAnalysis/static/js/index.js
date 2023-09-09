@@ -1,6 +1,7 @@
 import {StockChart} from "../../../static/js/stockChart.js";
 import {IndicatorCheckBox} from "../../../static/js/indicatorCheckBox.js";
 import {sendChart} from "./overlayLogic.js";
+import {MESSAGE_TYPE, sendToastMessage} from "../../../static/js/toastinette.js";
 
 const data = JSON.parse(stockData['stock']);
 const chart = new StockChart();
@@ -97,11 +98,12 @@ document.addEventListener('DOMContentLoaded', function () {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', '/compareStocks/');
     xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+    comparisonResult.innerHTML = ''; // Clear previous content
+    comparisonResultMessage.innerHTML = '';
+
     xhr.onload = function() {
       if (xhr.status === 200) {
         let response = JSON.parse(xhr.responseText);
-        comparisonResult.innerHTML = ''; // Clear previous content
-        comparisonResultMessage.innerHTML = '';
         const fundamentals = response.fundamentals;
         const message = `${symbol.toUpperCase()} will ${response.is_better ? '' : 'not'} be a better invest!`;
         const messageElement = document.createElement('p');
@@ -120,12 +122,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
       } else {
-        comparisonResult.innerHTML = '';
-        const message = 'Invalid input!';
-        const messageElement = document.createElement('p');
-        messageElement.textContent = message;
-        comparisonResult.appendChild(messageElement);
+        sendToastMessage(`The Symbol - ${symbol} does not exists!`, MESSAGE_TYPE.ERROR);
       }
+      stockSymbolInput.value = '';
     };
     const payload = {
         symbol: symbol,
