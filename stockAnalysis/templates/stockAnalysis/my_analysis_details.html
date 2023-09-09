@@ -68,7 +68,7 @@
                                             <textarea placeholder="Description" name="description"
                                                       id="textArea">{{ stock_analyzed.description }}</textarea>
                                             <div class="checkbox-container">
-                                                <input type="checkbox" id="publicCheckBox">
+                                                <input name="is_public" type="checkbox" id="publicCheckBox">
                                                 <label for="publicCheckBox">Share it with the world</label>
                                             </div>
                                             <button id="submitButton" class="button-17" type="submit">Submit</button>
@@ -90,6 +90,7 @@
     {% if messages %}
         {% for message in messages %}
             <script type="application/json" id="message">{{ message }}</script>
+            <script type="application/json" id="messageType">{{ message.tags }}</script>
         {% endfor %}
     {% endif %}
     <script>
