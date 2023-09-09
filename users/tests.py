@@ -131,7 +131,7 @@ class TestChangePasswordView:
         }
         response = client.post(url, data)
         assert response.status_code == 302  # Check for a redirect
-        assert response.url == reverse('login')  # Check the redirect URL
+        assert response.url == reverse('show_details')  # Check the redirect URL
         user.refresh_from_db()
         assert user.check_password('newtestpassword')  # Verify the password change
 

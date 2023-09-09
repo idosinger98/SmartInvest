@@ -3,6 +3,8 @@ from .models import Post, Comment
 
 
 class PostForm(forms.ModelForm):
+    is_public = forms.BooleanField()
+
     class Meta:
         model = Post
         fields = ['title', 'description']

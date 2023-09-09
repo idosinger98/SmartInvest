@@ -1,8 +1,14 @@
 import {StockChart} from "../../../static/js/stockChart.js";
-import {sendNotLoginMessage, MESSAGE_TYPE} from '../../../static/js/toastinette.js';
+import {sendNotLoginMessage} from '../../../static/js/toastinette.js';
 
 
 const chart = new StockChart();
+
+$(document).ready(function () {
+    if (document.getElementById('message')) {
+        sendNotLoginMessage();
+    }
+});
 
 $(document).ready(function() {
   // Function for post likes

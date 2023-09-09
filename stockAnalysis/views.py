@@ -248,16 +248,14 @@ def edit_analysis_details_view(request, pk):
             stock_analyzed.is_public = True
             stock_analyzed.save()
             return redirect('post-details', post_id=post.id)
-
-        elif stock_analyzed.is_public is False:
+        elif not form.cleaned_data.get('is_public', False):
             stock_analyzed.description = form.cleaned_data['description']
             stock_analyzed.save()
+            messages.success(request, 'Your analyze has been change.')
+        else:
+            messages.error(request, 'in case you want to publish your analysis you must fill the title.')
 
-    context = {
-        'stock_analyzed': stock_analyzed,
-        'post_chart': stock_analyzed.stock_image
-    }
-    return render(request, 'stockAnalysis/my_analysis_details.html', context)
+    return redirect('my_analysis_details', pk)
 
 
 @login_required

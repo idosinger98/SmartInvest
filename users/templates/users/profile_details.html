@@ -3,65 +3,84 @@
 
 <head>
     {% block head2 %}
-    <title>Profile</title>
+        <title>Profile</title>
     {% endblock %}
 </head>
 
-{% block content2 %}
 <body>
-        <hr class="mt-0 mb-4">
-        <div class="row">
-            <div class="col-xl-4">
-                <div class="card mb-4 mb-xl-0">
-                    <div class="card-header">Profile Picture</div>
-                    <div class="card-body text-center">
-                        {% if profile.image %}
-                            <img class="img-account-profile rounded-circle mb-2" src="{{profile.image.url}}" alt="">
-                        {% else %}
-                            <img class="img-account-profile rounded-circle mb-2" src="{% static 'images/blank_profile.png' %}" alt="">
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-8">
-                <div class="card mb-4">
-                    <div class="card-header">Account Details</div>
-                    <div class="card-body">
-                        <form method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <fieldset class="form-group">
-                                <div class="mb-3">
-                                    <label class="form-label" for="username">Username</label>
-                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" value="{{ user_form.username.value }}" disabled>
-                                </div>
-                                <div class="row gx-3 mb-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="first_name">First Name</label>
-                                        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter your first name" value="{{ user_form.first_name.value }}" disabled>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="last_name">Last Name</label>
-                                        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter your last name" value="{{ user_form.last_name.value }}" disabled>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label" for="location">Country</label>
-                                    <input type="text" class="form-control" id="location" name="location" placeholder="Enter your location" value="{{ profile_form.country.value }}" disabled>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label" for="email">Email Address</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" value="{{ user_form.email.value }}" disabled>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label" for="phone_number">Phone Number</label>
-                                    <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Enter your phone number" value="{{ profile_form.phone_number.value }}" disabled>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
+{% block content2 %}
+    <hr class="mt-0 mb-4">
+    <div class="row">
+        <div class="col-xl-4">
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">Profile Picture</div>
+                <div class="card-body text-center">
+                    {% if profile.image %}
+                        <img class="img-account-profile rounded-circle mb-2" src="{{ profile.image.url }}" alt="">
+                    {% else %}
+                        <img class="img-account-profile rounded-circle mb-2"
+                             src="{% static 'images/blank_profile.png' %}" alt="">
+                    {% endif %}
                 </div>
             </div>
         </div>
-
+        <div class="col-xl-8">
+            <div class="card mb-4">
+                <div class="card-header">Account Details</div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <div class="mb-3">
+                                <label class="form-label" for="username">Username</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                       placeholder="Enter your username" value="{{ user_form.username.value }}"
+                                       disabled>
+                            </div>
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="first_name">First Name</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name"
+                                           placeholder="Enter your first name" value="{{ user_form.first_name.value }}"
+                                           disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="last_name">Last Name</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name"
+                                           placeholder="Enter your last name" value="{{ user_form.last_name.value }}"
+                                           disabled>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="location">Country</label>
+                                <input type="text" class="form-control" id="location" name="location"
+                                       placeholder="Enter your location" value="{{ profile_form.country.value }}"
+                                       disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="email">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       placeholder="Enter your email address" value="{{ user_form.email.value }}"
+                                       disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="phone_number">Phone Number</label>
+                                <input type="text" class="form-control" id="phone_number" name="phone_number"
+                                       placeholder="Enter your phone number"
+                                       value="{{ profile_form.phone_number.value }}" disabled>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if messages %}
+        {% for message in messages %}
+            <script type="application/json" id="message">{{ message }}</script>
+        {% endfor %}
+    {% endif %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="module" src="{% static 'js/profile_details.js' %}"></script>
+{% endblock content2 %}
 </body>
-{% endblock %}
