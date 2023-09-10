@@ -33,7 +33,7 @@
                             about finance and stocks</p>
                         <form action="/stockgraph" method="GET" class="sign-up-form d-flex" data-aos="fade-up"
                               data-aos-delay="300">
-                            <input type="text" class="form-control" name="sy" id="stockInput"
+                            <input type="text" class="form-control" name="sy" id="stockInput" autocomplete="off"
                                    placeholder="Enter stock symbol">
                             <input type="submit" class="btn btn-primary" value="Get graph">
                         </form>
@@ -155,9 +155,7 @@
 
                     <div class="col-lg-3 col-md-6">
                         <div class="stats-item text-center w-100 h-100">
-                            <span data-purecounter-start="0"
-                                  data-purecounter-end={{ review }} data-purecounter-duration="1"
-                                  class="purecounter"></span>
+                            <span>{{ review |floatformat:1 }}</span>
                             <p>average review</p>
                         </div>
                     </div><!-- End Stats Item -->
