@@ -9,7 +9,7 @@ from .exceptions.UnsupportedMediaException import UnsupportedMediaException
 from .utils import Yfinance
 from http import HTTPStatus
 from .utils.IndicatorsAlgo import calculate_algorithms
-from .utils.StockPrediction import fit_model
+from .utils.StockPrediction import get_ml_prediction
 from django.shortcuts import render, redirect
 from .exceptions.StockNotFoundException import StockNotFoundException
 from .utils.IndicatorsAlgo import get_indicators_dict
@@ -107,17 +107,44 @@ def new_stock_is_better(fundamentals, fundamentals_items):
     return get_stock_fundamentals_score(fundamentals) > get_stock_fundamentals_score(fundamentals_items)
 
 
+# @csrf_exempt
+# @require_POST
+# def post_ml_algorithm(request):
+#     try:
+#         body = json_to_object(request.body)
+#         symbol = body[StockViewParams.STOCK_SYMBOL.value]
+#         ml_df = fit_model(symbol)
+#         adj_close_col = f'Adj Close_{symbol}'
+#         result_dict = {}
+#
+#         for column_name in ['adj_close_col', 'Forecast']:
+#             inner_dict = {}
+#
+#             for index, row in ml_df.iterrows():
+#                 if pd.notna(row[column_name]):
+#                     inner_dict[str(row['Date']).split(" ")[0]] = row[column_name]
+#
+#             result_dict[column_name] = inner_dict
+#
+#     except Exception as e:
+#         error_msg, status_code = handle_exception(e)
+#         return JsonResponse(error_msg, status=status_code, safe=False)
+#
+#     result = json.dumps(result_dict)
+#
+#     return JsonResponse(result, status=HTTPStatus.OK, safe=False)
+
+
 @csrf_exempt
 @require_POST
 def post_ml_algorithm(request):
     try:
         body = json_to_object(request.body)
         symbol = body[StockViewParams.STOCK_SYMBOL.value]
-        ml_df = fit_model(symbol)
-        adj_close_col = f'Adj Close_{symbol}'
+        previous_df, predicted_df = get_ml_prediction(symbol)
         result_dict = {}
 
-        for column_name in [adj_close_col, 'Forecast']:
+        for column_name in ['last_original_days_value', 'next_predicted_days_value']:
             inner_dict = {}
 
             for index, row in ml_df.iterrows():
@@ -133,7 +160,6 @@ def post_ml_algorithm(request):
     result = json.dumps(result_dict)
 
     return JsonResponse(result, status=HTTPStatus.OK, safe=False)
-
 
 @csrf_exempt
 @require_POST
