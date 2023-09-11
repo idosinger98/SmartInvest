@@ -9,7 +9,7 @@ from .exceptions.UnsupportedMediaException import UnsupportedMediaException
 from .utils import Yfinance
 from http import HTTPStatus
 from .utils.IndicatorsAlgo import calculate_algorithms
-from .utils.StockPrediction import fit_model
+from .utils.StockPrediction import fit_model, fix_date
 from django.shortcuts import render, redirect
 from .exceptions.StockNotFoundException import StockNotFoundException
 from .utils.IndicatorsAlgo import get_indicators_dict
@@ -122,7 +122,7 @@ def post_ml_algorithm(request):
 
             for index, row in ml_df.iterrows():
                 if pd.notna(row[column_name]):
-                    inner_dict[str(row['Date']).split(" ")[0]] = row[column_name]
+                    inner_dict[fix_date(str(row['Date'])).split(" ")[0]] = row[column_name]
 
             result_dict[column_name] = inner_dict
 
