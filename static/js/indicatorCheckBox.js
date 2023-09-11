@@ -25,7 +25,7 @@ export class IndicatorCheckBox {
         this.infoIcon.className = 'fas fa-exclamation-circle';
         this.infoIcon.appendChild(this.tooltip);
 
-        this.tooltip.className = 'tooltip';
+        this.tooltip.className = 'mytooltip';
         this.tooltip.textContent = info;
 
         this.listItem.appendChild(this.checkbox);

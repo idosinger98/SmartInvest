@@ -73,7 +73,7 @@ ul.ks-cboxtags li i.fas.fa-exclamation-circle:hover{
     color: #a0a0a0;
 }
 
-ul.ks-cboxtags li i.fas.fa-exclamation-circle .tooltip {
+ul.ks-cboxtags li i.fas.fa-exclamation-circle .mytooltip {
     visibility: hidden;
     position: absolute;
     top: 35px; /* Adjust the distance from the icon */
@@ -90,7 +90,7 @@ ul.ks-cboxtags li i.fas.fa-exclamation-circle .tooltip {
     border-radius: 25px;
 }
 
-ul.ks-cboxtags li i.fas.fa-exclamation-circle:hover .tooltip{
+ul.ks-cboxtags li i.fas.fa-exclamation-circle:hover .mytooltip{
     visibility: visible;
 }
 
