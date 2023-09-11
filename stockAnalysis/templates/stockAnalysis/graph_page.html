@@ -2,94 +2,139 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
 
-{% block head %}
+    {% block head %}
         <title>{{ sy }} Stock</title>
 
         <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
-        <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css"
+              rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link rel="stylesheet" href="../../static/css/styles.css">
-    {% load static %}
-{% endblock %}
-    </head>
-    <body>
-    {% block content %}
-        <div>
-            <div id="container">
-                <div id="chart_container"></div>
-                <div id="fundamentals-container">
-                    <h1>Fundamental Analysis</h1>
-                    <div id="main-stock-container">
-                        <p>{{ sy }}</p>
-                        <ul>
-                            {% for key, value in fundamentals.items %}
-                                <li>{{ key }}: {{ value }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% if notIndex %}
-                        <div id="compareStocksContainer">
-                            <div id="comparisonResult"></div>
-                        </div>
-                        <div id="search-compare">
-                            <div id="compare-result-message"></div>
-                            <input type="text" class="search-input" id="stockSymbolInput" placeholder="Enter a stock's symbol">
-                            <button class="search-button" id="compareButton">Compare</button>
-                        </div>
-                    {% endif %}
+        {% load static %}
+    {% endblock %}
+</head>
+{% block content %}
+<body class="stock-analysis-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+  <main id="main">
+    <!-- Services Section - Home Page -->
+{#    <section id="stock-analysis" class="services">#}
+
+    <div data-aos="fade" class="page-title">
+      <div class="heading">
+        <div class="container mt-5">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8">
+              <h1>Stock Analysis</h1>
+              <p class="mb-0">On this page you can see the stock analysis<br>Click on the buttons at the right side of the page to run the algorithms</p>
+            </div>
+          </div>
+        </div>
+      </div>
+        <nav class="breadcrumbs">
+        <div class="container">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li class="current">Stock Analysis</li>
+          </ol>
+        </div>
+      </nav>
+    </div>
+
+    <div>
+        <div id="container">
+            <div class="row">
+                <div class="col-lg-8 col-sm-8 col-md-12">
+                    <div id="chart_container"></div>
                 </div>
+                <div class="col-lg-1 col-sm-12 col-md-4">
+                    <div id="checkboxesContainer">
+                        <ul id="checkboxList" class="ks-cboxtags"></ul>
+                    </div>
+                </div>
+            </div>
+            <div id="saveButtonContainer">
                 <button id="saveButton" class="button-17" role="button">KEEP CHART</button>
             </div>
-            <div id="checkboxesContainer">
-                <ul id="checkboxList" class="ks-cboxtags"></ul>
+        </div>
+        <div class="row gy-6 mb-5">
+        <div class="col-lg-5 col-sm-6 col-md-6">
+        <div id="fundamentals-container">
+            <div class="section-title">
+            <h2>Fundamental Analysis</h2>
+                <div id="main-stock-container">
+                <h4>{{ sy }}</h4>
+                <ul>
+                    {% for key, value in fundamentals.items %}
+                        <li>{{ key }}: {{ value }}</li>
+                    {% endfor %}
+                </ul>
             </div>
-                    <div id="ml-container">
-                <h1>Graph Prediction</h1>
-                <div id="ml-graph-container"></div>
-                    <div id="chartContainer" data-sy="{{ sy }}" style="width: 800px; height: 400px;"></div>
-            </div>
-            <div id="overlay"></div>
-            <div id="window">
-                <button id="closeButton" class="button-17">X</button>
-                <div id="title">Your Analyze</div>
-                <div class="centered">
-                    <input type="text" placeholder="Title" id="titleInput">
-                    <textarea placeholder="Description" id="textArea"></textarea>
-                     <label id="stockSymbolValue" class="hidden" data-stock-value="{{ sy }}"></label>
-
-                    <div class="checkbox-container">
-                        <input type="checkbox" id="publicCheckBox">
-                        <label for="publicCheckBox">Share it with the world</label>
-                    </div>
-                    <button id="submitButton" class="button-17">Submit</button>
+            {% if notIndex %}
+                <div id="compareStocksContainer">
+                    <div id="comparisonResult"></div>
                 </div>
+                <div id="search-compare">
+                    <div id="compare-result-message"></div>
+                    <input type="text" class="search-input" id="stockSymbolInput" placeholder="Enter a stock's symbol">
+                    <button class="search-button" id="compareButton">Compare</button>
+                </div>
+            {% endif %}
+        </div>
+            </div>
 
+        </div>
+            <div class="col-lg-7 col-sm-6 col-md-6">
+                <div id="ml-container">
+                    <div class="section-title">
+                        <h2>Graph Prediction</h2>
+                        <div id="chartContainer" data-sy="{{ sy }}" style="min-width: 600px; height: 400px;"></div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div id="overlay"></div>
+        <div id="window">
+            <button id="closeButton" class="button-17">X</button>
+            <div id="title">Your Analyze</div>
+            <div class="centered">
+                <input type="text" placeholder="Title" id="titleInput">
+                <textarea placeholder="Description" id="textArea"></textarea>
+                <label id="stockSymbolValue" class="hidden" data-stock-value="{{ sy }}"></label>
 
-        <script>
-            const indicators = {{ indicators | safe }};
-            const stockData = {{ stock_data | safe }};
-        </script>
-        <script type="application/json" id="isAuthenticated">{{ request.user.is_authenticated|yesno:"true,false" }}</script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
-        <script type="module" src="../../static/js/index.js"></script>
-        <script type="module" src="../../static/js/overlayLogic.js"></script>
-        <script type="module" src="../../../static/js/constants.js"></script>
-        <script type="module" src="../../../static/js/indicatorCheckBox.js"></script>
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-data-adapter.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-cartesian.min.js"></script>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="publicCheckBox">
+                    <label for="publicCheckBox">Share it with the world</label>
+                </div>
+                <button id="submitButton" class="button-17">Submit</button>
+            </div>
+
+        </div>
+    </div>
+{#    </section>#}
+  </main>
+    <script>
+        const indicators = {{ indicators | safe }};
+        const stockData = {{ stock_data | safe }};
+    </script>
+    <script type="application/json" id="isAuthenticated">{{ request.user.is_authenticated|yesno:"true,false" }}</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-bundle.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+    <script type="module" src="../../static/js/index.js"></script>
+    <script type="module" src="../../static/js/overlayLogic.js"></script>
+    <script type="module" src="../../../static/js/constants.js"></script>
+    <script type="module" src="../../../static/js/indicatorCheckBox.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-data-adapter.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-cartesian.min.js"></script>
 {% endblock %}
-    </body>
+</body>
 </html>
