@@ -13,7 +13,9 @@ class ReviewManager(models.Manager):
         return self.order_by('-date')[:5]
 
     def get_average_rating(self):
-        return self.all().aggregate(avg_rating=Avg('rating'))['avg_rating']
+        avg_rating = self.all().aggregate(avg_rating=Avg('rating'))['avg_rating']
+
+        return avg_rating if avg_rating is not None else 0.0
 
 
 class Review(models.Model):
