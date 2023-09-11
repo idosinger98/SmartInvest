@@ -77,15 +77,15 @@ ul.ks-cboxtags li i.fas.fa-exclamation-circle .mytooltip {
     visibility: hidden;
     position: absolute;
     top: 35px; /* Adjust the distance from the icon */
+    font-family: "Font Awesome 5 Free", serif;
 
     left: 50%; /* Position at the center of the icon */
     transform: translateX(-50%);
-    width: auto;
-    max-width: 80px;
+    width: 300px;
+    max-width: 300px;
     background-color: #a0a0a0;
     color: #fff;
     font-size: 14px;
-    font-style: normal;
     padding: 2px 10px 2px 10px;
     border-radius: 25px;
 }
