@@ -100,9 +100,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const message = `${symbol.toUpperCase()} will ${response.is_better ? '' : 'not'} be a better invest!`;
         const messageElement = document.createElement('p');
         messageElement.textContent = message;
+        messageElement.style.margin = '10px';
         messageElement.style.color = response.is_better ? 'green' : 'red';
         comparisonResultMessage.appendChild(messageElement);
-        const stockName = document.createElement('p');
+        const stockName = document.createElement('h4');
         stockName.textContent = symbol.toUpperCase();
         comparisonResult.appendChild(stockName);
         for (const key in fundamentals) {
