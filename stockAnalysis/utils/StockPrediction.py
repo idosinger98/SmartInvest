@@ -17,6 +17,21 @@ def yesterday_date():
     return datetime.datetime.strftime(yesterday, '%Y-%m-%d')
 
 
+def fix_date(input_date):
+    try:
+        input_datetime = datetime.datetime.strptime(input_date, '%Y-%m-%d')
+    except ValueError:
+        try:
+            input_datetime = datetime.datetime.strptime(input_date, '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            return "Invalid date format. Please provide a date in one of the supported formats."
+
+    result_datetime = input_datetime + datetime.timedelta(days=37)
+    result_date = result_datetime.strftime('%Y-%m-%d')
+
+    return result_date
+
+
 def get_ml_raw_data(stock_symbol):
     data_to_download = [stock_symbol, "BTC-USD", "XLP", "XLF", "XLE", "XLI", "XLK", "XLY",
                         "XLB", "XLU", "QQQ", "IEI", "GLD", "TIP", "RLY"]
